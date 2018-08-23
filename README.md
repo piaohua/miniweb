@@ -8,7 +8,11 @@ This sample is about using http and WebSocket to build a wechat miniprogram base
 
 ```
 cd $GOPATH/src/miniweb
+go get github.com/astaxie/beego
 go get github.com/gorilla/websocket
+go get github.com/globalsign/mgo
+go get github.com/gogo/protobuf
+go get github.com/AsynkronIT/protoactor-go
 go get github.com/beego/i18n
 bee run
 ```
