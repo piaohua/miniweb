@@ -1,0 +1,12 @@
+syntax = "proto3";
+package pb;
+
+//%s/uint32\(\s\+\)error/ErrCode error/g
+
+//let i=0 | g/\(\d\{5}\)/s//\=i/ |let i=i+1
+
+enum ErrCode {
+    OK                     =  0; //正常
+    RegistFaild            =  1; //注册失败
+    LoginFaild             =  2; //登录失败
+}

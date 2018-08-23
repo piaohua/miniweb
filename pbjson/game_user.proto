@@ -1,0 +1,28 @@
+syntax = "proto3";
+package pb;
+import "game_code.proto";
+import "game_pub.proto";
+
+// 心跳
+message CPing
+{
+    int64 time = 1;//时间截
+}
+
+message SPing
+{
+    int64 time = 1;//时间截
+    ErrCode error= 2;//错误码 ,0:正常
+}
+
+// 获取玩家的数据
+message CUserData
+{
+    string userid = 1;//用户id
+}
+
+message SUserData
+{
+    UserData data = 1;
+    ErrCode error = 2;//错误码
+}

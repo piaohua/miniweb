@@ -1,0 +1,8 @@
+syntax = "proto3";
+package pb;
+
+//日志操作类型
+enum LogType {
+    LOG_TYPE0  =  0;//无
+    LOG_TYPE1  =  1;//注册赠送
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+package pb;
+import "game_code.proto";
+
+// 微信登录登陆:https://developers.weixin.qq.com/miniprogram/dev/api/open.html#wxgetuserinfoobject
+message CWxLogin
+{
+    bool   withCredentials = 1; //
+    string rawData         = 2; //
+    string signature       = 3; //
+    string encryptedData   = 4; //
+    string iv              = 5; //
+}
+
+message SWxLogin
+{
+    string  userid = 1; //用户id
+    ErrCode error  = 2; //错误码
+}
+
+// 登出
+message SLoginOut
+{
+    int32 rtype = 1 ;//1别处登录,2停服
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package pb;
+
+// 玩家的详细数据
+message UserData
+{
+    string userid    = 1;//用户id
+    string nickName  = 2;//昵称
+    string avatarUrl = 3;//头像
+    int32  gender    = 4;//性别
+}

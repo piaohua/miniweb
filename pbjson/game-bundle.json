@@ -1,0 +1,125 @@
+{
+  "nested": {
+    "pb": {
+      "nested": {
+        "CWxLogin": {
+          "fields": {
+            "withCredentials": {
+              "type": "bool",
+              "id": 1
+            },
+            "rawData": {
+              "type": "string",
+              "id": 2
+            },
+            "signature": {
+              "type": "string",
+              "id": 3
+            },
+            "encryptedData": {
+              "type": "string",
+              "id": 4
+            },
+            "iv": {
+              "type": "string",
+              "id": 5
+            }
+          }
+        },
+        "SWxLogin": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "SLoginOut": {
+          "fields": {
+            "rtype": {
+              "type": "int32",
+              "id": 1
+            }
+          }
+        },
+        "ErrCode": {
+          "values": {
+            "OK": 0,
+            "RegistFaild": 1,
+            "LoginFaild": 2
+          }
+        },
+        "CPing": {
+          "fields": {
+            "time": {
+              "type": "int64",
+              "id": 1
+            }
+          }
+        },
+        "SPing": {
+          "fields": {
+            "time": {
+              "type": "int64",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CUserData": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "SUserData": {
+          "fields": {
+            "data": {
+              "type": "UserData",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "UserData": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            },
+            "nickName": {
+              "type": "string",
+              "id": 2
+            },
+            "avatarUrl": {
+              "type": "string",
+              "id": 3
+            },
+            "gender": {
+              "type": "int32",
+              "id": 4
+            }
+          }
+        },
+        "LogType": {
+          "values": {
+            "LOG_TYPE0": 0,
+            "LOG_TYPE1": 1
+          }
+        }
+      }
+    }
+  }
+}

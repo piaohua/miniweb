@@ -1,0 +1,32 @@
+syntax = "proto3";
+package pb;
+//import "github.com/AsynkronIT/protoactor-go/actor/protos.proto";
+
+//节点行为操作
+
+//启动服务
+message ServeStart {
+    string Message = 1;
+}
+
+message ServeStarted {
+    string Message = 1;
+}
+
+//停止服务
+message ServeStop {
+    string Message = 1;
+}
+
+message ServeStoped {
+    string Message = 1;
+}
+
+//关闭服务
+message ServeClose {
+    string Message = 1;
+}
+
+//时钟嘀嗒
+message Tick {
+}
