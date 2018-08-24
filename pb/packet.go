@@ -13,15 +13,21 @@ func Packet(msg interface{}) (uint32, uint32, []byte, error) {
 	case *SWxLogin:
 		b, err := msg.(*SWxLogin).Marshal()
 		return 1501, 0, b, err
+	case *SLogin:
+		b, err := msg.(*SLogin).Marshal()
+		return 1502, 0, b, err
 	case *SLoginOut:
 		b, err := msg.(*SLoginOut).Marshal()
-		return 1502, 0, b, err
+		return 1503, 0, b, err
 	case *SUserData:
 		b, err := msg.(*SUserData).Marshal()
-		return 1503, 0, b, err
+		return 1504, 0, b, err
+	case *SGameData:
+		b, err := msg.(*SGameData).Marshal()
+		return 1505, 0, b, err
 	case *SPing:
 		b, err := msg.(*SPing).Marshal()
-		return 1504, 0, b, err
+		return 1506, 0, b, err
 	default:
 		return 0, 0, []byte{}, errors.New("unknown message")
 	}

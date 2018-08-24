@@ -15,10 +15,18 @@ func Unpack(id uint32, b []byte) (interface{}, error) {
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1002:
-		msg := new(CUserData)
+		msg := new(CLogin)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1003:
+		msg := new(CUserData)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1004:
+		msg := new(CGameData)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1005:
 		msg := new(CPing)
 		err := msg.Unmarshal(b)
 		return msg, err

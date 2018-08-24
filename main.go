@@ -26,5 +26,8 @@ func main() {
 	dbName := beego.AppConfig.String("mdb.name")
 	models.InitMgo(dbHost, dbPort, dbUser, dbPassword, dbName)
 
+	models.GenIDChInit()
+	models.SessionChInit()
+
 	beego.Run()
 }

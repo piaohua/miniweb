@@ -43,9 +43,11 @@ var protosUnpack = map[string][]proto{
 	"game": {
 		//login
 		{code: 1001, name: "CWxLogin"},
+		{code: 1002, name: "CLogin"},
 		//user
-		{code: 1002, name: "CUserData"},
-		{code: 1003, name: "CPing"},
+		{code: 1003, name: "CUserData"},
+		{code: 1004, name: "CGameData"},
+		{code: 1005, name: "CPing"},
 	},
 }
 
@@ -54,10 +56,12 @@ var protosPacket = map[string][]proto{
 	"game": {
 		//login
 		{code: 1501, name: "SWxLogin"},
-		{code: 1502, name: "SLoginOut"},
+		{code: 1502, name: "SLogin"},
+		{code: 1503, name: "SLoginOut"},
 		//user
-		{code: 1503, name: "SUserData"},
-		{code: 1504, name: "SPing"},
+		{code: 1504, name: "SUserData"},
+		{code: 1505, name: "SGameData"},
+		{code: 1506, name: "SPing"},
 	},
 }
 

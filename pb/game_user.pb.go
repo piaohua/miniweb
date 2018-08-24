@@ -73,8 +73,9 @@ func (m *CUserData) GetUserid() string {
 }
 
 type SUserData struct {
-	Data  *UserData `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
-	Error ErrCode   `protobuf:"varint,2,opt,name=error,proto3,enum=pb.ErrCode" json:"error,omitempty"`
+	Data     *UserData   `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
+	GameInfo []*GameData `protobuf:"bytes,2,rep,name=gameInfo" json:"gameInfo,omitempty"`
+	Error    ErrCode     `protobuf:"varint,3,opt,name=error,proto3,enum=pb.ErrCode" json:"error,omitempty"`
 }
 
 func (m *SUserData) Reset()                    { *m = SUserData{} }
@@ -88,7 +89,53 @@ func (m *SUserData) GetData() *UserData {
 	return nil
 }
 
+func (m *SUserData) GetGameInfo() []*GameData {
+	if m != nil {
+		return m.GameInfo
+	}
+	return nil
+}
+
 func (m *SUserData) GetError() ErrCode {
+	if m != nil {
+		return m.Error
+	}
+	return OK
+}
+
+// 玩家的数据
+type CGameData struct {
+	GameInfo *GameData `protobuf:"bytes,1,opt,name=gameInfo" json:"gameInfo,omitempty"`
+}
+
+func (m *CGameData) Reset()                    { *m = CGameData{} }
+func (*CGameData) ProtoMessage()               {}
+func (*CGameData) Descriptor() ([]byte, []int) { return fileDescriptorGameUser, []int{4} }
+
+func (m *CGameData) GetGameInfo() *GameData {
+	if m != nil {
+		return m.GameInfo
+	}
+	return nil
+}
+
+type SGameData struct {
+	NextInfo *GameData `protobuf:"bytes,1,opt,name=nextInfo" json:"nextInfo,omitempty"`
+	Error    ErrCode   `protobuf:"varint,2,opt,name=error,proto3,enum=pb.ErrCode" json:"error,omitempty"`
+}
+
+func (m *SGameData) Reset()                    { *m = SGameData{} }
+func (*SGameData) ProtoMessage()               {}
+func (*SGameData) Descriptor() ([]byte, []int) { return fileDescriptorGameUser, []int{5} }
+
+func (m *SGameData) GetNextInfo() *GameData {
+	if m != nil {
+		return m.NextInfo
+	}
+	return nil
+}
+
+func (m *SGameData) GetError() ErrCode {
 	if m != nil {
 		return m.Error
 	}
@@ -100,6 +147,8 @@ func init() {
 	proto.RegisterType((*SPing)(nil), "pb.SPing")
 	proto.RegisterType((*CUserData)(nil), "pb.CUserData")
 	proto.RegisterType((*SUserData)(nil), "pb.SUserData")
+	proto.RegisterType((*CGameData)(nil), "pb.CGameData")
+	proto.RegisterType((*SGameData)(nil), "pb.SGameData")
 }
 func (this *CPing) Equal(that interface{}) bool {
 	if that == nil {
@@ -198,6 +247,65 @@ func (this *SUserData) Equal(that interface{}) bool {
 	if !this.Data.Equal(that1.Data) {
 		return false
 	}
+	if len(this.GameInfo) != len(that1.GameInfo) {
+		return false
+	}
+	for i := range this.GameInfo {
+		if !this.GameInfo[i].Equal(that1.GameInfo[i]) {
+			return false
+		}
+	}
+	if this.Error != that1.Error {
+		return false
+	}
+	return true
+}
+func (this *CGameData) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*CGameData)
+	if !ok {
+		that2, ok := that.(CGameData)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.GameInfo.Equal(that1.GameInfo) {
+		return false
+	}
+	return true
+}
+func (this *SGameData) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*SGameData)
+	if !ok {
+		that2, ok := that.(SGameData)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.NextInfo.Equal(that1.NextInfo) {
+		return false
+	}
 	if this.Error != that1.Error {
 		return false
 	}
@@ -238,10 +346,38 @@ func (this *SUserData) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := make([]string, 0, 6)
+	s := make([]string, 0, 7)
 	s = append(s, "&pb.SUserData{")
 	if this.Data != nil {
 		s = append(s, "Data: "+fmt.Sprintf("%#v", this.Data)+",\n")
+	}
+	if this.GameInfo != nil {
+		s = append(s, "GameInfo: "+fmt.Sprintf("%#v", this.GameInfo)+",\n")
+	}
+	s = append(s, "Error: "+fmt.Sprintf("%#v", this.Error)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *CGameData) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&pb.CGameData{")
+	if this.GameInfo != nil {
+		s = append(s, "GameInfo: "+fmt.Sprintf("%#v", this.GameInfo)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *SGameData) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&pb.SGameData{")
+	if this.NextInfo != nil {
+		s = append(s, "NextInfo: "+fmt.Sprintf("%#v", this.NextInfo)+",\n")
 	}
 	s = append(s, "Error: "+fmt.Sprintf("%#v", this.Error)+",\n")
 	s = append(s, "}")
@@ -355,6 +491,79 @@ func (m *SUserData) MarshalTo(dAtA []byte) (int, error) {
 		}
 		i += n1
 	}
+	if len(m.GameInfo) > 0 {
+		for _, msg := range m.GameInfo {
+			dAtA[i] = 0x12
+			i++
+			i = encodeVarintGameUser(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Error != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGameUser(dAtA, i, uint64(m.Error))
+	}
+	return i, nil
+}
+
+func (m *CGameData) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CGameData) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.GameInfo != nil {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintGameUser(dAtA, i, uint64(m.GameInfo.Size()))
+		n2, err := m.GameInfo.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n2
+	}
+	return i, nil
+}
+
+func (m *SGameData) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SGameData) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.NextInfo != nil {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintGameUser(dAtA, i, uint64(m.NextInfo.Size()))
+		n3, err := m.NextInfo.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n3
+	}
 	if m.Error != 0 {
 		dAtA[i] = 0x10
 		i++
@@ -408,6 +617,35 @@ func (m *SUserData) Size() (n int) {
 	_ = l
 	if m.Data != nil {
 		l = m.Data.Size()
+		n += 1 + l + sovGameUser(uint64(l))
+	}
+	if len(m.GameInfo) > 0 {
+		for _, e := range m.GameInfo {
+			l = e.Size()
+			n += 1 + l + sovGameUser(uint64(l))
+		}
+	}
+	if m.Error != 0 {
+		n += 1 + sovGameUser(uint64(m.Error))
+	}
+	return n
+}
+
+func (m *CGameData) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameInfo != nil {
+		l = m.GameInfo.Size()
+		n += 1 + l + sovGameUser(uint64(l))
+	}
+	return n
+}
+
+func (m *SGameData) Size() (n int) {
+	var l int
+	_ = l
+	if m.NextInfo != nil {
+		l = m.NextInfo.Size()
 		n += 1 + l + sovGameUser(uint64(l))
 	}
 	if m.Error != 0 {
@@ -466,6 +704,28 @@ func (this *SUserData) String() string {
 	}
 	s := strings.Join([]string{`&SUserData{`,
 		`Data:` + strings.Replace(fmt.Sprintf("%v", this.Data), "UserData", "UserData", 1) + `,`,
+		`GameInfo:` + strings.Replace(fmt.Sprintf("%v", this.GameInfo), "GameData", "GameData", 1) + `,`,
+		`Error:` + fmt.Sprintf("%v", this.Error) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *CGameData) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&CGameData{`,
+		`GameInfo:` + strings.Replace(fmt.Sprintf("%v", this.GameInfo), "GameData", "GameData", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *SGameData) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&SGameData{`,
+		`NextInfo:` + strings.Replace(fmt.Sprintf("%v", this.NextInfo), "GameData", "GameData", 1) + `,`,
 		`Error:` + fmt.Sprintf("%v", this.Error) + `,`,
 		`}`,
 	}, "")
@@ -778,6 +1038,222 @@ func (m *SUserData) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx = postIndex
 		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameInfo", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGameUser
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGameUser
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GameInfo = append(m.GameInfo, &GameData{})
+			if err := m.GameInfo[len(m.GameInfo)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
+			}
+			m.Error = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGameUser
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Error |= (ErrCode(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGameUser(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGameUser
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CGameData) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGameUser
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CGameData: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CGameData: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameInfo", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGameUser
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGameUser
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.GameInfo == nil {
+				m.GameInfo = &GameData{}
+			}
+			if err := m.GameInfo.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGameUser(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGameUser
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SGameData) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGameUser
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SGameData: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SGameData: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NextInfo", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGameUser
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGameUser
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.NextInfo == nil {
+				m.NextInfo = &GameData{}
+			}
+			if err := m.NextInfo.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
 			}
@@ -925,7 +1401,7 @@ var (
 func init() { proto.RegisterFile("game_user.proto", fileDescriptorGameUser) }
 
 var fileDescriptorGameUser = []byte{
-	// 236 bytes of a gzipped FileDescriptorProto
+	// 294 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4f, 0x4f, 0xcc, 0x4d,
 	0x8d, 0x2f, 0x2d, 0x4e, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x92,
 	0x82, 0x08, 0x26, 0xe7, 0xa7, 0xa4, 0x42, 0x04, 0xa5, 0xf8, 0xc0, 0x02, 0x05, 0xa5, 0x49, 0x10,
@@ -934,11 +1410,15 @@ var fileDescriptorGameUser = []byte{
 	0x4b, 0x52, 0x48, 0x91, 0x8b, 0x35, 0xb5, 0xa8, 0x28, 0xbf, 0x48, 0x82, 0x49, 0x81, 0x51, 0x83,
 	0xcf, 0x88, 0x5b, 0xaf, 0x20, 0x49, 0xcf, 0xb5, 0xa8, 0xc8, 0x39, 0x3f, 0x25, 0x35, 0x08, 0x22,
 	0xa3, 0xa4, 0xcc, 0xc5, 0xe9, 0x1c, 0x5a, 0x9c, 0x5a, 0xe4, 0x92, 0x58, 0x92, 0x28, 0x24, 0xc6,
-	0xc5, 0x06, 0x72, 0x5c, 0x66, 0x0a, 0xd8, 0x14, 0xce, 0x20, 0x28, 0x4f, 0x29, 0x80, 0x8b, 0x33,
+	0xc5, 0x06, 0x72, 0x5c, 0x66, 0x0a, 0xd8, 0x14, 0xce, 0x20, 0x28, 0x4f, 0xa9, 0x8a, 0x8b, 0x33,
 	0x18, 0xae, 0x48, 0x81, 0x8b, 0x25, 0x25, 0xb1, 0x24, 0x11, 0xac, 0x84, 0xdb, 0x88, 0x07, 0x64,
-	0x26, 0x4c, 0x2e, 0x08, 0x2c, 0x43, 0x84, 0xb5, 0x4e, 0x3a, 0x17, 0x1e, 0xca, 0x31, 0xdc, 0x78,
-	0x28, 0xc7, 0xf0, 0xe1, 0xa1, 0x1c, 0x63, 0xc3, 0x23, 0x39, 0xc6, 0x15, 0x8f, 0xe4, 0x18, 0x4f,
-	0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x17, 0x8f, 0xe4, 0x18,
-	0x3e, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0x21, 0x89, 0x0d, 0x1c, 0x10, 0xc6, 0x80, 0x00,
-	0x00, 0x00, 0xff, 0xff, 0x73, 0x78, 0xb6, 0x6a, 0x40, 0x01, 0x00, 0x00,
+	0x26, 0x4c, 0x2e, 0x08, 0x2c, 0x23, 0xa4, 0xc1, 0xc5, 0x01, 0xf2, 0x82, 0x67, 0x5e, 0x5a, 0xbe,
+	0x04, 0x93, 0x02, 0x33, 0x4c, 0x95, 0x7b, 0x62, 0x6e, 0x2a, 0x58, 0x15, 0x5c, 0x16, 0xe1, 0x40,
+	0x66, 0x9c, 0x0e, 0x34, 0xe5, 0xe2, 0x74, 0x86, 0xe9, 0x44, 0x31, 0x19, 0xc9, 0x7e, 0x4c, 0x93,
+	0x95, 0x22, 0xb8, 0x38, 0x83, 0x91, 0xb5, 0xe5, 0xa5, 0x56, 0x94, 0xe0, 0xd6, 0x06, 0x93, 0x25,
+	0x22, 0xc4, 0x9c, 0x74, 0x2e, 0x3c, 0x94, 0x63, 0xb8, 0xf1, 0x50, 0x8e, 0xe1, 0xc3, 0x43, 0x39,
+	0xc6, 0x86, 0x47, 0x72, 0x8c, 0x2b, 0x1e, 0xc9, 0x31, 0x9e, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91,
+	0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x2f, 0x1e, 0xc9, 0x31, 0x7c, 0x78, 0x24, 0xc7, 0x38, 0xe1,
+	0xb1, 0x1c, 0x43, 0x12, 0x1b, 0x38, 0x0e, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x41, 0x6a,
+	0x38, 0xf1, 0xfb, 0x01, 0x00, 0x00,
 }

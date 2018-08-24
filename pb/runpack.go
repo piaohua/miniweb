@@ -15,14 +15,22 @@ func Runpack(id uint32, b []byte) (interface{}, error) {
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1502:
-		msg := new(SLoginOut)
+		msg := new(SLogin)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1503:
-		msg := new(SUserData)
+		msg := new(SLoginOut)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1504:
+		msg := new(SUserData)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1505:
+		msg := new(SGameData)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1506:
 		msg := new(SPing)
 		err := msg.Unmarshal(b)
 		return msg, err

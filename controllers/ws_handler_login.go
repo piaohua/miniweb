@@ -17,6 +17,9 @@ func (ws *WSConn) handlerLogin(msg interface{}, ctx actor.Context) {
 	case *pb.CWxLogin:
 		beego.Debug("CWxLogin ", arg)
 		ws.wxlogin(arg, ctx)
+	case *pb.CLogin:
+		beego.Debug("CLogin ", arg)
+		ws.login(arg, ctx)
 	case proto.Message:
 		//响应
 		if ws.online {
@@ -45,6 +48,12 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 			AvatarUrl: ws.user.AvatarUrl,
 			Gender:    ws.user.Gender,
 		}
+		ws.Send(s2c)
+	case *pb.CGameData:
+		beego.Debug("CGameData ", arg)
+		s2c := new(pb.SGameData)
+		s2c.NextInfo = arg.GetGameInfo()
+		s2c.NextInfo.Gate++
 		ws.Send(s2c)
 	case proto.Message:
 		//响应
@@ -92,4 +101,33 @@ func (ws *WSConn) logined(userid string, isRegist bool,
 	ws.online = true
 	//成功
 	ctx.SetReceiveTimeout(0) //login Successfully, timeout off
+}
+
+//普通登录验证
+func (ws *WSConn) login(arg *pb.CLogin, ctx actor.Context) {
+	s2c := new(pb.SLogin)
+	if models.RunMode() {
+		beego.Error("login runmode")
+		s2c.Error = pb.LoginFaild
+		ws.Send(s2c)
+		return
+	}
+	user, err := models.VerifyUserLogin(arg, ws.session)
+	beego.Info("login user: ", user)
+	if err != nil {
+		beego.Error("login err: ", err)
+		s2c.Error = pb.LoginFaild
+		ws.Send(s2c)
+		return
+	}
+	if user == nil {
+		s2c.Error = pb.LoginFaild
+		ws.Send(s2c)
+		return
+	}
+	ws.user = user
+	s2c.Userid = user.ID
+	ws.Send(s2c)
+	//成功后处理
+	ws.logined(user.ID, false, ctx)
 }

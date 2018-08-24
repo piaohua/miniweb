@@ -1,11 +1,21 @@
 syntax = "proto3";
 package pb;
+import "game_type.proto";
 
-// 玩家的详细数据
+// 玩家的基础数据
 message UserData
 {
     string userid    = 1;//用户id
     string nickName  = 2;//昵称
     string avatarUrl = 3;//头像
     int32  gender    = 4;//性别
+}
+
+// 玩家的游戏数据
+message GameData
+{
+    GameType type  = 1;//类型
+    int32 gate  = 2;//关卡
+    int32 times = 3;//次数
+    bytes data  = 4;//数据
 }

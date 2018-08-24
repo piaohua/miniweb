@@ -24,8 +24,8 @@ type WeiXin struct {
 }
 
 func init() {
-	appid := beego.AppConfig.String("appid")
-	secret := beego.AppConfig.String("secret")
+	appid := beego.AppConfig.String("wx.appid")
+	secret := beego.AppConfig.String("wx.secret")
 	WX = &WeiXin{
 		Appid:  appid,
 		Secret: secret,

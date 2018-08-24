@@ -1,6 +1,7 @@
 syntax = "proto3";
 package pb;
 import "game_code.proto";
+import "game_type.proto";
 
 // 微信登录登陆:https://developers.weixin.qq.com/miniprogram/dev/api/open.html#wxgetuserinfoobject
 message CWxLogin
@@ -21,5 +22,18 @@ message SWxLogin
 // 登出
 message SLoginOut
 {
-    int32 rtype = 1 ;//1别处登录,2停服
+    OutType type = 1 ;//类型
+}
+
+// 普通登录(test)
+message CLogin
+{
+    string signature = 1; //
+    int64  timestamp = 2; //
+}
+
+message SLogin
+{
+    string  userid = 1; //用户id
+    ErrCode error  = 2; //错误码
 }

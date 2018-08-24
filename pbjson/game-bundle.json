@@ -40,9 +40,33 @@
         },
         "SLoginOut": {
           "fields": {
-            "rtype": {
-              "type": "int32",
+            "type": {
+              "type": "OutType",
               "id": 1
+            }
+          }
+        },
+        "CLogin": {
+          "fields": {
+            "signature": {
+              "type": "string",
+              "id": 1
+            },
+            "timestamp": {
+              "type": "int64",
+              "id": 2
+            }
+          }
+        },
+        "SLogin": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
             }
           }
         },
@@ -51,6 +75,27 @@
             "OK": 0,
             "RegistFaild": 1,
             "LoginFaild": 2
+          }
+        },
+        "LogType": {
+          "values": {
+            "LOG_TYPE0": 0,
+            "LOG_TYPE1": 1
+          }
+        },
+        "GameType": {
+          "values": {
+            "GAME_TYPE0": 0,
+            "GAME_TYPE1": 1,
+            "GAME_TYPE2": 2,
+            "GAME_TYPE3": 3
+          }
+        },
+        "OutType": {
+          "values": {
+            "OUT_TYPE0": 0,
+            "OUT_TYPE1": 1,
+            "OUT_TYPE2": 2
           }
         },
         "CPing": {
@@ -87,6 +132,31 @@
               "type": "UserData",
               "id": 1
             },
+            "gameInfo": {
+              "rule": "repeated",
+              "type": "GameData",
+              "id": 2
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 3
+            }
+          }
+        },
+        "CGameData": {
+          "fields": {
+            "gameInfo": {
+              "type": "GameData",
+              "id": 1
+            }
+          }
+        },
+        "SGameData": {
+          "fields": {
+            "nextInfo": {
+              "type": "GameData",
+              "id": 1
+            },
             "error": {
               "type": "ErrCode",
               "id": 2
@@ -113,10 +183,24 @@
             }
           }
         },
-        "LogType": {
-          "values": {
-            "LOG_TYPE0": 0,
-            "LOG_TYPE1": 1
+        "GameData": {
+          "fields": {
+            "type": {
+              "type": "GameType",
+              "id": 1
+            },
+            "gate": {
+              "type": "int32",
+              "id": 2
+            },
+            "times": {
+              "type": "int32",
+              "id": 3
+            },
+            "data": {
+              "type": "bytes",
+              "id": 4
+            }
           }
         }
       }

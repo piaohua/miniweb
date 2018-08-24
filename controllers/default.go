@@ -35,13 +35,28 @@ func (this *MainController) Code() {
 		this.Redirect("/", 302)
 		return
 	}
-	beego.Info("join jscode: " + jscode)
+	beego.Info("get session by jscode: " + jscode)
 
-	wsaddr := beego.AppConfig.String("ws.addr")
-	this.Data["json"] = &models.SessionResult{
-		Session: "3rd_session",
-		WsAddr:  wsaddr + "3rd_session",
+	if models.RunMode() {
+		this.Redirect("/", 302)
+		return
 	}
+
+	//test TODO 控制频率
+	session, err := models.GetSessionByCode(jscode)
+	wsaddr := beego.AppConfig.String("ws.addr")
+
+	jsonData := &models.SessionResult{
+		Session: session,
+		WsAddr:  wsaddr + session,
+	}
+	if err != nil {
+		jsonData.WxErr = models.WxErr{
+			ErrCode: 1,
+			ErrMsg:  err.Error(),
+		}
+	}
+	this.Data["json"] = jsonData
 	this.ServeJSON()
 }
 

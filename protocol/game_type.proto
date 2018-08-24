@@ -6,3 +6,18 @@ enum LogType {
     LOG_TYPE0  =  0;//无
     LOG_TYPE1  =  1;//注册赠送
 }
+
+//游戏类型
+enum GameType {
+    GAME_TYPE0  =  0;//无
+    GAME_TYPE1  =  1;//
+    GAME_TYPE2  =  2;//
+    GAME_TYPE3  =  3;//
+}
+
+//登出类型
+enum OutType {
+    OUT_TYPE0  =  0;//无
+    OUT_TYPE1  =  1;//别处登录
+    OUT_TYPE2  =  2;//停服
+}
