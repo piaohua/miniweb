@@ -39,9 +39,12 @@ func genSession() {
 			beego.Error("genSession len err")
 			break
 		}
-		if HasSession(session) {
+		if Cache.IsExist(session) {
 			continue
 		}
+		//if HasSession(session) {
+		//	continue
+		//}
 		sessionCh <- session
 	}
 }

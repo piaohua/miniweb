@@ -34,9 +34,12 @@ func genID() {
 			beego.Error("genID len err")
 			break
 		}
-		if HasID(id) {
+		if Cache.IsExist(id) {
 			continue
 		}
+		//if HasID(id) {
+		//	continue
+		//}
 		genidCh <- id
 	}
 }

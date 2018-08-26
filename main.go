@@ -18,6 +18,16 @@ func main() {
 	// Register template functions.
 	beego.AddFuncMap("i18n", i18n.Tr)
 
+	//log file config
+	beego.AppConfig.Set("version", APP_VER)
+	if models.RunMode() {
+		beego.SetLevel(beego.LevelInformational)
+		beego.SetLogger("file", `{"filename":"`+beego.AppConfig.String("log_file")+`"}`)
+		beego.BeeLogger.DelLogger("console")
+	} else {
+		beego.SetLevel(beego.LevelDebug)
+	}
+
 	//mongodb init
 	dbHost := beego.AppConfig.String("mdb.host")
 	dbPort := beego.AppConfig.String("mdb.port")
@@ -26,8 +36,12 @@ func main() {
 	dbName := beego.AppConfig.String("mdb.name")
 	models.InitMgo(dbHost, dbPort, dbUser, dbPassword, dbName)
 
+	//var init
 	models.GenIDChInit()
 	models.SessionChInit()
+	//models.HealthCheck()
+	//models.RunStatics()
+	//models.RunTask()
 
 	beego.Run()
 }

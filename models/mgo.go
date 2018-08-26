@@ -260,6 +260,12 @@ func CheckMongoSessionLost() {
 	}
 }
 
+// 检查mognodb是否lost connection
+func isConnected() bool {
+	err := Session.Ping()
+	return err == nil
+}
+
 //计时器
 func ticker() {
 	mgoCloseCh = make(chan bool, 1)
