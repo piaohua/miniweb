@@ -4,10 +4,5 @@
 	1004:{type:"room",		sendType:"pb.CUserData",		revType:"pb.SUserData",		},
 	1005:{type:"room",		sendType:"pb.CGameData",		revType:"pb.SGameData",		},
 	1006:{type:"room",		sendType:"pb.CPing",		revType:"pb.SPing",		},
-	1001:{type:"room",		sendType:"pb.CWxLogin",		revType:"pb.SWxLogin",		},
-	1002:{type:"room",		sendType:"pb.CLogin",		revType:"pb.SLogin",		},
 	1003:{type:"room",		sendType:"",		revType:"pb.SLoginOut",		},
-	1004:{type:"room",		sendType:"pb.CUserData",		revType:"pb.SUserData",		},
-	1005:{type:"room",		sendType:"pb.CGameData",		revType:"pb.SGameData",		},
-	1006:{type:"room",		sendType:"pb.CPing",		revType:"pb.SPing",		}
 }

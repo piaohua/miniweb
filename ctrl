@@ -131,7 +131,7 @@ protojson() {
     mv ../tool/*.json ../pbjson/
     #
     cd ../
-    #zip -r pbjson.zip pbjson/
+    zip -r pbjson.zip pbjson/
 }
 
 build() {

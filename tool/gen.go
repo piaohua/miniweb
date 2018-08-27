@@ -371,6 +371,7 @@ func genjsMsgID(prefix string) {
 func genjsonMsgID(prefix string) {
 	var str string
 	str += fmt.Sprintf("{")
+	m := make(map[uint32]bool) //协议id不唯一时去重
 	//每条协议id唯一
 	for k, v := range protoUnpack { //响应
 		rsp := ""
@@ -385,11 +386,15 @@ func genjsonMsgID(prefix string) {
 		} else {
 			str += fmt.Sprintf("\n\t%d:{type:\"room\",\t\tsendType:\"pb.%s\",\t\trevType:\"pb.%s\",\t\t},", v, k, rsp)
 		}
+		m[v] = true
 	}
 	//
 	length := len(protoPacket)
 	var i int
 	for k, v := range protoPacket { //响应
+		if _, ok := m[v]; ok {
+			continue
+		}
 		rsp := ""
 		for k2, v2 := range protoUnpack { //请求
 			if v == v2 {
@@ -469,6 +474,7 @@ func genjsMsgID2(prefix string, ps, unps []proto) {
 func genjsonMsgID2(prefix string, ps, unps []proto) {
 	var str string
 	str += fmt.Sprintf("{")
+	m := make(map[uint32]bool) //协议id不唯一时去重
 	//每条协议id唯一
 	for _, v := range unps { //响应
 		rsp := ""
@@ -483,11 +489,15 @@ func genjsonMsgID2(prefix string, ps, unps []proto) {
 		} else {
 			str += fmt.Sprintf("\n\t%d:{type:\"room\",\t\tsendType:\"pb.%s\",\t\trevType:\"pb.%s\",\t\t},", v.code, v.name, rsp)
 		}
+		m[v.code] = true
 	}
 	//
 	length := len(ps)
 	var i int
 	for _, v := range ps { //响应
+		if _, ok := m[v.code]; ok {
+			continue
+		}
 		rsp := ""
 		for _, v2 := range unps { //请求
 			if v.code == v2.code {
