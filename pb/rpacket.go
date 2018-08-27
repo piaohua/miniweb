@@ -18,13 +18,13 @@ func Rpacket(msg interface{}) (uint32, []byte, error) {
 		return 1002, b, err
 	case *CUserData:
 		b, err := msg.(*CUserData).Marshal()
-		return 1003, b, err
+		return 1004, b, err
 	case *CGameData:
 		b, err := msg.(*CGameData).Marshal()
-		return 1004, b, err
+		return 1005, b, err
 	case *CPing:
 		b, err := msg.(*CPing).Marshal()
-		return 1005, b, err
+		return 1006, b, err
 	default:
 		return 0, []byte{}, errors.New("unknown message")
 	}

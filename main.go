@@ -26,6 +26,7 @@ func main() {
 		beego.BeeLogger.DelLogger("console")
 	} else {
 		beego.SetLevel(beego.LevelDebug)
+		beego.SetLogger("file", `{"filename":"`+beego.AppConfig.String("log_file")+`"}`)
 	}
 
 	//mongodb init

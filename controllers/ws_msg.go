@@ -56,11 +56,13 @@ func pack(code, sid uint32, msg []byte) []byte {
 	return append(append(encodeUint32(code), byte(sid)), msg...)
 }
 
+//Big Endian encode
 func encodeUint32(i uint32) (b []byte) {
 	b = append(b, byte(i>>24), byte(i>>16), byte(i>>8), byte(i))
 	return
 }
 
+//Big Endian decode
 func decodeUint32(b []byte) (i uint32) {
 	i = uint32(b[0])<<24 | uint32(b[1])<<16 | uint32(b[2])<<8 | uint32(b[3])
 	return

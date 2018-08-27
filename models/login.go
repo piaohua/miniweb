@@ -157,7 +157,7 @@ func VerifyUserLogin(arg *pb.CLogin, session string) (*User, error) {
 	if sign != arg.GetSignature() {
 		return nil, errors.New("sign failed")
 	}
-	if (time.Now().Unix() - arg.GetTimestamp()) < 10 {
+	if (time.Now().Unix() - arg.GetTimestamp()) > 10 {
 		return nil, errors.New("session expire")
 	}
 	return user, nil

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"time"
+
 	"miniweb/models"
 	"miniweb/pb"
 
@@ -13,7 +15,7 @@ import (
 func (ws *WSConn) handlerLogin(msg interface{}, ctx actor.Context) {
 	switch arg := msg.(type) {
 	case *pb.CPing:
-		ws.Send(&pb.SPing{Time: arg.GetTime()})
+		ws.Send(&pb.SPing{Time: time.Now().Unix()})
 	case *pb.CWxLogin:
 		beego.Debug("CWxLogin ", arg)
 		ws.wxlogin(arg, ctx)

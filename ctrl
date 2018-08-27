@@ -203,8 +203,9 @@ start() {
         # $2 as -node="1"
         #ulimit -HSn 65535
         ulimit -HSn 1024
-        logFile=`get_logfile $1 $2`
-        ${binFile} $2 -log_dir="logs" -stderrthreshold="DEBUG" >& ${logFile} &
+        #logFile=`get_logfile $1 $2`
+        #${binFile} $2 -log_dir="logs" -stderrthreshold="DEBUG" >& ${logFile} &
+        ${binFile} >& error.log 2>&1 &
         echo $! > ${pidFile}
         pid=`cat ${pidFile}`
         save_log "${binFile} started ${pid} ... "

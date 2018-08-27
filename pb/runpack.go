@@ -10,27 +10,27 @@ import (
 //Runpack 解包消息
 func Runpack(id uint32, b []byte) (interface{}, error) {
 	switch id {
-	case 1501:
+	case 1001:
 		msg := new(SWxLogin)
 		err := msg.Unmarshal(b)
 		return msg, err
-	case 1502:
+	case 1002:
 		msg := new(SLogin)
 		err := msg.Unmarshal(b)
 		return msg, err
-	case 1503:
+	case 1003:
 		msg := new(SLoginOut)
 		err := msg.Unmarshal(b)
 		return msg, err
-	case 1504:
+	case 1004:
 		msg := new(SUserData)
 		err := msg.Unmarshal(b)
 		return msg, err
-	case 1505:
+	case 1005:
 		msg := new(SGameData)
 		err := msg.Unmarshal(b)
 		return msg, err
-	case 1506:
+	case 1006:
 		msg := new(SPing)
 		err := msg.Unmarshal(b)
 		return msg, err

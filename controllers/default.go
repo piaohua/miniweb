@@ -87,6 +87,15 @@ type baseController struct {
 // Prepare implemented Prepare() method for baseController.
 // It's used for language option check and setting.
 func (this *baseController) Prepare() {
+	// Set config
+	this.Ctx.Output.Header("X-Powered-By", "miniweb/"+beego.AppConfig.String("version"))
+	this.Ctx.Output.Header("X-Author-By", "piaohua")
+	// Set header
+	if origin := this.Ctx.Request.Header.Get("Origin"); origin != "" {
+		this.Ctx.Request.Header.Set("Access-Control-Allow-Origin", "*")
+		this.Ctx.Request.Header.Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		this.Ctx.Request.Header.Set("Access-Control-Allow-Headers", "*")
+	}
 	// Reset language option.
 	this.Lang = "" // This field is from i18n.Locale.
 
