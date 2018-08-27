@@ -1,3 +1,11 @@
+/**********************************************************
+ * Author        : piaohua
+ * Email         : 814004090@qq.com
+ * Last modified : 2018-08-25 21:26:30
+ * Filename      : user.go
+ * Description   : 玩家数据
+ * *******************************************************/
+
 package models
 
 import (

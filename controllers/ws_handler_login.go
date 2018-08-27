@@ -1,3 +1,11 @@
+/**********************************************************
+ * Author        : piaohua
+ * Email         : 814004090@qq.com
+ * Last modified : 2018-08-27 21:36:19
+ * Filename      : ws_hander_login.go
+ * Description   : login handler
+ * *******************************************************/
+
 package controllers
 
 import (

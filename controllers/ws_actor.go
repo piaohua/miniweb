@@ -1,3 +1,11 @@
+/**********************************************************
+ * Author        : piaohua
+ * Email         : 814004090@qq.com
+ * Last modified : 2018-08-24 12:17:20
+ * Filename      : ws_actor.go
+ * Description   : ws actor
+ * *******************************************************/
+
 package controllers
 
 import (

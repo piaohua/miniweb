@@ -1,6 +1,16 @@
+/**********************************************************
+ * Author        : piaohua
+ * Email         : 814004090@qq.com
+ * Last modified : 2018-08-24 11:18:20
+ * Filename      : ws_msg.go
+ * Description   : ws msg
+ * *******************************************************/
+
 package controllers
 
 import (
+	"encoding/binary"
+
 	"miniweb/pb"
 
 	"github.com/astaxie/beego"
@@ -56,14 +66,15 @@ func pack(code, sid uint32, msg []byte) []byte {
 	return append(append(encodeUint32(code), byte(sid)), msg...)
 }
 
-//Big Endian encode
+//little Endian encode
 func encodeUint32(i uint32) (b []byte) {
-	b = append(b, byte(i>>24), byte(i>>16), byte(i>>8), byte(i))
+	b = make([]byte, 4)
+	binary.LittleEndian.PutUint32(b, i)
 	return
 }
 
-//Big Endian decode
+//little Endian decode
 func decodeUint32(b []byte) (i uint32) {
-	i = uint32(b[0])<<24 | uint32(b[1])<<16 | uint32(b[2])<<8 | uint32(b[3])
+	i = binary.LittleEndian.Uint32(b)
 	return
 }

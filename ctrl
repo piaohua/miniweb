@@ -293,6 +293,24 @@ bee() {
     ${GOPATH}/bin/bee.exe run
 }
 
+svnact() {
+    cp -f main.go ../server
+    cp -f ./controllers/*.go ../server/controllers/
+    cp -f ./libs/*.go ../server/libs/
+    cp -f ./models/*.go ../server/models/
+    cp -f ./pb/*.go ../server/pb/
+    cp -f ./pbjson/* ../server/pbjson/
+    cp -f ./protocol/*.proto ../server/protocol/
+    cp -f ./routers/*.go ../server/routers/
+    cd ../server
+    echo "svn status ."
+    svn status .
+    echo "svn commit -m ."
+    svn commit -m "update" .
+    echo "svn status ."
+    svn status .
+}
+
 case $1 in
     build)
         build $2 $3;;
@@ -314,6 +332,8 @@ case $1 in
         proto;;
     protojson)
         protojson;;
+    svn)
+        svnact;;
     *)
         usage;;
 esac

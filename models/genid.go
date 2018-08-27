@@ -1,3 +1,11 @@
+/**********************************************************
+ * Author        : piaohua
+ * Email         : 814004090@qq.com
+ * Last modified : 2018-08-25 12:26:39
+ * Filename      : genid.go
+ * Description   : 生成id
+ * *******************************************************/
+
 package models
 
 import (

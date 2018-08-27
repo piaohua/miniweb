@@ -1,3 +1,11 @@
+/**********************************************************
+ * Author        : piaohua
+ * Email         : 814004090@qq.com
+ * Last modified : 2018-08-23 10:47:22
+ * Filename      : login.go
+ * Description   : login handler
+ * *******************************************************/
+
 package models
 
 import (

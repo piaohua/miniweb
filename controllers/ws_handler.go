@@ -1,3 +1,11 @@
+/**********************************************************
+ * Author        : piaohua
+ * Email         : 814004090@qq.com
+ * Last modified : 2018-08-23 13:10:13
+ * Filename      : ws_hander.go
+ * Description   : ws actor handler
+ * *******************************************************/
+
 package controllers
 
 import (

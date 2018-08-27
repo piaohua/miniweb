@@ -1,3 +1,11 @@
+/**********************************************************
+ * Author        : piaohua
+ * Email         : 814004090@qq.com
+ * Last modified : 2018-08-25 18:36:20
+ * Filename      : session.go
+ * Description   : 生成session
+ * *******************************************************/
+
 package models
 
 import (
