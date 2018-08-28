@@ -83,12 +83,11 @@
             "LOG_TYPE1": 1
           }
         },
-        "GameType": {
+        "GateType": {
           "values": {
-            "GAME_TYPE0": 0,
-            "GAME_TYPE1": 1,
-            "GAME_TYPE2": 2,
-            "GAME_TYPE3": 3
+            "GATE_TYPE0": 0,
+            "GATE_TYPE1": 1,
+            "GATE_TYPE2": 2
           }
         },
         "OutType": {
@@ -96,6 +95,42 @@
             "OUT_TYPE0": 0,
             "OUT_TYPE1": 1,
             "OUT_TYPE2": 2
+          }
+        },
+        "PropType": {
+          "values": {
+            "PROP_TYPE0": 0,
+            "PROP_TYPE1": 1,
+            "PROP_TYPE2": 2,
+            "PROP_TYPE3": 3,
+            "PROP_TYPE4": 4,
+            "PROP_TYPE5": 5,
+            "PROP_TYPE6": 6,
+            "PROP_TYPE7": 7,
+            "PROP_TYPE8": 8,
+            "PROP_TYPE10": 10,
+            "PROP_TYPE11": 11,
+            "PROP_TYPE12": 12
+          }
+        },
+        "PayWay": {
+          "values": {
+            "PAY_WAY0": 0,
+            "PAY_WAY1": 1,
+            "PAY_WAY2": 2
+          }
+        },
+        "ShopStatus": {
+          "values": {
+            "SHOP_STATUS0": 0,
+            "SHOP_STATUS1": 1,
+            "SHOP_STATUS2": 2
+          }
+        },
+        "LoginPrizeType": {
+          "values": {
+            "LoginPrizeSelect": 0,
+            "LoginPrizeDraw": 1
           }
         },
         "CPing": {
@@ -128,38 +163,100 @@
         },
         "SUserData": {
           "fields": {
-            "data": {
+            "userInfo": {
               "type": "UserData",
               "id": 1
             },
-            "gameInfo": {
-              "rule": "repeated",
-              "type": "GameData",
+            "error": {
+              "type": "ErrCode",
               "id": 2
+            }
+          }
+        },
+        "CGateData": {
+          "fields": {}
+        },
+        "SGateData": {
+          "fields": {
+            "gateInfo": {
+              "rule": "repeated",
+              "type": "GateData",
+              "id": 1
             },
             "error": {
               "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CPropData": {
+          "fields": {}
+        },
+        "SPropData": {
+          "fields": {
+            "propInfo": {
+              "rule": "repeated",
+              "type": "PropData",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CGetCurrency": {
+          "fields": {}
+        },
+        "SGetCurrency": {
+          "fields": {
+            "coin": {
+              "type": "int64",
+              "id": 1
+            },
+            "diamond": {
+              "type": "int64",
+              "id": 2
+            },
+            "energy": {
+              "type": "int64",
               "id": 3
             }
           }
         },
-        "CGameData": {
+        "SPushCurrency": {
           "fields": {
-            "gameInfo": {
-              "type": "GameData",
+            "type": {
+              "type": "LogType",
               "id": 1
+            },
+            "coin": {
+              "type": "int64",
+              "id": 2
+            },
+            "diamond": {
+              "type": "int64",
+              "id": 3
+            },
+            "energy": {
+              "type": "int64",
+              "id": 4
             }
           }
         },
-        "SGameData": {
+        "SPushProp": {
           "fields": {
-            "nextInfo": {
-              "type": "GameData",
+            "type": {
+              "type": "LogType",
               "id": 1
             },
-            "error": {
-              "type": "ErrCode",
+            "ptype": {
+              "type": "PropType",
               "id": 2
+            },
+            "num": {
+              "type": "int32",
+              "id": 3
             }
           }
         },
@@ -180,16 +277,28 @@
             "gender": {
               "type": "int32",
               "id": 4
+            },
+            "diamond": {
+              "type": "int64",
+              "id": 5
+            },
+            "coin": {
+              "type": "int64",
+              "id": 6
+            },
+            "energy": {
+              "type": "int64",
+              "id": 7
             }
           }
         },
-        "GameData": {
+        "GateData": {
           "fields": {
             "type": {
-              "type": "GameType",
+              "type": "GateType",
               "id": 1
             },
-            "gate": {
+            "gateid": {
               "type": "int32",
               "id": 2
             },
@@ -200,6 +309,91 @@
             "data": {
               "type": "bytes",
               "id": 4
+            },
+            "stars": {
+              "type": "int32",
+              "id": 5
+            }
+          }
+        },
+        "PropData": {
+          "fields": {
+            "type": {
+              "type": "PropType",
+              "id": 1
+            },
+            "num": {
+              "type": "int32",
+              "id": 2
+            },
+            "attr": {
+              "type": "int32",
+              "id": 3
+            }
+          }
+        },
+        "Shop": {
+          "fields": {
+            "id": {
+              "type": "uint32",
+              "id": 1
+            },
+            "status": {
+              "type": "ShopStatus",
+              "id": 2
+            },
+            "type": {
+              "type": "PropType",
+              "id": 3
+            },
+            "way": {
+              "type": "PayWay",
+              "id": 4
+            },
+            "number": {
+              "type": "uint32",
+              "id": 5
+            },
+            "price": {
+              "type": "uint32",
+              "id": 6
+            },
+            "name": {
+              "type": "string",
+              "id": 7
+            },
+            "info": {
+              "type": "string",
+              "id": 8
+            }
+          }
+        },
+        "LoginPrize": {
+          "fields": {
+            "day": {
+              "type": "uint32",
+              "id": 1
+            },
+            "coin": {
+              "type": "int64",
+              "id": 2
+            },
+            "diamond": {
+              "type": "int64",
+              "id": 3
+            },
+            "status": {
+              "type": "LoginPrizeStatus",
+              "id": 4
+            }
+          },
+          "nested": {
+            "LoginPrizeStatus": {
+              "values": {
+                "LoginPrizeNone": 0,
+                "LoginPrizeDone": 1,
+                "LoginPrizeGot": 2
+              }
             }
           }
         }

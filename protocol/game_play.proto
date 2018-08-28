@@ -1,0 +1,59 @@
+syntax = "proto3";
+package pb;
+import "game_code.proto";
+import "game_pub.proto";
+import "game_type.proto";
+
+// 结算数据
+message COverData
+{
+    GateType type = 1;//类型
+    int32 gateid  = 2;//关卡id
+    int32 stars   = 3;//星数
+}
+
+message SOverData
+{
+    int32 cardInfo = 1; //卡片奖励次数信息
+    GateData nextGate = 2; //下一关卡信息
+    repeated PropData propInfo = 3; //道具奖励信息
+    ErrCode error = 4;//错误码
+}
+
+// 卡牌
+message CCard
+{
+}
+
+message SCard
+{
+    int32 leftTimes = 1; //剩余次数
+    repeated PropData propInfo = 3; //道具奖励信息
+    ErrCode error = 2;//错误码
+}
+
+// 登录奖励
+message CLoginPrize
+{
+    LoginPrizeType type  = 1;//
+    uint32  day  = 2;//0-6
+}
+
+message SLoginPrize
+{
+    LoginPrizeType type  = 1;//
+    repeated LoginPrize list = 2;//
+    ErrCode error = 3;//错误码
+}
+
+// 使用道具
+message CUseProp
+{
+    PropType ptype = 1;//类型
+}
+
+message SUseProp
+{
+    PropType ptype = 1;//类型
+    ErrCode error = 2;//错误码
+}

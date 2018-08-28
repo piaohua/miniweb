@@ -23,11 +23,43 @@ func Unpack(id uint32, b []byte) (interface{}, error) {
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1005:
-		msg := new(CGameData)
+		msg := new(CGateData)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1006:
 		msg := new(CPing)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1007:
+		msg := new(CPropData)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1008:
+		msg := new(CGetCurrency)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1011:
+		msg := new(CShop)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1012:
+		msg := new(CBuy)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1013:
+		msg := new(COverData)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1014:
+		msg := new(CCard)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1015:
+		msg := new(CLoginPrize)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1016:
+		msg := new(CUseProp)
 		err := msg.Unmarshal(b)
 		return msg, err
 	default:

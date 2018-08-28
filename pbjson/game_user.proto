@@ -2,6 +2,7 @@ syntax = "proto3";
 package pb;
 import "game_code.proto";
 import "game_pub.proto";
+import "game_type.proto";
 
 // 心跳
 message CPing
@@ -23,19 +24,57 @@ message CUserData
 
 message SUserData
 {
-    UserData data = 1;
-    repeated GameData gameInfo = 2;
-    ErrCode error = 3;//错误码
-}
-
-// 玩家的数据
-message CGameData
-{
-    GameData gameInfo = 1;
-}
-
-message SGameData
-{
-    GameData nextInfo = 1;
+    UserData userInfo = 1; //个人信息
     ErrCode error = 2;//错误码
+}
+
+// 玩家的关卡数据
+message CGateData
+{
+}
+
+message SGateData
+{
+    repeated GateData gateInfo = 1; //关卡信息
+    ErrCode error = 2;//错误码
+}
+
+// 玩家的道具数据
+message CPropData
+{
+}
+
+message SPropData
+{
+    repeated PropData propInfo = 1; //道具信息
+    ErrCode error = 2;//错误码
+}
+
+// 主动获取虚拟货币
+message CGetCurrency
+{
+}
+
+message SGetCurrency
+{
+    int64 coin     = 1;//金币
+    int64 diamond  = 2;//钻石
+    int64 energy   = 3;//精力
+}
+
+// 推送变更货币数量
+message SPushCurrency
+{
+    LogType type   = 1;//类型
+    int64 coin     = 2;//金币
+    int64 diamond  = 3;//钻石
+    int64 energy   = 4;//精力
+}
+
+// 推送变更道具数量
+message SPushProp
+{
+    LogType type   = 1;//类型
+    PropType ptype = 2;//类型
+    int32 num      = 3;//数量
 }

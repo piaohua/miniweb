@@ -7,12 +7,11 @@ enum LogType {
     LOG_TYPE1  =  1;//注册赠送
 }
 
-//游戏类型
-enum GameType {
-    GAME_TYPE0  =  0;//无
-    GAME_TYPE1  =  1;//
-    GAME_TYPE2  =  2;//
-    GAME_TYPE3  =  3;//
+//关卡类型
+enum GateType {
+    GATE_TYPE0  =  0;//无
+    GATE_TYPE1  =  1;//单人
+    GATE_TYPE2  =  2;//副本
 }
 
 //登出类型
@@ -20,4 +19,40 @@ enum OutType {
     OUT_TYPE0  =  0;//无
     OUT_TYPE1  =  1;//别处登录
     OUT_TYPE2  =  2;//停服
+}
+
+//道具类型
+enum PropType {
+    PROP_TYPE0  =  0;//无
+    PROP_TYPE1  =  1;//钻石
+    PROP_TYPE2  =  2;//金币
+    PROP_TYPE3  =  3;//精力
+    PROP_TYPE4  =  4;//快速提示
+    PROP_TYPE5  =  5;//重新整理
+    PROP_TYPE6  =  6;//炸弹
+    PROP_TYPE7  =  7;//时间冻结
+    PROP_TYPE8  =  8;//时间回流
+    PROP_TYPE10 = 10;//初级精力瓶
+    PROP_TYPE11 = 11;//中级精力瓶
+    PROP_TYPE12 = 12;//高级精力瓶
+}
+
+//支付方式
+enum PayWay {
+    PAY_WAY0  =  0;//RMB(默认)
+    PAY_WAY1  =  1;//钻石
+    PAY_WAY2  =  2;//金币
+}
+
+//商品状态
+enum ShopStatus {
+    SHOP_STATUS0  =  0;//普通(默认)
+    SHOP_STATUS1  =  1;//热卖
+    SHOP_STATUS2  =  2;//新品
+}
+
+//登录奖励类型
+enum LoginPrizeType {
+    LoginPrizeSelect = 0;//查询(默认)
+    LoginPrizeDraw   = 1;//领取
 }

@@ -7,6 +7,8 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
+import strconv "strconv"
+
 import bytes "bytes"
 
 import strings "strings"
@@ -19,12 +21,38 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+type LoginPrize_LoginPrizeStatus int32
+
+const (
+	LoginPrizeNone LoginPrize_LoginPrizeStatus = 0
+	LoginPrizeDone LoginPrize_LoginPrizeStatus = 1
+	LoginPrizeGot  LoginPrize_LoginPrizeStatus = 2
+)
+
+var LoginPrize_LoginPrizeStatus_name = map[int32]string{
+	0: "LoginPrizeNone",
+	1: "LoginPrizeDone",
+	2: "LoginPrizeGot",
+}
+var LoginPrize_LoginPrizeStatus_value = map[string]int32{
+	"LoginPrizeNone": 0,
+	"LoginPrizeDone": 1,
+	"LoginPrizeGot":  2,
+}
+
+func (LoginPrize_LoginPrizeStatus) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptorGamePub, []int{4, 0}
+}
+
 // 玩家的基础数据
 type UserData struct {
 	Userid    string `protobuf:"bytes,1,opt,name=userid,proto3" json:"userid,omitempty"`
 	NickName  string `protobuf:"bytes,2,opt,name=nickName,proto3" json:"nickName,omitempty"`
 	AvatarUrl string `protobuf:"bytes,3,opt,name=avatarUrl,proto3" json:"avatarUrl,omitempty"`
 	Gender    int32  `protobuf:"varint,4,opt,name=gender,proto3" json:"gender,omitempty"`
+	Diamond   int64  `protobuf:"varint,5,opt,name=diamond,proto3" json:"diamond,omitempty"`
+	Coin      int64  `protobuf:"varint,6,opt,name=coin,proto3" json:"coin,omitempty"`
+	Energy    int64  `protobuf:"varint,7,opt,name=energy,proto3" json:"energy,omitempty"`
 }
 
 func (m *UserData) Reset()                    { *m = UserData{} }
@@ -59,49 +87,233 @@ func (m *UserData) GetGender() int32 {
 	return 0
 }
 
-// 玩家的游戏数据
-type GameData struct {
-	Type  GameType `protobuf:"varint,1,opt,name=type,proto3,enum=pb.GameType" json:"type,omitempty"`
-	Gate  int32    `protobuf:"varint,2,opt,name=gate,proto3" json:"gate,omitempty"`
-	Times int32    `protobuf:"varint,3,opt,name=times,proto3" json:"times,omitempty"`
-	Data  []byte   `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
-}
-
-func (m *GameData) Reset()                    { *m = GameData{} }
-func (*GameData) ProtoMessage()               {}
-func (*GameData) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{1} }
-
-func (m *GameData) GetType() GameType {
+func (m *UserData) GetDiamond() int64 {
 	if m != nil {
-		return m.Type
-	}
-	return GAME_TYPE0
-}
-
-func (m *GameData) GetGate() int32 {
-	if m != nil {
-		return m.Gate
+		return m.Diamond
 	}
 	return 0
 }
 
-func (m *GameData) GetTimes() int32 {
+func (m *UserData) GetCoin() int64 {
+	if m != nil {
+		return m.Coin
+	}
+	return 0
+}
+
+func (m *UserData) GetEnergy() int64 {
+	if m != nil {
+		return m.Energy
+	}
+	return 0
+}
+
+// 玩家的游戏数据
+type GateData struct {
+	Type   GateType `protobuf:"varint,1,opt,name=type,proto3,enum=pb.GateType" json:"type,omitempty"`
+	Gateid int32    `protobuf:"varint,2,opt,name=gateid,proto3" json:"gateid,omitempty"`
+	Times  int32    `protobuf:"varint,3,opt,name=times,proto3" json:"times,omitempty"`
+	Data   []byte   `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
+	Stars  int32    `protobuf:"varint,5,opt,name=stars,proto3" json:"stars,omitempty"`
+}
+
+func (m *GateData) Reset()                    { *m = GateData{} }
+func (*GateData) ProtoMessage()               {}
+func (*GateData) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{1} }
+
+func (m *GateData) GetType() GateType {
+	if m != nil {
+		return m.Type
+	}
+	return GATE_TYPE0
+}
+
+func (m *GateData) GetGateid() int32 {
+	if m != nil {
+		return m.Gateid
+	}
+	return 0
+}
+
+func (m *GateData) GetTimes() int32 {
 	if m != nil {
 		return m.Times
 	}
 	return 0
 }
 
-func (m *GameData) GetData() []byte {
+func (m *GateData) GetData() []byte {
 	if m != nil {
 		return m.Data
 	}
 	return nil
 }
 
+func (m *GateData) GetStars() int32 {
+	if m != nil {
+		return m.Stars
+	}
+	return 0
+}
+
+// 道具数据
+type PropData struct {
+	Type PropType `protobuf:"varint,1,opt,name=type,proto3,enum=pb.PropType" json:"type,omitempty"`
+	Num  int32    `protobuf:"varint,2,opt,name=num,proto3" json:"num,omitempty"`
+	Attr int32    `protobuf:"varint,3,opt,name=attr,proto3" json:"attr,omitempty"`
+}
+
+func (m *PropData) Reset()                    { *m = PropData{} }
+func (*PropData) ProtoMessage()               {}
+func (*PropData) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{2} }
+
+func (m *PropData) GetType() PropType {
+	if m != nil {
+		return m.Type
+	}
+	return PROP_TYPE0
+}
+
+func (m *PropData) GetNum() int32 {
+	if m != nil {
+		return m.Num
+	}
+	return 0
+}
+
+func (m *PropData) GetAttr() int32 {
+	if m != nil {
+		return m.Attr
+	}
+	return 0
+}
+
+// 商品信息
+type Shop struct {
+	Id     uint32     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status ShopStatus `protobuf:"varint,2,opt,name=status,proto3,enum=pb.ShopStatus" json:"status,omitempty"`
+	Type   PropType   `protobuf:"varint,3,opt,name=type,proto3,enum=pb.PropType" json:"type,omitempty"`
+	Way    PayWay     `protobuf:"varint,4,opt,name=way,proto3,enum=pb.PayWay" json:"way,omitempty"`
+	Number uint32     `protobuf:"varint,5,opt,name=number,proto3" json:"number,omitempty"`
+	Price  uint32     `protobuf:"varint,6,opt,name=price,proto3" json:"price,omitempty"`
+	Name   string     `protobuf:"bytes,7,opt,name=name,proto3" json:"name,omitempty"`
+	Info   string     `protobuf:"bytes,8,opt,name=info,proto3" json:"info,omitempty"`
+}
+
+func (m *Shop) Reset()                    { *m = Shop{} }
+func (*Shop) ProtoMessage()               {}
+func (*Shop) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{3} }
+
+func (m *Shop) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *Shop) GetStatus() ShopStatus {
+	if m != nil {
+		return m.Status
+	}
+	return SHOP_STATUS0
+}
+
+func (m *Shop) GetType() PropType {
+	if m != nil {
+		return m.Type
+	}
+	return PROP_TYPE0
+}
+
+func (m *Shop) GetWay() PayWay {
+	if m != nil {
+		return m.Way
+	}
+	return PAY_WAY0
+}
+
+func (m *Shop) GetNumber() uint32 {
+	if m != nil {
+		return m.Number
+	}
+	return 0
+}
+
+func (m *Shop) GetPrice() uint32 {
+	if m != nil {
+		return m.Price
+	}
+	return 0
+}
+
+func (m *Shop) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *Shop) GetInfo() string {
+	if m != nil {
+		return m.Info
+	}
+	return ""
+}
+
+// 连续登录信息
+type LoginPrize struct {
+	Day     uint32                      `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`
+	Coin    int64                       `protobuf:"varint,2,opt,name=coin,proto3" json:"coin,omitempty"`
+	Diamond int64                       `protobuf:"varint,3,opt,name=diamond,proto3" json:"diamond,omitempty"`
+	Status  LoginPrize_LoginPrizeStatus `protobuf:"varint,4,opt,name=status,proto3,enum=pb.LoginPrize_LoginPrizeStatus" json:"status,omitempty"`
+}
+
+func (m *LoginPrize) Reset()                    { *m = LoginPrize{} }
+func (*LoginPrize) ProtoMessage()               {}
+func (*LoginPrize) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{4} }
+
+func (m *LoginPrize) GetDay() uint32 {
+	if m != nil {
+		return m.Day
+	}
+	return 0
+}
+
+func (m *LoginPrize) GetCoin() int64 {
+	if m != nil {
+		return m.Coin
+	}
+	return 0
+}
+
+func (m *LoginPrize) GetDiamond() int64 {
+	if m != nil {
+		return m.Diamond
+	}
+	return 0
+}
+
+func (m *LoginPrize) GetStatus() LoginPrize_LoginPrizeStatus {
+	if m != nil {
+		return m.Status
+	}
+	return LoginPrizeNone
+}
+
 func init() {
 	proto.RegisterType((*UserData)(nil), "pb.UserData")
-	proto.RegisterType((*GameData)(nil), "pb.GameData")
+	proto.RegisterType((*GateData)(nil), "pb.GateData")
+	proto.RegisterType((*PropData)(nil), "pb.PropData")
+	proto.RegisterType((*Shop)(nil), "pb.Shop")
+	proto.RegisterType((*LoginPrize)(nil), "pb.LoginPrize")
+	proto.RegisterEnum("pb.LoginPrize_LoginPrizeStatus", LoginPrize_LoginPrizeStatus_name, LoginPrize_LoginPrizeStatus_value)
+}
+func (x LoginPrize_LoginPrizeStatus) String() string {
+	s, ok := LoginPrize_LoginPrizeStatus_name[int32(x)]
+	if ok {
+		return s
+	}
+	return strconv.Itoa(int(x))
 }
 func (this *UserData) Equal(that interface{}) bool {
 	if that == nil {
@@ -134,16 +346,25 @@ func (this *UserData) Equal(that interface{}) bool {
 	if this.Gender != that1.Gender {
 		return false
 	}
+	if this.Diamond != that1.Diamond {
+		return false
+	}
+	if this.Coin != that1.Coin {
+		return false
+	}
+	if this.Energy != that1.Energy {
+		return false
+	}
 	return true
 }
-func (this *GameData) Equal(that interface{}) bool {
+func (this *GateData) Equal(that interface{}) bool {
 	if that == nil {
 		return this == nil
 	}
 
-	that1, ok := that.(*GameData)
+	that1, ok := that.(*GateData)
 	if !ok {
-		that2, ok := that.(GameData)
+		that2, ok := that.(GateData)
 		if ok {
 			that1 = &that2
 		} else {
@@ -158,7 +379,7 @@ func (this *GameData) Equal(that interface{}) bool {
 	if this.Type != that1.Type {
 		return false
 	}
-	if this.Gate != that1.Gate {
+	if this.Gateid != that1.Gateid {
 		return false
 	}
 	if this.Times != that1.Times {
@@ -167,31 +388,188 @@ func (this *GameData) Equal(that interface{}) bool {
 	if !bytes.Equal(this.Data, that1.Data) {
 		return false
 	}
+	if this.Stars != that1.Stars {
+		return false
+	}
+	return true
+}
+func (this *PropData) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*PropData)
+	if !ok {
+		that2, ok := that.(PropData)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Type != that1.Type {
+		return false
+	}
+	if this.Num != that1.Num {
+		return false
+	}
+	if this.Attr != that1.Attr {
+		return false
+	}
+	return true
+}
+func (this *Shop) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Shop)
+	if !ok {
+		that2, ok := that.(Shop)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Status != that1.Status {
+		return false
+	}
+	if this.Type != that1.Type {
+		return false
+	}
+	if this.Way != that1.Way {
+		return false
+	}
+	if this.Number != that1.Number {
+		return false
+	}
+	if this.Price != that1.Price {
+		return false
+	}
+	if this.Name != that1.Name {
+		return false
+	}
+	if this.Info != that1.Info {
+		return false
+	}
+	return true
+}
+func (this *LoginPrize) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*LoginPrize)
+	if !ok {
+		that2, ok := that.(LoginPrize)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Day != that1.Day {
+		return false
+	}
+	if this.Coin != that1.Coin {
+		return false
+	}
+	if this.Diamond != that1.Diamond {
+		return false
+	}
+	if this.Status != that1.Status {
+		return false
+	}
 	return true
 }
 func (this *UserData) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := make([]string, 0, 8)
+	s := make([]string, 0, 11)
 	s = append(s, "&pb.UserData{")
 	s = append(s, "Userid: "+fmt.Sprintf("%#v", this.Userid)+",\n")
 	s = append(s, "NickName: "+fmt.Sprintf("%#v", this.NickName)+",\n")
 	s = append(s, "AvatarUrl: "+fmt.Sprintf("%#v", this.AvatarUrl)+",\n")
 	s = append(s, "Gender: "+fmt.Sprintf("%#v", this.Gender)+",\n")
+	s = append(s, "Diamond: "+fmt.Sprintf("%#v", this.Diamond)+",\n")
+	s = append(s, "Coin: "+fmt.Sprintf("%#v", this.Coin)+",\n")
+	s = append(s, "Energy: "+fmt.Sprintf("%#v", this.Energy)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
-func (this *GameData) GoString() string {
+func (this *GateData) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 9)
+	s = append(s, "&pb.GateData{")
+	s = append(s, "Type: "+fmt.Sprintf("%#v", this.Type)+",\n")
+	s = append(s, "Gateid: "+fmt.Sprintf("%#v", this.Gateid)+",\n")
+	s = append(s, "Times: "+fmt.Sprintf("%#v", this.Times)+",\n")
+	s = append(s, "Data: "+fmt.Sprintf("%#v", this.Data)+",\n")
+	s = append(s, "Stars: "+fmt.Sprintf("%#v", this.Stars)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *PropData) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 7)
+	s = append(s, "&pb.PropData{")
+	s = append(s, "Type: "+fmt.Sprintf("%#v", this.Type)+",\n")
+	s = append(s, "Num: "+fmt.Sprintf("%#v", this.Num)+",\n")
+	s = append(s, "Attr: "+fmt.Sprintf("%#v", this.Attr)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Shop) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 12)
+	s = append(s, "&pb.Shop{")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
+	s = append(s, "Status: "+fmt.Sprintf("%#v", this.Status)+",\n")
+	s = append(s, "Type: "+fmt.Sprintf("%#v", this.Type)+",\n")
+	s = append(s, "Way: "+fmt.Sprintf("%#v", this.Way)+",\n")
+	s = append(s, "Number: "+fmt.Sprintf("%#v", this.Number)+",\n")
+	s = append(s, "Price: "+fmt.Sprintf("%#v", this.Price)+",\n")
+	s = append(s, "Name: "+fmt.Sprintf("%#v", this.Name)+",\n")
+	s = append(s, "Info: "+fmt.Sprintf("%#v", this.Info)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *LoginPrize) GoString() string {
 	if this == nil {
 		return "nil"
 	}
 	s := make([]string, 0, 8)
-	s = append(s, "&pb.GameData{")
-	s = append(s, "Type: "+fmt.Sprintf("%#v", this.Type)+",\n")
-	s = append(s, "Gate: "+fmt.Sprintf("%#v", this.Gate)+",\n")
-	s = append(s, "Times: "+fmt.Sprintf("%#v", this.Times)+",\n")
-	s = append(s, "Data: "+fmt.Sprintf("%#v", this.Data)+",\n")
+	s = append(s, "&pb.LoginPrize{")
+	s = append(s, "Day: "+fmt.Sprintf("%#v", this.Day)+",\n")
+	s = append(s, "Coin: "+fmt.Sprintf("%#v", this.Coin)+",\n")
+	s = append(s, "Diamond: "+fmt.Sprintf("%#v", this.Diamond)+",\n")
+	s = append(s, "Status: "+fmt.Sprintf("%#v", this.Status)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -241,10 +619,25 @@ func (m *UserData) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintGamePub(dAtA, i, uint64(m.Gender))
 	}
+	if m.Diamond != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Diamond))
+	}
+	if m.Coin != 0 {
+		dAtA[i] = 0x30
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Coin))
+	}
+	if m.Energy != 0 {
+		dAtA[i] = 0x38
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Energy))
+	}
 	return i, nil
 }
 
-func (m *GameData) Marshal() (dAtA []byte, err error) {
+func (m *GateData) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -254,7 +647,7 @@ func (m *GameData) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *GameData) MarshalTo(dAtA []byte) (int, error) {
+func (m *GateData) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -264,10 +657,10 @@ func (m *GameData) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintGamePub(dAtA, i, uint64(m.Type))
 	}
-	if m.Gate != 0 {
+	if m.Gateid != 0 {
 		dAtA[i] = 0x10
 		i++
-		i = encodeVarintGamePub(dAtA, i, uint64(m.Gate))
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Gateid))
 	}
 	if m.Times != 0 {
 		dAtA[i] = 0x18
@@ -279,6 +672,142 @@ func (m *GameData) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintGamePub(dAtA, i, uint64(len(m.Data)))
 		i += copy(dAtA[i:], m.Data)
+	}
+	if m.Stars != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Stars))
+	}
+	return i, nil
+}
+
+func (m *PropData) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PropData) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Type != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Type))
+	}
+	if m.Num != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Num))
+	}
+	if m.Attr != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Attr))
+	}
+	return i, nil
+}
+
+func (m *Shop) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Shop) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Id))
+	}
+	if m.Status != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Status))
+	}
+	if m.Type != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Type))
+	}
+	if m.Way != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Way))
+	}
+	if m.Number != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Number))
+	}
+	if m.Price != 0 {
+		dAtA[i] = 0x30
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Price))
+	}
+	if len(m.Name) > 0 {
+		dAtA[i] = 0x3a
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(len(m.Name)))
+		i += copy(dAtA[i:], m.Name)
+	}
+	if len(m.Info) > 0 {
+		dAtA[i] = 0x42
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(len(m.Info)))
+		i += copy(dAtA[i:], m.Info)
+	}
+	return i, nil
+}
+
+func (m *LoginPrize) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *LoginPrize) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Day != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Day))
+	}
+	if m.Coin != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Coin))
+	}
+	if m.Diamond != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Diamond))
+	}
+	if m.Status != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Status))
 	}
 	return i, nil
 }
@@ -310,17 +839,26 @@ func (m *UserData) Size() (n int) {
 	if m.Gender != 0 {
 		n += 1 + sovGamePub(uint64(m.Gender))
 	}
+	if m.Diamond != 0 {
+		n += 1 + sovGamePub(uint64(m.Diamond))
+	}
+	if m.Coin != 0 {
+		n += 1 + sovGamePub(uint64(m.Coin))
+	}
+	if m.Energy != 0 {
+		n += 1 + sovGamePub(uint64(m.Energy))
+	}
 	return n
 }
 
-func (m *GameData) Size() (n int) {
+func (m *GateData) Size() (n int) {
 	var l int
 	_ = l
 	if m.Type != 0 {
 		n += 1 + sovGamePub(uint64(m.Type))
 	}
-	if m.Gate != 0 {
-		n += 1 + sovGamePub(uint64(m.Gate))
+	if m.Gateid != 0 {
+		n += 1 + sovGamePub(uint64(m.Gateid))
 	}
 	if m.Times != 0 {
 		n += 1 + sovGamePub(uint64(m.Times))
@@ -328,6 +866,74 @@ func (m *GameData) Size() (n int) {
 	l = len(m.Data)
 	if l > 0 {
 		n += 1 + l + sovGamePub(uint64(l))
+	}
+	if m.Stars != 0 {
+		n += 1 + sovGamePub(uint64(m.Stars))
+	}
+	return n
+}
+
+func (m *PropData) Size() (n int) {
+	var l int
+	_ = l
+	if m.Type != 0 {
+		n += 1 + sovGamePub(uint64(m.Type))
+	}
+	if m.Num != 0 {
+		n += 1 + sovGamePub(uint64(m.Num))
+	}
+	if m.Attr != 0 {
+		n += 1 + sovGamePub(uint64(m.Attr))
+	}
+	return n
+}
+
+func (m *Shop) Size() (n int) {
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sovGamePub(uint64(m.Id))
+	}
+	if m.Status != 0 {
+		n += 1 + sovGamePub(uint64(m.Status))
+	}
+	if m.Type != 0 {
+		n += 1 + sovGamePub(uint64(m.Type))
+	}
+	if m.Way != 0 {
+		n += 1 + sovGamePub(uint64(m.Way))
+	}
+	if m.Number != 0 {
+		n += 1 + sovGamePub(uint64(m.Number))
+	}
+	if m.Price != 0 {
+		n += 1 + sovGamePub(uint64(m.Price))
+	}
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovGamePub(uint64(l))
+	}
+	l = len(m.Info)
+	if l > 0 {
+		n += 1 + l + sovGamePub(uint64(l))
+	}
+	return n
+}
+
+func (m *LoginPrize) Size() (n int) {
+	var l int
+	_ = l
+	if m.Day != 0 {
+		n += 1 + sovGamePub(uint64(m.Day))
+	}
+	if m.Coin != 0 {
+		n += 1 + sovGamePub(uint64(m.Coin))
+	}
+	if m.Diamond != 0 {
+		n += 1 + sovGamePub(uint64(m.Diamond))
+	}
+	if m.Status != 0 {
+		n += 1 + sovGamePub(uint64(m.Status))
 	}
 	return n
 }
@@ -354,19 +960,65 @@ func (this *UserData) String() string {
 		`NickName:` + fmt.Sprintf("%v", this.NickName) + `,`,
 		`AvatarUrl:` + fmt.Sprintf("%v", this.AvatarUrl) + `,`,
 		`Gender:` + fmt.Sprintf("%v", this.Gender) + `,`,
+		`Diamond:` + fmt.Sprintf("%v", this.Diamond) + `,`,
+		`Coin:` + fmt.Sprintf("%v", this.Coin) + `,`,
+		`Energy:` + fmt.Sprintf("%v", this.Energy) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-func (this *GameData) String() string {
+func (this *GateData) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&GameData{`,
+	s := strings.Join([]string{`&GateData{`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Gate:` + fmt.Sprintf("%v", this.Gate) + `,`,
+		`Gateid:` + fmt.Sprintf("%v", this.Gateid) + `,`,
 		`Times:` + fmt.Sprintf("%v", this.Times) + `,`,
 		`Data:` + fmt.Sprintf("%v", this.Data) + `,`,
+		`Stars:` + fmt.Sprintf("%v", this.Stars) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *PropData) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&PropData{`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Num:` + fmt.Sprintf("%v", this.Num) + `,`,
+		`Attr:` + fmt.Sprintf("%v", this.Attr) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Shop) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Shop{`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
+		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Way:` + fmt.Sprintf("%v", this.Way) + `,`,
+		`Number:` + fmt.Sprintf("%v", this.Number) + `,`,
+		`Price:` + fmt.Sprintf("%v", this.Price) + `,`,
+		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
+		`Info:` + fmt.Sprintf("%v", this.Info) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *LoginPrize) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&LoginPrize{`,
+		`Day:` + fmt.Sprintf("%v", this.Day) + `,`,
+		`Coin:` + fmt.Sprintf("%v", this.Coin) + `,`,
+		`Diamond:` + fmt.Sprintf("%v", this.Diamond) + `,`,
+		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -514,6 +1166,63 @@ func (m *UserData) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Diamond", wireType)
+			}
+			m.Diamond = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Diamond |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coin", wireType)
+			}
+			m.Coin = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Coin |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Energy", wireType)
+			}
+			m.Energy = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Energy |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGamePub(dAtA[iNdEx:])
@@ -535,7 +1244,7 @@ func (m *UserData) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *GameData) Unmarshal(dAtA []byte) error {
+func (m *GateData) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -558,10 +1267,10 @@ func (m *GameData) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: GameData: wiretype end group for non-group")
+			return fmt.Errorf("proto: GateData: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: GameData: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: GateData: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -578,16 +1287,16 @@ func (m *GameData) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Type |= (GameType(b) & 0x7F) << shift
+				m.Type |= (GateType(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Gate", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Gateid", wireType)
 			}
-			m.Gate = 0
+			m.Gateid = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGamePub
@@ -597,7 +1306,7 @@ func (m *GameData) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Gate |= (int32(b) & 0x7F) << shift
+				m.Gateid |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -652,6 +1361,480 @@ func (m *GameData) Unmarshal(dAtA []byte) error {
 				m.Data = []byte{}
 			}
 			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Stars", wireType)
+			}
+			m.Stars = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Stars |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGamePub(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PropData) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGamePub
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PropData: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PropData: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			m.Type = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Type |= (PropType(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Num", wireType)
+			}
+			m.Num = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Num |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Attr", wireType)
+			}
+			m.Attr = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Attr |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGamePub(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Shop) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGamePub
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Shop: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Shop: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= (ShopStatus(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			m.Type = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Type |= (PropType(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Way", wireType)
+			}
+			m.Way = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Way |= (PayWay(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Number", wireType)
+			}
+			m.Number = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Number |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Price", wireType)
+			}
+			m.Price = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Price |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Info", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Info = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGamePub(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *LoginPrize) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGamePub
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: LoginPrize: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: LoginPrize: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Day", wireType)
+			}
+			m.Day = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Day |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coin", wireType)
+			}
+			m.Coin = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Coin |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Diamond", wireType)
+			}
+			m.Diamond = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Diamond |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= (LoginPrize_LoginPrizeStatus(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGamePub(dAtA[iNdEx:])
@@ -781,22 +1964,38 @@ var (
 func init() { proto.RegisterFile("game_pub.proto", fileDescriptorGamePub) }
 
 var fileDescriptorGamePub = []byte{
-	// 263 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x44, 0x90, 0x41, 0x4a, 0xc3, 0x40,
-	0x14, 0x86, 0x33, 0x35, 0x29, 0xe9, 0x50, 0x2a, 0x0c, 0x22, 0xa1, 0xc8, 0x23, 0x74, 0xd5, 0x85,
-	0x64, 0xa1, 0x37, 0x10, 0xc1, 0x9d, 0x8b, 0xc1, 0xae, 0xe5, 0xc5, 0x3c, 0x42, 0xd4, 0xb4, 0xc3,
-	0x64, 0x2a, 0x74, 0xe7, 0x11, 0x3c, 0x86, 0x47, 0x71, 0xd9, 0xa5, 0x4b, 0x33, 0x6e, 0x5c, 0xf6,
-	0x08, 0x92, 0x97, 0xa0, 0xbb, 0xff, 0xff, 0xbf, 0x61, 0xbe, 0x61, 0xe4, 0xac, 0xc4, 0x9a, 0xee,
-	0xcd, 0x36, 0xcf, 0x8c, 0xdd, 0xb8, 0x8d, 0x1a, 0x99, 0x7c, 0x7e, 0xcc, 0x9b, 0xdb, 0x19, 0xea,
-	0xc7, 0x85, 0x93, 0xf1, 0xaa, 0x21, 0x7b, 0x8d, 0x0e, 0xd5, 0xa9, 0x1c, 0x6f, 0x1b, 0xb2, 0x55,
-	0x91, 0x88, 0x54, 0x2c, 0x27, 0x7a, 0x68, 0x6a, 0x2e, 0xe3, 0x75, 0xf5, 0xf0, 0x74, 0x8b, 0x35,
-	0x25, 0x23, 0x26, 0x7f, 0x5d, 0x9d, 0xc9, 0x09, 0xbe, 0xa0, 0x43, 0xbb, 0xb2, 0xcf, 0xc9, 0x11,
-	0xc3, 0xff, 0xa1, 0xbb, 0xb1, 0xa4, 0x75, 0x41, 0x36, 0x09, 0x53, 0xb1, 0x8c, 0xf4, 0xd0, 0x16,
-	0x8f, 0x32, 0xbe, 0xc1, 0x9a, 0xd8, 0x9a, 0xca, 0xb0, 0x7b, 0x0f, 0x3b, 0x67, 0x17, 0xd3, 0xcc,
-	0xe4, 0x59, 0xc7, 0xee, 0x76, 0x86, 0x34, 0x13, 0xa5, 0x64, 0x58, 0xa2, 0xeb, 0xdd, 0x91, 0xe6,
-	0xac, 0x4e, 0x64, 0xe4, 0xaa, 0x9a, 0x1a, 0x76, 0x46, 0xba, 0x2f, 0xdd, 0xc9, 0x02, 0x1d, 0xb2,
-	0x6d, 0xaa, 0x39, 0x5f, 0x9d, 0xef, 0x5b, 0x08, 0x3e, 0x5b, 0x08, 0x0e, 0x2d, 0x88, 0x57, 0x0f,
-	0xe2, 0xdd, 0x83, 0xf8, 0xf0, 0x20, 0xf6, 0x1e, 0xc4, 0x97, 0x07, 0xf1, 0xe3, 0x21, 0x38, 0x78,
-	0x10, 0x6f, 0xdf, 0x10, 0xe4, 0x63, 0xfe, 0x96, 0xcb, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x0b,
-	0x57, 0xbb, 0xf9, 0x3d, 0x01, 0x00, 0x00,
+	// 522 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x53, 0xbd, 0x8e, 0xd3, 0x40,
+	0x10, 0xce, 0xda, 0x49, 0x2e, 0x37, 0xba, 0x98, 0xb0, 0x42, 0xc8, 0x3a, 0x9d, 0x96, 0x28, 0x05,
+	0x4a, 0x81, 0x52, 0x84, 0x82, 0x1e, 0x9d, 0x74, 0x0d, 0x9c, 0x4e, 0x7b, 0x9c, 0x28, 0xd1, 0x26,
+	0x5e, 0xc2, 0x0a, 0xbc, 0xb6, 0xd6, 0x6b, 0x90, 0xa9, 0x28, 0x78, 0x00, 0x1e, 0x83, 0x67, 0xe0,
+	0x09, 0x28, 0xaf, 0xa0, 0xa0, 0x24, 0xa6, 0xa1, 0xbc, 0x47, 0x40, 0x33, 0x36, 0xf9, 0x41, 0xba,
+	0xee, 0xfb, 0xbe, 0xb1, 0x66, 0xbf, 0x6f, 0x66, 0x0c, 0xd1, 0x4a, 0xa5, 0xfa, 0x55, 0x5e, 0x2e,
+	0x66, 0xb9, 0xcb, 0x7c, 0xc6, 0x83, 0x7c, 0x71, 0x7c, 0x87, 0x34, 0x5f, 0xe5, 0xba, 0x11, 0x27,
+	0xdf, 0x18, 0x0c, 0xae, 0x0a, 0xed, 0x4e, 0x95, 0x57, 0xfc, 0x3e, 0xf4, 0xcb, 0x42, 0x3b, 0x93,
+	0xc4, 0x6c, 0xcc, 0xa6, 0x87, 0xb2, 0x65, 0xfc, 0x18, 0x06, 0xd6, 0x2c, 0xdf, 0x9e, 0xab, 0x54,
+	0xc7, 0x01, 0x55, 0x36, 0x9c, 0x9f, 0xc0, 0xa1, 0x7a, 0xaf, 0xbc, 0x72, 0x57, 0xee, 0x5d, 0x1c,
+	0x52, 0x71, 0x2b, 0x60, 0xc7, 0x95, 0xb6, 0x89, 0x76, 0x71, 0x77, 0xcc, 0xa6, 0x3d, 0xd9, 0x32,
+	0x1e, 0xc3, 0x41, 0x62, 0x54, 0x9a, 0xd9, 0x24, 0xee, 0x8d, 0xd9, 0x34, 0x94, 0xff, 0x28, 0xe7,
+	0xd0, 0x5d, 0x66, 0xc6, 0xc6, 0x7d, 0x92, 0x09, 0x63, 0x17, 0x6d, 0xb5, 0x5b, 0x55, 0xf1, 0x01,
+	0xa9, 0x2d, 0x9b, 0x7c, 0x66, 0x30, 0x38, 0x53, 0x5e, 0x93, 0xf9, 0x31, 0x74, 0x31, 0x17, 0x59,
+	0x8f, 0xe6, 0x47, 0xb3, 0x7c, 0x31, 0xc3, 0xda, 0x8b, 0x2a, 0xd7, 0x92, 0x2a, 0x64, 0x46, 0x79,
+	0x6d, 0x12, 0x0a, 0x81, 0x66, 0x88, 0xf1, 0x7b, 0xd0, 0xf3, 0x26, 0xd5, 0x05, 0xd9, 0xef, 0xc9,
+	0x86, 0xa0, 0x91, 0x44, 0x79, 0x45, 0xc6, 0x8f, 0x24, 0x61, 0xfc, 0xb2, 0xf0, 0xca, 0x15, 0x64,
+	0xba, 0x27, 0x1b, 0x32, 0x91, 0x30, 0xb8, 0x70, 0x59, 0x7e, 0x9b, 0x0b, 0xac, 0xed, 0xb8, 0x18,
+	0x41, 0x68, 0xcb, 0xb4, 0xb5, 0x80, 0x10, 0x5f, 0x52, 0xde, 0xbb, 0xf6, 0x79, 0xc2, 0x93, 0x1f,
+	0x0c, 0xba, 0x97, 0x6f, 0xb2, 0x9c, 0x47, 0x10, 0xb4, 0xfb, 0x18, 0xca, 0xc0, 0x24, 0xfc, 0x21,
+	0xf4, 0x0b, 0xaf, 0x7c, 0x59, 0x50, 0x87, 0x68, 0x1e, 0xe1, 0x13, 0xf8, 0xe5, 0x25, 0xa9, 0xb2,
+	0xad, 0x6e, 0x8c, 0x84, 0xb7, 0x1a, 0x39, 0x81, 0xf0, 0x83, 0xaa, 0x28, 0x5f, 0x34, 0x07, 0xfa,
+	0x40, 0x55, 0x2f, 0x55, 0x25, 0x51, 0xc6, 0x61, 0xd9, 0x32, 0x5d, 0x68, 0x47, 0x59, 0x87, 0xb2,
+	0x65, 0x38, 0x82, 0xdc, 0x99, 0xa5, 0xa6, 0x05, 0x0d, 0x65, 0x43, 0x30, 0x82, 0xc5, 0xeb, 0x38,
+	0xa0, 0x03, 0x20, 0x8c, 0x9a, 0xb1, 0xaf, 0xb3, 0x78, 0xd0, 0x68, 0x88, 0x31, 0x16, 0x3c, 0xcb,
+	0x56, 0xc6, 0x5e, 0x38, 0xf3, 0x91, 0x66, 0x91, 0xa8, 0xaa, 0x4d, 0x87, 0x70, 0xb3, 0xfe, 0x60,
+	0x67, 0xfd, 0x3b, 0xc7, 0x12, 0xee, 0x1f, 0xcb, 0x93, 0xcd, 0x30, 0x9a, 0x14, 0x0f, 0x30, 0xc5,
+	0xb6, 0xff, 0x0e, 0xdc, 0x9f, 0xce, 0xe4, 0x39, 0x8c, 0xfe, 0xaf, 0x71, 0x0e, 0xd1, 0x56, 0x3b,
+	0xcf, 0xac, 0x1e, 0x75, 0xf6, 0xb5, 0x53, 0xd4, 0x18, 0xbf, 0x0b, 0xc3, 0xad, 0x76, 0x96, 0xf9,
+	0x51, 0xf0, 0xf4, 0xd1, 0xf5, 0x5a, 0x74, 0x7e, 0xae, 0x45, 0xe7, 0x66, 0x2d, 0xd8, 0xa7, 0x5a,
+	0xb0, 0xaf, 0xb5, 0x60, 0xdf, 0x6b, 0xc1, 0xae, 0x6b, 0xc1, 0x7e, 0xd5, 0x82, 0xfd, 0xa9, 0x45,
+	0xe7, 0xa6, 0x16, 0xec, 0xcb, 0x6f, 0xd1, 0x59, 0xf4, 0xe9, 0xd7, 0x7b, 0xfc, 0x37, 0x00, 0x00,
+	0xff, 0xff, 0x4d, 0x09, 0xfa, 0xa9, 0xa1, 0x03, 0x00, 0x00,
 }

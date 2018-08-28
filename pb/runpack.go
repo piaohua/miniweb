@@ -27,11 +27,51 @@ func Runpack(id uint32, b []byte) (interface{}, error) {
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1005:
-		msg := new(SGameData)
+		msg := new(SGateData)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1006:
 		msg := new(SPing)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1007:
+		msg := new(SPropData)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1008:
+		msg := new(SGetCurrency)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1009:
+		msg := new(SPushCurrency)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1010:
+		msg := new(SPushProp)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1011:
+		msg := new(SShop)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1012:
+		msg := new(SBuy)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1013:
+		msg := new(SOverData)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1014:
+		msg := new(SCard)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1015:
+		msg := new(SLoginPrize)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1016:
+		msg := new(SUseProp)
 		err := msg.Unmarshal(b)
 		return msg, err
 	default:

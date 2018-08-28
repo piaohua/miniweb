@@ -9,13 +9,52 @@ message UserData
     string nickName  = 2;//昵称
     string avatarUrl = 3;//头像
     int32  gender    = 4;//性别
+    int64  diamond   = 5;//钻石
+    int64  coin      = 6;//金币
+    int64  energy    = 7;//精力
 }
 
 // 玩家的游戏数据
-message GameData
+message GateData
 {
-    GameType type  = 1;//类型
-    int32 gate  = 2;//关卡
-    int32 times = 3;//次数
-    bytes data  = 4;//数据
+    GateType type = 1;//类型
+    int32 gateid  = 2;//关卡id
+    int32 times   = 3;//次数
+    bytes data    = 4;//数据
+    int32 stars   = 5;//星数
+}
+
+// 道具数据
+message PropData
+{
+    PropType type = 1;//类型
+    int32 num     = 2;//数量
+    int32 attr    = 3;//属性
+}
+
+// 商品信息
+message Shop
+{
+    uint32 id     = 1; //购买ID
+    ShopStatus status = 2; //物品状态
+    PropType type = 3; //兑换的物品
+    PayWay way = 4; //支付方式
+    uint32 number = 5; //兑换的数量
+    uint32 price  = 6; //支付价格(单位元)
+    string name   = 7; //物品名称
+    string info   = 8; //物品信息
+}
+
+// 连续登录信息
+message LoginPrize
+{
+    enum LoginPrizeStatus {
+        LoginPrizeNone = 0;//未完成
+        LoginPrizeDone = 1;//可以领取
+        LoginPrizeGot = 2;//已经领取
+    }
+    uint32 day     = 1;//
+    int64  coin    = 2;//金币奖励
+    int64  diamond = 3;//钻石奖励
+    LoginPrizeStatus status = 4;//状态
 }

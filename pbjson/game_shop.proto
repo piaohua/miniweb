@@ -1,0 +1,27 @@
+syntax = "proto3";
+package pb;
+import "game_code.proto";
+import "game_pub.proto";
+
+// 商城
+message CShop
+{
+}
+
+message SShop
+{
+    repeated Shop list = 1; //商品列表
+    ErrCode error  = 2; //错误码
+}
+
+// 商城购买
+message CBuy
+{
+    uint32 id   = 1;//购买ID
+}
+
+message SBuy
+{
+    uint32 result  = 1; //0购买成功,1失败
+    ErrCode error  = 2; //错误码
+}

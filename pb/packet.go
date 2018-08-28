@@ -22,12 +22,42 @@ func Packet(msg interface{}) (uint32, uint32, []byte, error) {
 	case *SUserData:
 		b, err := msg.(*SUserData).Marshal()
 		return 1004, 0, b, err
-	case *SGameData:
-		b, err := msg.(*SGameData).Marshal()
+	case *SGateData:
+		b, err := msg.(*SGateData).Marshal()
 		return 1005, 0, b, err
 	case *SPing:
 		b, err := msg.(*SPing).Marshal()
 		return 1006, 0, b, err
+	case *SPropData:
+		b, err := msg.(*SPropData).Marshal()
+		return 1007, 0, b, err
+	case *SGetCurrency:
+		b, err := msg.(*SGetCurrency).Marshal()
+		return 1008, 0, b, err
+	case *SPushCurrency:
+		b, err := msg.(*SPushCurrency).Marshal()
+		return 1009, 0, b, err
+	case *SPushProp:
+		b, err := msg.(*SPushProp).Marshal()
+		return 1010, 0, b, err
+	case *SShop:
+		b, err := msg.(*SShop).Marshal()
+		return 1011, 0, b, err
+	case *SBuy:
+		b, err := msg.(*SBuy).Marshal()
+		return 1012, 0, b, err
+	case *SOverData:
+		b, err := msg.(*SOverData).Marshal()
+		return 1013, 0, b, err
+	case *SCard:
+		b, err := msg.(*SCard).Marshal()
+		return 1014, 0, b, err
+	case *SLoginPrize:
+		b, err := msg.(*SLoginPrize).Marshal()
+		return 1015, 0, b, err
+	case *SUseProp:
+		b, err := msg.(*SUseProp).Marshal()
+		return 1016, 0, b, err
 	default:
 		return 0, 0, []byte{}, errors.New("unknown message")
 	}

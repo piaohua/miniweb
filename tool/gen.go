@@ -54,8 +54,18 @@ var protosUnpack = map[string][]proto{
 		{code: 1002, name: "CLogin"},
 		//user
 		{code: 1004, name: "CUserData"},
-		{code: 1005, name: "CGameData"},
+		{code: 1005, name: "CGateData"},
 		{code: 1006, name: "CPing"},
+		{code: 1007, name: "CPropData"},
+		{code: 1008, name: "CGetCurrency"},
+		//shop
+		{code: 1011, name: "CShop"},
+		{code: 1012, name: "CBuy"},
+		//play
+		{code: 1013, name: "COverData"},
+		{code: 1014, name: "CCard"},
+		{code: 1015, name: "CLoginPrize"},
+		{code: 1016, name: "CUseProp"},
 	},
 }
 
@@ -68,8 +78,20 @@ var protosPacket = map[string][]proto{
 		{code: 1003, name: "SLoginOut"},
 		//user
 		{code: 1004, name: "SUserData"},
-		{code: 1005, name: "SGameData"},
+		{code: 1005, name: "SGateData"},
 		{code: 1006, name: "SPing"},
+		{code: 1007, name: "SPropData"},
+		{code: 1008, name: "SGetCurrency"},
+		{code: 1009, name: "SPushCurrency"},
+		{code: 1010, name: "SPushProp"},
+		//shop
+		{code: 1011, name: "SShop"},
+		{code: 1012, name: "SBuy"},
+		//play
+		{code: 1013, name: "SOverData"},
+		{code: 1014, name: "SCard"},
+		{code: 1015, name: "SLoginPrize"},
+		{code: 1016, name: "SUseProp"},
 	},
 }
 
