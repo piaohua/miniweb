@@ -33,7 +33,8 @@ func (ws *WSConn) handlerLogin(msg interface{}, ctx actor.Context) {
 	case proto.Message:
 		//响应
 		if ws.online {
-			ws.Send(arg)
+			ws.handlerLogined(arg, ctx)
+			//ws.Send(arg)
 		}
 	default:
 		beego.Error("unknown message ", arg)
@@ -111,6 +112,7 @@ func (ws *WSConn) logined(userid string, isRegist bool,
 	ws.online = true
 	//成功
 	ctx.SetReceiveTimeout(0) //login Successfully, timeout off
+	beego.Info("login success: ", userid)
 }
 
 //普通登录验证

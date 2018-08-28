@@ -11,10 +11,10 @@ package models
 import (
 	"errors"
 	"time"
+	"strconv"
 
 	"miniweb/libs"
 	"miniweb/pb"
-	"utils"
 
 	"github.com/astaxie/beego"
 )
@@ -161,7 +161,7 @@ func VerifyUserLogin(arg *pb.CLogin, session string) (*User, error) {
 	if len(user.Session) == 0 || len(user.ID) == 0 {
 		return nil, errors.New("session invaild")
 	}
-	sign := libs.Sha1Signature(utils.String(arg.GetTimestamp()), session)
+	sign := libs.Sha1Signature(strconv.Itoa(int(arg.GetTimestamp())), session)
 	if sign != arg.GetSignature() {
 		return nil, errors.New("sign failed")
 	}
