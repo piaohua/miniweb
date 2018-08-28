@@ -10,8 +10,8 @@ package models
 
 import (
 	"errors"
-	"time"
 	"strconv"
+	"time"
 
 	"miniweb/libs"
 	"miniweb/pb"
@@ -26,7 +26,7 @@ func RunMode() bool {
 }
 
 //GetSession 获取session
-func GetSession(jscode string) (session string, err error) {
+func GetSession(jscode, ip string) (session string, err error) {
 	wxs, err := WX.Jscode2Session(jscode)
 	if err != nil {
 		return
@@ -68,8 +68,10 @@ func GetSession(jscode string) (session string, err error) {
 	user.SessionKey = wxs.SessionKey
 	user.UnionId = wxs.UnionId
 	user.Session = session
-	//user.SessionTime = time.New()
+	//user.SessionTime = time.Now()
 	user.ID = id
+	user.RegistIP = ip
+	user.Ctime = time.Now()
 	if !user.Save() {
 		err = errors.New("session save failed")
 	}
@@ -119,7 +121,7 @@ func VerifyUserInfo(arg *pb.CWxLogin, session string) (*User, error) {
 }
 
 //GetSessionByCode 获取session(test)
-func GetSessionByCode(jscode string) (session string, err error) {
+func GetSessionByCode(jscode, ip string) (session string, err error) {
 	//已经存在
 	if HasOpenid(jscode) {
 		user := new(User) //TODO 查找session字段
@@ -146,8 +148,10 @@ func GetSessionByCode(jscode string) (session string, err error) {
 	user := new(User)
 	user.OpenId = jscode
 	user.Session = session
-	//user.SessionTime = time.New()
+	//user.SessionTime = time.Now()
 	user.ID = id
+	user.RegistIP = ip
+	user.Ctime = time.Now()
 	if !user.Save() {
 		err = errors.New("session save failed")
 	}

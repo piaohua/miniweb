@@ -1,7 +1,7 @@
 /**********************************************************
  * Author        : piaohua
  * Email         : 814004090@qq.com
- * Last modified : 2018-08-27 21:36:19
+ * Last modified : 2018-08-29 00:28:48
  * Filename      : ws_hander_login.go
  * Description   : login handler
  * *******************************************************/
@@ -53,18 +53,27 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 	case *pb.CUserData:
 		beego.Debug("CUserData ", arg)
 		s2c := new(pb.SUserData)
-		s2c.Data = &pb.UserData{
+		s2c.UserInfo = &pb.UserData{
 			Userid:    ws.user.ID,
 			NickName:  ws.user.NickName,
 			AvatarUrl: ws.user.AvatarUrl,
 			Gender:    ws.user.Gender,
 		}
 		ws.Send(s2c)
-	case *pb.CGameData:
-		beego.Debug("CGameData ", arg)
-		s2c := new(pb.SGameData)
-		s2c.NextInfo = arg.GetGameInfo()
-		s2c.NextInfo.Gate++
+	case *pb.CGateData:
+		beego.Debug("CGateData ", arg)
+		s2c := new(pb.SGateData)
+		ws.Send(s2c)
+	case *pb.CPropData:
+		beego.Debug("CPropData ", arg)
+		s2c := new(pb.SPropData)
+		ws.Send(s2c)
+	case *pb.CGetCurrency:
+		beego.Debug("CGetCurrency ", arg)
+		s2c := new(pb.SGetCurrency)
+		s2c.Coin = ws.user.Coin
+		s2c.Diamond = ws.user.Diamond
+		s2c.Energy = ws.user.Energy
 		ws.Send(s2c)
 	case proto.Message:
 		//响应
@@ -94,25 +103,17 @@ func (ws *WSConn) wxlogin(arg *pb.CWxLogin, ctx actor.Context) {
 	s2c.Userid = user.ID
 	ws.Send(s2c)
 	//成功后处理
-	ws.logined(user.ID, false, ctx)
+	ws.logined(user.ID, ctx)
 }
 
 //登录成功处理
-func (ws *WSConn) logined(userid string, isRegist bool,
-	ctx actor.Context) {
-	//登录成功消息
-	//msg := new(pb.LoginSuccess)
-	//msg.IsRegist = isRegist
-	//msg.Ip = ws.GetIPAddr()
-	//msg.Userid = userid
-	//msg.WsPid = ctx.Self()
-	//pid已经切换为rsPid
-	//ws.pid.Tell(msg)
+func (ws *WSConn) logined(userid string, ctx actor.Context) {
+	ctx.SetReceiveTimeout(0) //login Successfully, timeout off
 	//登录成功
 	ws.online = true
-	//成功
-	ctx.SetReceiveTimeout(0) //login Successfully, timeout off
 	beego.Info("login success: ", userid)
+	ws.user.LoginIP = ws.GetIPAddr()
+	ws.user.LoginTime = time.Now()
 }
 
 //普通登录验证
@@ -141,5 +142,5 @@ func (ws *WSConn) login(arg *pb.CLogin, ctx actor.Context) {
 	s2c.Userid = user.ID
 	ws.Send(s2c)
 	//成功后处理
-	ws.logined(user.ID, false, ctx)
+	ws.logined(user.ID, ctx)
 }

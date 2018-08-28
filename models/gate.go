@@ -1,11 +1,11 @@
 package models
 
 import (
-	"time"
 	"strconv"
+	"time"
 )
 
-//Gate gate 
+//Gate gate
 type Gate struct {
 	ID     string    `bson:"_id" json:"id"`        //unique ID
 	Gateid int32     `bson:"gateid" json:"gateid"` //unique
@@ -27,5 +27,5 @@ type GateInfo struct {
 
 //GeteKey unique key
 func GateKey(Type, Gateid int32) string {
-    return strconv.Itoa(int(Type)) + strconv.Itoa(int(Gateid))
+	return strconv.Itoa(int(Type)) + strconv.Itoa(int(Gateid))
 }

@@ -29,20 +29,20 @@ type User struct {
 	Province    string    `bson:"province", json:"province"`
 	Country     string    `bson:"country", json:"country"`
 	//
-	RegistIP string `bson:"regist_ip" json:"regist_ip"`       // 注册账户时的IP地址
-	LoginIP  string `bson:"login_ip" json:"login_ip"`         // 登录账户时的IP地址
+	RegistIP  string    `bson:"regist_ip" json:"regist_ip"`   // 注册账户时的IP地址
+	LoginIP   string    `bson:"login_ip" json:"login_ip"`     // 登录账户时的IP地址
 	Ctime     time.Time `bson:"ctime" json:"ctime"`           // 注册时间
 	LoginTime time.Time `bson:"login_time" json:"login_time"` // 最后登录时间
 	//
 	LoginTimes uint32 `bson:"login_times" json:"login_times"` //连续登录次数
 	LoginPrize uint32 `bson:"login_prize" json:"login_prize"` //连续登录奖励
-    //
-	Diamond  int64  `bson:"diamond" json:"diamond"`           // 钻石
-	Coin     int64  `bson:"coin" json:"coin"`                 // 金币
-	Energy   int64  `bson:"energy" json:"energy"`             // 精力
-    //
-	Gate   map[string]GateInfo  `bson:"gate" json:"gate"`             // 道具
-	Prop   map[string]PropInfo  `bson:"prop" json:"prop"`             // 道具
+	//
+	Diamond int64 `bson:"diamond" json:"diamond"` // 钻石
+	Coin    int64 `bson:"coin" json:"coin"`       // 金币
+	Energy  int64 `bson:"energy" json:"energy"`   // 精力
+	//
+	Gate map[string]GateInfo `bson:"gate" json:"gate"` // 道具
+	Prop map[string]PropInfo `bson:"prop" json:"prop"` // 道具
 }
 
 //Save 保存

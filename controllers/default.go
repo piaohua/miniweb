@@ -21,8 +21,7 @@ func (c *MainController) Get() {
 	json := make(map[string]interface{}, 0)
 	json["errcode"] = 10001
 	json["errmsg"] = "failed"
-	c.Data["json"] = json
-	c.ServeJSON()
+	c.jsonResult(json)
 }
 
 // Code method handles POST requests for AppController.
@@ -42,8 +41,14 @@ func (this *MainController) Code() {
 		return
 	}
 
+	if !this.isPost() {
+		this.Redirect("/", 302)
+		return
+	}
+
 	//test TODO 控制频率
-	session, err := models.GetSessionByCode(jscode)
+	ip := this.getClientIp()
+	session, err := models.GetSessionByCode(jscode, ip)
 	wsaddr := beego.AppConfig.String("ws.addr")
 
 	jsonData := &models.SessionResult{
@@ -56,8 +61,7 @@ func (this *MainController) Code() {
 			ErrMsg:  err.Error(),
 		}
 	}
-	this.Data["json"] = jsonData
-	this.ServeJSON()
+	this.jsonResult(jsonData)
 }
 
 var langTypes []string // Languages that are supported.
@@ -115,4 +119,24 @@ func (this *baseController) Prepare() {
 
 	// Set template level language option.
 	this.Data["Lang"] = this.Lang
+}
+
+//获取用户IP地址
+func (this *baseController) getClientIp() string {
+	if p := this.Ctx.Input.Proxy(); len(p) > 0 {
+		return p[0]
+	}
+	return this.Ctx.Input.IP()
+}
+
+// 输出json
+func (this *baseController) jsonResult(out interface{}) {
+	this.Data["json"] = out
+	this.ServeJSON()
+	this.StopRun()
+}
+
+// 是否POST提交
+func (this *baseController) isPost() bool {
+	return this.Ctx.Request.Method == "POST"
 }

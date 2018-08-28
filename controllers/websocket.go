@@ -37,7 +37,13 @@ func (this *WebSocketController) Get() {
 	}
 	beego.Info("websocket get jscode", jscode)
 
-	session, err := models.GetSession(jscode)
+	if this.isPost() {
+		this.Redirect("/", 302)
+		return
+	}
+
+	ip := this.getClientIp()
+	session, err := models.GetSession(jscode, ip)
 	wsaddr := beego.AppConfig.String("ws.addr")
 
 	jsonData := &models.SessionResult{
@@ -50,8 +56,7 @@ func (this *WebSocketController) Get() {
 			ErrMsg:  err.Error(),
 		}
 	}
-	this.Data["json"] = jsonData
-	this.ServeJSON()
+	this.jsonResult(jsonData)
 }
 
 // Join method handles WebSocket requests for WebSocketController.
@@ -63,6 +68,11 @@ func (this *WebSocketController) Login() {
 	}
 	beego.Info("websocket join 3rd_session", session)
 
+	if this.isPost() {
+		this.Redirect("/", 302)
+		return
+	}
+
 	// Upgrade from http request to WebSocket.
 	ws, err := Handler.upgrader.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil)
 	if val, ok := err.(websocket.HandshakeError); ok {
@@ -72,8 +82,7 @@ func (this *WebSocketController) Login() {
 			ErrCode: 400,
 			ErrMsg:  err.Error(),
 		}
-		this.Data["json"] = jsonData
-		this.ServeJSON()
+		this.jsonResult(jsonData)
 		return
 	} else if err != nil {
 		beego.Error("Cannot setup WebSocket connection:", err)
@@ -81,8 +90,7 @@ func (this *WebSocketController) Login() {
 			ErrCode: 401,
 			ErrMsg:  err.Error(),
 		}
-		this.Data["json"] = jsonData
-		this.ServeJSON()
+		this.jsonResult(jsonData)
 		return
 	}
 

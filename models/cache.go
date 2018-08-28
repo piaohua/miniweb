@@ -14,6 +14,7 @@ var (
 func init() {
 	var err error
 	Cache, err = cache.NewCache("memory", `{"interval":0}`)
+	//Cache, err = cache.NewCache("redis", `{"key":"collectionName","conn":"127.0.0.1:6039","dbNum":"0","password":"thePassWord"}`)
 	if err != nil {
 		beego.Error("init cache err : ", err)
 		panic(err)
