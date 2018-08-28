@@ -66,6 +66,7 @@ var protosUnpack = map[string][]proto{
 		{code: 1014, name: "CCard"},
 		{code: 1015, name: "CLoginPrize"},
 		{code: 1016, name: "CUseProp"},
+		{code: 1017, name: "CStart"},
 	},
 }
 
@@ -92,6 +93,7 @@ var protosPacket = map[string][]proto{
 		{code: 1014, name: "SCard"},
 		{code: 1015, name: "SLoginPrize"},
 		{code: 1016, name: "SUseProp"},
+		{code: 1017, name: "SStart"},
 	},
 }
 

@@ -74,6 +74,10 @@ func Runpack(id uint32, b []byte) (interface{}, error) {
 		msg := new(SUseProp)
 		err := msg.Unmarshal(b)
 		return msg, err
+	case 1017:
+		msg := new(SStart)
+		err := msg.Unmarshal(b)
+		return msg, err
 	default:
 		return nil, errors.New("unknown message")
 	}

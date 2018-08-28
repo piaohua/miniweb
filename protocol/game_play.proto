@@ -4,6 +4,19 @@ import "game_code.proto";
 import "game_pub.proto";
 import "game_type.proto";
 
+// 开始
+message CStart
+{
+    GateType type = 1;//类型
+    int32 gateid  = 2;//关卡id
+}
+
+message SStart
+{
+    GateData gateInfo = 1; //关卡信息
+    ErrCode error = 2;//错误码
+}
+
 // 结算数据
 message COverData
 {

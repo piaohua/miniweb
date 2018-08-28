@@ -12,6 +12,7 @@ msgID = {
 	CCard = 1014,
 	CLoginPrize = 1015,
 	CUseProp = 1016,
+	CStart = 1017,
 
 	SWxLogin = 1001,
 	SLogin = 1002,
@@ -29,4 +30,5 @@ msgID = {
 	SCard = 1014,
 	SLoginPrize = 1015,
 	SUseProp = 1016,
+	SStart = 1017,
 }

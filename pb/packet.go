@@ -58,6 +58,9 @@ func Packet(msg interface{}) (uint32, uint32, []byte, error) {
 	case *SUseProp:
 		b, err := msg.(*SUseProp).Marshal()
 		return 1016, 0, b, err
+	case *SStart:
+		b, err := msg.(*SStart).Marshal()
+		return 1017, 0, b, err
 	default:
 		return 0, 0, []byte{}, errors.New("unknown message")
 	}

@@ -62,6 +62,10 @@ func Unpack(id uint32, b []byte) (interface{}, error) {
 		msg := new(CUseProp)
 		err := msg.Unmarshal(b)
 		return msg, err
+	case 1017:
+		msg := new(CStart)
+		err := msg.Unmarshal(b)
+		return msg, err
 	default:
 		return nil, errors.New("unknown message")
 	}
