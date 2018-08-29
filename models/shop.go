@@ -43,7 +43,11 @@ func SetShopList() {
 	NewShop("2", int32(pb.SHOP_STATUS1), int32(pb.PROP_TYPE1),
 		int32(pb.PAY_WAY0), 10000, 100, "钻石", "100元兑换10000钻石")
 	NewShop("3", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE3),
-		int32(pb.PAY_WAY1), 100, 10, "精力", "10钻石兑换100精力")
+		int32(pb.PAY_WAY1), 100, 10, "初级精力瓶", "10钻石兑换100初级精力瓶")
+	NewShop("4", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE3),
+		int32(pb.PAY_WAY1), 100, 10, "中级精力瓶", "10钻石兑换100中级精力瓶")
+	NewShop("5", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE3),
+		int32(pb.PAY_WAY1), 100, 10, "高级精力瓶", "10钻石兑换100高级精力瓶")
 }
 
 //NewShop 添加商品
@@ -60,6 +64,30 @@ func NewShop(id string, status, proptype, payway int32,
 		Info:   info,
 		Etime:  time.Now().AddDate(0, 0, 100),
 	}
-	//config.SetShop(t)
 	t.Save()
+}
+
+//ShopKey unique key
+func ShopKey(id string) string {
+	return "shop" + id
+}
+
+//GetShops by cache
+func GetShops() (l []Shop) {
+    if v := Cache.Get("shop"); v != nil {
+        if val, ok := v.([]Shop); ok {
+            l = val
+        }
+    }
+    return
+}
+
+//GetShop get shop by id
+func GetShop(id string) (shop *Shop) {
+    if v := Cache.Get(ShopKey(id)); v != nil {
+        if val, ok := v.(*Shop); ok {
+            shop = val
+        }
+    }
+    return
 }

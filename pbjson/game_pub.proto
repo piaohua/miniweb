@@ -19,9 +19,9 @@ message GateData
 {
     GateType type = 1;//类型
     int32 gateid  = 2;//关卡id
-    int32 times   = 3;//次数
+    int32 num     = 3;//完成次数
     bytes data    = 4;//数据
-    int32 stars   = 5;//星数
+    int32 star    = 5;//星数
 }
 
 // 道具数据
@@ -30,12 +30,13 @@ message PropData
     PropType type = 1;//类型
     int32 num     = 2;//数量
     int32 attr    = 3;//属性
+    string name   = 4;//名字
 }
 
 // 商品信息
 message Shop
 {
-    uint32 id     = 1; //购买ID
+    string id     = 1; //购买ID
     ShopStatus status = 2; //物品状态
     PropType type = 3; //兑换的物品
     PayWay way = 4; //支付方式

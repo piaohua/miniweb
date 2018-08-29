@@ -40,8 +40,9 @@ type User struct {
 	Diamond int64 `bson:"diamond" json:"diamond"` // 钻石
 	Coin    int64 `bson:"coin" json:"coin"`       // 金币
 	Energy  int64 `bson:"energy" json:"energy"`   // 精力
+	EnergyTime int64 `bson:"energy_time" json:"energy_time"`   // 精力恢复时间
 	//
-	Gate map[string]GateInfo `bson:"gate" json:"gate"` // 道具
+	Gate map[string]GateInfo `bson:"gate" json:"gate"` // 关卡
 	Prop map[string]PropInfo `bson:"prop" json:"prop"` // 道具
 }
 
@@ -79,4 +80,15 @@ func (u *User) GetBySession(session string) {
 func (u *User) UpdateSessionKey() bool {
 	return Update(Users, bson.M{"_id": u.ID},
 		bson.M{"$set": bson.M{"session_key": u.SessionKey}})
+}
+
+//AddEnergy add energy
+func (u *User) AddEnergy(num int64) {
+    u.Energy += num
+    if u.Energy < 0 {
+        u.Energy = 0
+    }
+    if u.Energy > 30 {
+        u.Energy = 30
+    }
 }

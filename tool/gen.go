@@ -83,7 +83,6 @@ var protosPacket = map[string][]proto{
 		{code: 1006, name: "SPing"},
 		{code: 1007, name: "SPropData"},
 		{code: 1008, name: "SGetCurrency"},
-		{code: 1009, name: "SPushCurrency"},
 		{code: 1010, name: "SPushProp"},
 		//shop
 		{code: 1011, name: "SShop"},

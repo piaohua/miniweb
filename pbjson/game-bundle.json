@@ -80,7 +80,8 @@
         "LogType": {
           "values": {
             "LOG_TYPE0": 0,
-            "LOG_TYPE1": 1
+            "LOG_TYPE1": 1,
+            "LOG_TYPE2": 2
           }
         },
         "GateType": {
@@ -224,26 +225,6 @@
             }
           }
         },
-        "SPushCurrency": {
-          "fields": {
-            "type": {
-              "type": "LogType",
-              "id": 1
-            },
-            "coin": {
-              "type": "int64",
-              "id": 2
-            },
-            "diamond": {
-              "type": "int64",
-              "id": 3
-            },
-            "energy": {
-              "type": "int64",
-              "id": 4
-            }
-          }
-        },
         "SPushProp": {
           "fields": {
             "type": {
@@ -255,7 +236,7 @@
               "id": 2
             },
             "num": {
-              "type": "int32",
+              "type": "int64",
               "id": 3
             }
           }
@@ -302,7 +283,7 @@
               "type": "int32",
               "id": 2
             },
-            "times": {
+            "num": {
               "type": "int32",
               "id": 3
             },
@@ -310,7 +291,7 @@
               "type": "bytes",
               "id": 4
             },
-            "stars": {
+            "star": {
               "type": "int32",
               "id": 5
             }
@@ -329,13 +310,17 @@
             "attr": {
               "type": "int32",
               "id": 3
+            },
+            "name": {
+              "type": "string",
+              "id": 4
             }
           }
         },
         "Shop": {
           "fields": {
             "id": {
-              "type": "uint32",
+              "type": "string",
               "id": 1
             },
             "status": {

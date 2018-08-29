@@ -55,7 +55,6 @@ It has these top-level messages:
 	SPropData
 	CGetCurrency
 	SGetCurrency
-	SPushCurrency
 	SPushProp
 */
 package pb

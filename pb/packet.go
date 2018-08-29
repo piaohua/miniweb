@@ -34,9 +34,6 @@ func Packet(msg interface{}) (uint32, uint32, []byte, error) {
 	case *SGetCurrency:
 		b, err := msg.(*SGetCurrency).Marshal()
 		return 1008, 0, b, err
-	case *SPushCurrency:
-		b, err := msg.(*SPushCurrency).Marshal()
-		return 1009, 0, b, err
 	case *SPushProp:
 		b, err := msg.(*SPushProp).Marshal()
 		return 1010, 0, b, err

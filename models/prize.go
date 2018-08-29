@@ -44,7 +44,11 @@ func SetLoginPrizeList() {
 			Coin:    int64(coin),
 			Day:     i,
 		}
-		//config.SetLogin(t)
 		t.Save()
 	}
+}
+
+//PrizeKey unique key
+func PrizeKey(id string) string {
+	return "prize" + id
 }

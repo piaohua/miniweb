@@ -31,11 +31,7 @@ func (ws *WSConn) handlerLogin(msg interface{}, ctx actor.Context) {
 		beego.Debug("CLogin ", arg)
 		ws.login(arg, ctx)
 	case proto.Message:
-		//响应
-		if ws.online {
-			ws.handlerLogined(arg, ctx)
-			//ws.Send(arg)
-		}
+        ws.handlerLogined(arg, ctx)
 	default:
 		beego.Error("unknown message ", arg)
 	}
@@ -49,32 +45,30 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 	if ws.user == nil {
 		return
 	}
+    beego.Debug("userid %s, msg %#v", ws.user.ID, msg)
 	switch arg := msg.(type) {
 	case *pb.CUserData:
-		beego.Debug("CUserData ", arg)
-		s2c := new(pb.SUserData)
-		s2c.UserInfo = &pb.UserData{
-			Userid:    ws.user.ID,
-			NickName:  ws.user.NickName,
-			AvatarUrl: ws.user.AvatarUrl,
-			Gender:    ws.user.Gender,
-		}
-		ws.Send(s2c)
+        ws.getUserData(arg)
 	case *pb.CGateData:
-		beego.Debug("CGateData ", arg)
-		s2c := new(pb.SGateData)
-		ws.Send(s2c)
+        ws.getGateData()
 	case *pb.CPropData:
-		beego.Debug("CPropData ", arg)
-		s2c := new(pb.SPropData)
-		ws.Send(s2c)
+        ws.getPropData()
 	case *pb.CGetCurrency:
-		beego.Debug("CGetCurrency ", arg)
-		s2c := new(pb.SGetCurrency)
-		s2c.Coin = ws.user.Coin
-		s2c.Diamond = ws.user.Diamond
-		s2c.Energy = ws.user.Energy
-		ws.Send(s2c)
+        ws.getCurrency()
+	case *pb.CShop:
+        ws.getShopData()
+	case *pb.CBuy:
+        ws.buy(arg)
+	case *pb.COverData:
+        ws.overData(arg)
+	case *pb.CCard:
+        ws.card(arg)
+	case *pb.CLoginPrize:
+        ws.loginPrize(arg)
+	case *pb.CUseProp:
+        ws.useProp(arg)
+	case *pb.CStart:
+        ws.gameStart(arg)
 	case proto.Message:
 		//响应
 		ws.Send(arg)
@@ -114,6 +108,14 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 	beego.Info("login success: ", userid)
 	ws.user.LoginIP = ws.GetIPAddr()
 	ws.user.LoginTime = time.Now()
+    //初始化
+    models.PropInit(ws.user)
+    models.GateInit(ws.user)
+    //精力恢复
+    msg := models.CheckEnergy(ws.user)
+    if msg != nil {
+        ws.Send(msg)
+    }
 }
 
 //普通登录验证

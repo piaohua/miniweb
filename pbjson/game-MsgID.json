@@ -14,6 +14,5 @@
 	1016:{type:"room",		sendType:"pb.CUseProp",		revType:"pb.SUseProp",		},
 	1017:{type:"room",		sendType:"pb.CStart",		revType:"pb.SStart",		},
 	1003:{type:"room",		sendType:"",		revType:"pb.SLoginOut",		},
-	1009:{type:"room",		sendType:"",		revType:"pb.SPushCurrency",		},
 	1010:{type:"room",		sendType:"",		revType:"pb.SPushProp",		},
 }

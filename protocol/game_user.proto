@@ -62,19 +62,10 @@ message SGetCurrency
     int64 energy   = 3;//精力
 }
 
-// 推送变更货币数量
-message SPushCurrency
-{
-    LogType type   = 1;//类型
-    int64 coin     = 2;//金币
-    int64 diamond  = 3;//钻石
-    int64 energy   = 4;//精力
-}
-
 // 推送变更道具数量
 message SPushProp
 {
-    LogType type   = 1;//类型
-    PropType ptype = 2;//类型
-    int32 num      = 3;//数量
+    LogType type   = 1;//日志类型
+    PropType ptype = 2;//道具类型
+    int64 num      = 3;//变更数量
 }

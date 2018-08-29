@@ -22,7 +22,6 @@ msgID = {
 	SPing : 1006,
 	SPropData : 1007,
 	SGetCurrency : 1008,
-	SPushCurrency : 1009,
 	SPushProp : 1010,
 	SShop : 1011,
 	SBuy : 1012,

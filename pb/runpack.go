@@ -42,10 +42,6 @@ func Runpack(id uint32, b []byte) (interface{}, error) {
 		msg := new(SGetCurrency)
 		err := msg.Unmarshal(b)
 		return msg, err
-	case 1009:
-		msg := new(SPushCurrency)
-		err := msg.Unmarshal(b)
-		return msg, err
 	case 1010:
 		msg := new(SPushProp)
 		err := msg.Unmarshal(b)
