@@ -17,11 +17,15 @@ message SShop
 // 商城购买
 message CBuy
 {
-    uint32 id   = 1;//购买ID
+    string id   = 1;//购买ID
 }
 
 message SBuy
 {
-    uint32 result  = 1; //0购买成功,1失败
+    enum BuyStatus {
+        BuySuccess = 0;//成功
+        BuyFailed = 1;//失败
+    }
+    BuyStatus status  = 1; //0购买成功,1失败
     ErrCode error  = 2; //错误码
 }

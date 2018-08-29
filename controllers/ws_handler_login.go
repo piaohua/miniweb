@@ -31,7 +31,7 @@ func (ws *WSConn) handlerLogin(msg interface{}, ctx actor.Context) {
 		beego.Debug("CLogin ", arg)
 		ws.login(arg, ctx)
 	case proto.Message:
-        ws.handlerLogined(arg, ctx)
+		ws.handlerLogined(arg, ctx)
 	default:
 		beego.Error("unknown message ", arg)
 	}
@@ -45,30 +45,30 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 	if ws.user == nil {
 		return
 	}
-    beego.Debug("userid %s, msg %#v", ws.user.ID, msg)
+	beego.Debug("userid %s, msg %#v", ws.user.ID, msg)
 	switch arg := msg.(type) {
 	case *pb.CUserData:
-        ws.getUserData(arg)
+		ws.getUserData(arg)
 	case *pb.CGateData:
-        ws.getGateData()
+		ws.getGateData()
 	case *pb.CPropData:
-        ws.getPropData()
+		ws.getPropData()
 	case *pb.CGetCurrency:
-        ws.getCurrency()
+		ws.getCurrency()
 	case *pb.CShop:
-        ws.getShopData()
+		ws.getShopData()
 	case *pb.CBuy:
-        ws.buy(arg)
+		ws.buy(arg)
 	case *pb.COverData:
-        ws.overData(arg)
+		ws.overData(arg)
 	case *pb.CCard:
-        ws.card(arg)
+		ws.card(arg)
 	case *pb.CLoginPrize:
-        ws.loginPrize(arg)
+		ws.loginPrize(arg)
 	case *pb.CUseProp:
-        ws.useProp(arg)
+		ws.useProp(arg)
 	case *pb.CStart:
-        ws.gameStart(arg)
+		ws.gameStart(arg)
 	case proto.Message:
 		//响应
 		ws.Send(arg)
@@ -84,12 +84,12 @@ func (ws *WSConn) wxlogin(arg *pb.CWxLogin, ctx actor.Context) {
 	beego.Info("wxlogin user: ", user)
 	if err != nil {
 		beego.Error("wxlogin err: ", err)
-		s2c.Error = pb.LoginFaild
+		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
 		return
 	}
 	if user == nil {
-		s2c.Error = pb.LoginFaild
+		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
 		return
 	}
@@ -108,14 +108,14 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 	beego.Info("login success: ", userid)
 	ws.user.LoginIP = ws.GetIPAddr()
 	ws.user.LoginTime = time.Now()
-    //初始化
-    models.PropInit(ws.user)
-    models.GateInit(ws.user)
-    //精力恢复
-    msg := models.CheckEnergy(ws.user)
-    if msg != nil {
-        ws.Send(msg)
-    }
+	//初始化
+	models.PropInit(ws.user)
+	models.GateInit(ws.user)
+	//精力恢复
+	msg := models.CheckEnergy(ws.user)
+	if msg != nil {
+		ws.Send(msg)
+	}
 }
 
 //普通登录验证
@@ -123,7 +123,7 @@ func (ws *WSConn) login(arg *pb.CLogin, ctx actor.Context) {
 	s2c := new(pb.SLogin)
 	if models.RunMode() {
 		beego.Error("login runmode")
-		s2c.Error = pb.LoginFaild
+		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
 		return
 	}
@@ -131,12 +131,12 @@ func (ws *WSConn) login(arg *pb.CLogin, ctx actor.Context) {
 	beego.Info("login user: ", user)
 	if err != nil {
 		beego.Error("login err: ", err)
-		s2c.Error = pb.LoginFaild
+		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
 		return
 	}
 	if user == nil {
-		s2c.Error = pb.LoginFaild
+		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
 		return
 	}

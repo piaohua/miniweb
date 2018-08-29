@@ -73,8 +73,10 @@
         "ErrCode": {
           "values": {
             "OK": 0,
-            "RegistFaild": 1,
-            "LoginFaild": 2
+            "RegistFailed": 1,
+            "LoginFailed": 2,
+            "PropNotEnough": 3,
+            "GateUnreachable": 4
           }
         },
         "LogType": {

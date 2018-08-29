@@ -22,7 +22,7 @@ message COverData
 {
     GateType type = 1;//类型
     int32 gateid  = 2;//关卡id
-    int32 stars   = 3;//星数
+    int32 star    = 3;//星数
 }
 
 message SOverData

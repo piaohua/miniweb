@@ -3,6 +3,10 @@ package models
 import (
 	"strconv"
 	"time"
+
+	"miniweb/pb"
+
+	"github.com/globalsign/mgo/bson"
 )
 
 //Gate gate
@@ -39,7 +43,7 @@ func (t *Gate) Save() bool {
 	return Insert(Gates, t)
 }
 
-//GeteKey unique key
+//GateKey unique key
 func GateKey(Type, Gateid int32) string {
 	return strconv.Itoa(int(Type)) + strconv.Itoa(int(Gateid))
 }
@@ -51,18 +55,48 @@ func GateUniqueKey(Type, Gateid int32) string {
 
 //GateInit gate init
 func GateInit(user *User) {
-    if user.Gate != nil {
-        return
-    }
-    user.Gate = make(map[string]GateInfo)
+	if user.Gate != nil {
+		return
+	}
+	user.Gate = make(map[string]GateInfo)
+	AddGate(user, int32(pb.GATE_TYPE1), 1, 0)
+}
+
+//AddGate add new gate
+func AddGate(user *User, Type, id, star int32) {
+	key := GateKey(Type, id)
+	if val, ok := user.Gate[key]; ok {
+		val.Num++
+		if val.Star < star {
+			val.Star = star
+		}
+		user.Gate[key] = val
+		return
+	}
+	user.Gate[key] = GateInfo{
+		Gateid: id,
+		Type:   Type,
+		Star:   star,
+	}
+}
+
+//AddNewGate add new gate
+func AddNewGate(user *User, Type, id int32) {
+	key := GateKey(Type, id)
+	if _, ok := user.Gate[key]; !ok {
+		user.Gate[key] = GateInfo{
+			Gateid: id,
+			Type:   Type,
+		}
+	}
 }
 
 //GetGate get gate by type and id
 func GetGate(Type, Gateid int32) (gate *Gate) {
-    if v := Cache.Get(GateUniqueKey(Type, Gateid)); v != nil {
-        if val, ok := v.(*Gate); ok {
-            gate = val
-        }
-    }
-    return
+	if v := Cache.Get(GateUniqueKey(Type, Gateid)); v != nil {
+		if val, ok := v.(*Gate); ok {
+			gate = val
+		}
+	}
+	return
 }

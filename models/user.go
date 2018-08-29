@@ -1,7 +1,7 @@
 /**********************************************************
  * Author        : piaohua
  * Email         : 814004090@qq.com
- * Last modified : 2018-08-25 21:26:30
+ * Last modified : 2018-08-30 01:09:26
  * Filename      : user.go
  * Description   : 玩家数据
  * *******************************************************/
@@ -10,6 +10,8 @@ package models
 
 import (
 	"time"
+
+	"miniweb/pb"
 
 	"github.com/globalsign/mgo/bson"
 )
@@ -37,10 +39,10 @@ type User struct {
 	LoginTimes uint32 `bson:"login_times" json:"login_times"` //连续登录次数
 	LoginPrize uint32 `bson:"login_prize" json:"login_prize"` //连续登录奖励
 	//
-	Diamond int64 `bson:"diamond" json:"diamond"` // 钻石
-	Coin    int64 `bson:"coin" json:"coin"`       // 金币
-	Energy  int64 `bson:"energy" json:"energy"`   // 精力
-	EnergyTime int64 `bson:"energy_time" json:"energy_time"`   // 精力恢复时间
+	Diamond    int64 `bson:"diamond" json:"diamond"`         // 钻石
+	Coin       int64 `bson:"coin" json:"coin"`               // 金币
+	Energy     int64 `bson:"energy" json:"energy"`           // 精力
+	EnergyTime int64 `bson:"energy_time" json:"energy_time"` // 精力恢复时间
 	//
 	Gate map[string]GateInfo `bson:"gate" json:"gate"` // 关卡
 	Prop map[string]PropInfo `bson:"prop" json:"prop"` // 道具
@@ -84,11 +86,49 @@ func (u *User) UpdateSessionKey() bool {
 
 //AddEnergy add energy
 func (u *User) AddEnergy(num int64) {
-    u.Energy += num
-    if u.Energy < 0 {
-        u.Energy = 0
-    }
-    if u.Energy > 30 {
-        u.Energy = 30
-    }
+	u.Energy += num
+	if u.Energy < 0 {
+		u.Energy = 0
+	}
+	if u.Energy > 30 {
+		u.Energy = 30
+	}
+}
+
+//AddCoin add coin
+func (u *User) AddCoin(num int64) {
+	u.Coin += num
+	if u.Coin < 0 {
+		u.Coin = 0
+	}
+}
+
+//AddDiamond add diamond
+func (u *User) AddDiamond(num int64) {
+	u.Diamond += num
+	if u.Diamond < 0 {
+		u.Diamond = 0
+	}
+}
+
+//AddCoinMsg add coin msg
+func AddCoinMsg(user *User, num int64) (msg *pb.SPushProp) {
+	user.AddCoin(num)
+	msg = &pb.SPushProp{
+		//Type: pb.LOG_TYPE0,
+		Ptype: pb.PROP_TYPE2,
+		Num:   num,
+	}
+	return
+}
+
+//AddDiamondMsg add diamond msg
+func AddDiamondMsg(user *User, num int64) (msg *pb.SPushProp) {
+	user.AddDiamond(num)
+	msg = &pb.SPushProp{
+		//Type: pb.LOG_TYPE0,
+		Ptype: pb.PROP_TYPE2,
+		Num:   num,
+	}
+	return
 }
