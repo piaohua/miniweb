@@ -76,7 +76,13 @@
             "RegistFailed": 1,
             "LoginFailed": 2,
             "PropNotEnough": 3,
-            "GateUnreachable": 4
+            "GateUnreachable": 4,
+            "EnergyNotEnough": 5,
+            "CoinNotEnough": 6,
+            "DiamondNotEnough": 7,
+            "AlreadyAward": 8,
+            "AwardFailed": 9,
+            "OrderFailed": 10
           }
         },
         "LogType": {
@@ -361,17 +367,14 @@
               "type": "uint32",
               "id": 1
             },
-            "coin": {
-              "type": "int64",
+            "prize": {
+              "rule": "repeated",
+              "type": "LoginPrizeProp",
               "id": 2
-            },
-            "diamond": {
-              "type": "int64",
-              "id": 3
             },
             "status": {
               "type": "LoginPrizeStatus",
-              "id": 4
+              "id": 3
             }
           },
           "nested": {
@@ -380,6 +383,192 @@
                 "LoginPrizeNone": 0,
                 "LoginPrizeDone": 1,
                 "LoginPrizeGot": 2
+              }
+            }
+          }
+        },
+        "LoginPrizeProp": {
+          "fields": {
+            "type": {
+              "type": "PropType",
+              "id": 1
+            },
+            "number": {
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "CStart": {
+          "fields": {
+            "type": {
+              "type": "GateType",
+              "id": 1
+            },
+            "gateid": {
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "SStart": {
+          "fields": {
+            "gateInfo": {
+              "type": "GateData",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "COverData": {
+          "fields": {
+            "type": {
+              "type": "GateType",
+              "id": 1
+            },
+            "gateid": {
+              "type": "int32",
+              "id": 2
+            },
+            "star": {
+              "type": "int32",
+              "id": 3
+            }
+          }
+        },
+        "SOverData": {
+          "fields": {
+            "cardInfo": {
+              "type": "int32",
+              "id": 1
+            },
+            "gateInfo": {
+              "type": "GateData",
+              "id": 2
+            },
+            "propInfo": {
+              "rule": "repeated",
+              "type": "PropData",
+              "id": 3
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 4
+            }
+          }
+        },
+        "CCard": {
+          "fields": {}
+        },
+        "SCard": {
+          "fields": {
+            "leftTimes": {
+              "type": "int32",
+              "id": 1
+            },
+            "propInfo": {
+              "rule": "repeated",
+              "type": "PropData",
+              "id": 3
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CLoginPrize": {
+          "fields": {
+            "type": {
+              "type": "LoginPrizeType",
+              "id": 1
+            },
+            "day": {
+              "type": "uint32",
+              "id": 2
+            }
+          }
+        },
+        "SLoginPrize": {
+          "fields": {
+            "type": {
+              "type": "LoginPrizeType",
+              "id": 1
+            },
+            "list": {
+              "rule": "repeated",
+              "type": "LoginPrize",
+              "id": 2
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 3
+            }
+          }
+        },
+        "CUseProp": {
+          "fields": {
+            "ptype": {
+              "type": "PropType",
+              "id": 1
+            }
+          }
+        },
+        "SUseProp": {
+          "fields": {
+            "ptype": {
+              "type": "PropType",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CShop": {
+          "fields": {}
+        },
+        "SShop": {
+          "fields": {
+            "list": {
+              "rule": "repeated",
+              "type": "Shop",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CBuy": {
+          "fields": {
+            "id": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "SBuy": {
+          "fields": {
+            "status": {
+              "type": "BuyStatus",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          },
+          "nested": {
+            "BuyStatus": {
+              "values": {
+                "BuySuccess": 0,
+                "BuyFailed": 1
               }
             }
           }

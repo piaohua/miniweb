@@ -38,21 +38,32 @@ func (t *Prop) Save() bool {
 	return Insert(Props, t)
 }
 
-//AddPropMsg add prop msg
-func AddPropMsg(user *User, key string, n int32,
-	ptype pb.PropType) (msg *pb.SPushProp) {
-	if val, ok := user.Prop[key]; ok {
-		val.Num += n
-		if val.Num <= 0 {
-			delete(user.Prop, key)
-		}
-	}
-	msg = &pb.SPushProp{
-		//Type: pb.LOG_TYPE0,
-		Ptype: ptype,
-		Num:   int64(n),
-	}
-	return
+//AddPropMsg add prop msg, TODO 日志
+func AddPropMsg(user *User, key string, num int64,
+ptype pb.PropType) (msg *pb.SPushProp) {
+    switch ptype {
+    case pb.PROP_TYPE1:
+        msg = AddDiamondMsg(user, num)
+        return
+    case pb.PROP_TYPE2:
+        msg = AddCoinMsg(user, num)
+        return
+    case pb.PROP_TYPE3:
+        msg = AddEnergyMsg(user, num)
+        return
+    }
+    if val, ok := user.Prop[key]; ok {
+        val.Num += int32(num)
+        if val.Num <= 0 {
+            delete(user.Prop, key)
+        }
+    }
+    msg = &pb.SPushProp{
+        //Type: pb.LOG_TYPE0,
+        Ptype: ptype,
+        Num:   num,
+    }
+    return
 }
 
 //PropKey unique key

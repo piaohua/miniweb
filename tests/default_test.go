@@ -1,15 +1,18 @@
 package test
 
 import (
+	"time"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"runtime"
 	"path/filepath"
+
 	_ "miniweb/routers"
 
 	"github.com/astaxie/beego"
 	. "github.com/smartystreets/goconvey/convey"
+    "github.com/gorilla/websocket"
 )
 
 func init() {
@@ -37,3 +40,23 @@ func TestBeego(t *testing.T) {
 	})
 }
 
+
+// TestWS is a sample to run an endpoint test
+func TestWS(t *testing.T) {
+    ws := "ws://localhost:8080/ws/login?3rd_session=813c37947b55ca2fe2648cf6e91912df"
+    beego.Trace("ws %s\n", ws)
+	c, _, err := websocket.DefaultDialer.Dial(ws, nil)
+	beego.Trace("err -> %+v\n", err)
+	if err != nil {
+		beego.Trace("err -> %+v\n", err)
+	}
+	if c != nil {
+        <-time.After(time.Duration(1) * time.Second)
+        buff := make([]byte, 0)
+        beego.Trace("send msg: %d\n", len(buff))
+		c.WriteMessage(websocket.BinaryMessage, buff)
+        <-time.After(time.Duration(1) * time.Second)
+        beego.Trace("close conn\n")
+		c.Close()
+	}
+}

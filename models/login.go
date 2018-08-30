@@ -72,6 +72,7 @@ func GetSession(jscode, ip string) (session string, err error) {
 	user.ID = id
 	user.RegistIP = ip
 	user.Ctime = time.Now()
+	user.Energy = 30
 	if !user.Save() {
 		err = errors.New("session save failed")
 	}
@@ -152,6 +153,7 @@ func GetSessionByCode(jscode, ip string) (session string, err error) {
 	user.ID = id
 	user.RegistIP = ip
 	user.Ctime = time.Now()
+	user.Energy = 30
 	if !user.Save() {
 		err = errors.New("session save failed")
 	}

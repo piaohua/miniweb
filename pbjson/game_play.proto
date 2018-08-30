@@ -28,7 +28,7 @@ message COverData
 message SOverData
 {
     int32 cardInfo = 1; //卡片奖励次数信息
-    GateData nextGate = 2; //下一关卡信息
+    GateData gateInfo = 2; //关卡信息
     repeated PropData propInfo = 3; //道具奖励信息
     ErrCode error = 4;//错误码
 }

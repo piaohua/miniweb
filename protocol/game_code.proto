@@ -11,4 +11,10 @@ enum ErrCode {
     LoginFailed            =  2; //登录失败
     PropNotEnough          =  3; //道具不足
     GateUnreachable        =  4; //关卡不可达
+    EnergyNotEnough        =  5; //精力不足
+    CoinNotEnough          =  6; //金币不足
+    DiamondNotEnough       =  7; //钻石不足
+    AlreadyAward           =  8; //已经领取奖励
+    AwardFailed            =  9; //领取奖励失败
+    OrderFailed            = 10; //下单失败
 }

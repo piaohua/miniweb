@@ -116,6 +116,8 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 	if msg != nil {
 		ws.Send(msg)
 	}
+    //更新连续登录
+    ws.loginPrizeInit()
 }
 
 //普通登录验证

@@ -10,7 +10,7 @@ import (
 
 //Shop 商城
 type Shop struct {
-	Id     string    `bson:"_id" json:"id"`        //购买ID
+	ID     string    `bson:"_id" json:"id"`        //购买ID
 	Status int32     `bson:"status" json:"status"` //物品状态
 	Ptype  int32     `bson:"ptype" json:"ptype"`   //兑换的物品
 	Payway int32     `bson:"payway" json:"payway"` //支付方式
@@ -50,11 +50,20 @@ func SetShopList() {
 		int32(pb.PAY_WAY1), 100, 10, "高级精力瓶", "10钻石兑换100高级精力瓶")
 }
 
+//InitShopList init shop to cache
+func InitShopList() {
+    list := GetShopList()
+    Cache.Put("shop", list, 0)
+    for k, v := range list {
+        Cache.Put(ShopKey(v.ID), &list[k], 0)
+    }
+}
+
 //NewShop 添加商品
 func NewShop(id string, status, proptype, payway int32,
 	number, price uint32, name, info string) {
 	t := Shop{
-		Id:     id,
+		ID:     id,
 		Status: status,
 		Ptype:  proptype,
 		Payway: payway,
@@ -72,7 +81,7 @@ func ShopKey(id string) string {
 	return "shop" + id
 }
 
-//GetShops by cache
+//GetShops from cache
 func GetShops() (l []Shop) {
     if v := Cache.Get("shop"); v != nil {
         if val, ok := v.([]Shop); ok {
@@ -82,7 +91,7 @@ func GetShops() (l []Shop) {
     return
 }
 
-//GetShop get shop by id
+//GetShop get shop from cache by id
 func GetShop(id string) (shop *Shop) {
     if v := Cache.Get(ShopKey(id)); v != nil {
         if val, ok := v.(*Shop); ok {

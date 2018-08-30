@@ -9,6 +9,8 @@
 package controllers
 
 import (
+    "time"
+
 	"miniweb/models"
 	"miniweb/pb"
 
@@ -75,7 +77,7 @@ func (ws *WSConn) getShopData() {
 	list := models.GetShops()
 	for _, v := range list {
 		shop := &pb.Shop{
-			Id:     v.Id,
+			Id:     v.ID,
 			Status: pb.ShopStatus(v.Status),
 			Type:   pb.PropType(v.Ptype),
 			Way:    pb.PayWay(v.Payway),
@@ -92,8 +94,45 @@ func (ws *WSConn) getShopData() {
 //buy handler
 func (ws *WSConn) buy(arg *pb.CBuy) {
 	s2c := new(pb.SBuy)
-	//shop := models.GetShop(arg.GetId())
+	shop := models.GetShop(arg.GetId())
+    if shop == nil {
+        beego.Error("order failed ", arg.GetId())
+        s2c.Error = pb.OrderFailed
+        ws.Send(s2c)
+        return
+    }
+    switch shop.Payway {
+    case int32(pb.PAY_WAY0):
+        //TODO RMB
+        beego.Error("buy failed no money ", arg.GetId())
+        s2c.Error = pb.OrderFailed
+        ws.Send(s2c)
+        return
+    case int32(pb.PAY_WAY1):
+        if ws.user.Diamond < int64(shop.Price) {
+            s2c.Error = pb.DiamondNotEnough
+            s2c.Status = pb.BuyFailed
+            ws.Send(s2c)
+            return
+        }
+        msg1 := models.AddDiamondMsg(ws.user, -1 * int64(shop.Price))
+        ws.Send(msg1)
+    case int32(pb.PAY_WAY2):
+        if ws.user.Coin < int64(shop.Price) {
+            s2c.Error = pb.CoinNotEnough
+            s2c.Status = pb.BuyFailed
+            ws.Send(s2c)
+            return
+        }
+        msg1 := models.AddCoinMsg(ws.user, -1 * int64(shop.Price))
+        ws.Send(msg1)
+    }
+    s2c.Status = pb.BuySuccess
 	ws.Send(s2c)
+    //发货
+    key := models.PropKey(int32(shop.Ptype))
+    msg2 := models.AddPropMsg(ws.user, key, int64(shop.Number), pb.PropType(shop.Ptype))
+    ws.Send(msg2)
 }
 
 //over handler
@@ -119,15 +158,13 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 		//add new gateid
 		nextid := gateID + 1
 		models.AddNewGate(ws.user, Type, nextid)
-		nextKey := models.GateKey(Type, nextid)
-		if nextVal, ok := ws.user.Gate[nextKey]; ok {
-			s2c.NextGate = &pb.GateData{
-				Type:   arg.GetType(),
-				Gateid: gateID + 1,
-				Num:    nextVal.Num,
-				Star:   nextVal.Star,
-			}
-		}
+        //gate info
+        s2c.GateInfo = &pb.GateData{
+            Type:   arg.GetType(),
+            Gateid: gateID,
+            Num:    ws.user.Gate[key].Num,
+            Star:   ws.user.Gate[key].Star,
+        }
 		ws.Send(s2c)
 		return
 	}
@@ -166,12 +203,6 @@ func (ws *WSConn) card(arg *pb.CCard) {
 	ws.Send(s2c)
 }
 
-//login prize handler
-func (ws *WSConn) loginPrize(arg *pb.CLoginPrize) {
-	s2c := new(pb.SLoginPrize)
-	ws.Send(s2c)
-}
-
 //use prop handler
 func (ws *WSConn) useProp(arg *pb.CUseProp) {
 	s2c := new(pb.SUseProp)
@@ -204,6 +235,10 @@ func (ws *WSConn) useProp(arg *pb.CUseProp) {
 //game start handler
 func (ws *WSConn) gameStart(arg *pb.CStart) {
 	s2c := new(pb.SStart)
+    if ws.user.Energy < 5 {
+        s2c.Error = pb.EnergyNotEnough
+        ws.Send(s2c)
+    }
 	//检测关卡
 	key := models.GateKey(int32(arg.GetType()), arg.GetGateid())
 	if val, ok := ws.user.Gate[key]; ok {
@@ -214,9 +249,121 @@ func (ws *WSConn) gameStart(arg *pb.CStart) {
 			Star:   val.Star,
 		}
 		ws.Send(s2c)
+        msg := models.AddEnergyMsg(ws.user, -5)
+		ws.Send(msg)
 		return
 	}
 	s2c.Error = pb.GateUnreachable
 	ws.Send(s2c)
 	beego.Error("gameStart error ", arg)
+}
+
+//更新连续登录奖励
+func (ws *WSConn) loginPrizeInit() {
+	setLoginPrize(ws.user)
+	ws.user.LoginTime = time.Now().Local()
+}
+
+//连续登录奖励处理
+func (ws *WSConn) loginPrize(arg *pb.CLoginPrize) {
+	msg := new(pb.SLoginPrize)
+	msg.Type = arg.Type
+	switch arg.Type {
+	case pb.LoginPrizeSelect:
+        msg.List = loginPrizeInfo(ws.user)
+	case pb.LoginPrizeDraw:
+		l, errCode := getLoginPrize(arg.Day, ws.user)
+		if errCode == pb.OK {
+			//奖励发放
+            ws.sendLoginPrize(l)
+            msg.List = loginPrizeInfo(ws.user)
+		} else {
+            msg.Error = errCode
+        }
+	}
+	ws.Send(msg)
+}
+
+//奖励发放
+func (ws *WSConn) sendLoginPrize(list []models.LoginPrizeProp) {
+    for _, v := range list {
+        key := models.PropKey(int32(v.Type))
+        msg := models.AddPropMsg(ws.user, key, int64(v.Number), pb.PropType(v.Type))
+        ws.Send(msg)
+    }
+}
+
+//setLoginPrize 连续登录处理
+func setLoginPrize(user *models.User) {
+	now := time.Now()
+    today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+    yesterDay := today.AddDate(0, 0, -1)
+	if user.LoginTime.Before(yesterDay) {
+		//隔天登录重置
+		user.LoginTimes = (1 << 0)
+		user.LoginPrize = 0
+		return
+	}
+	//是否昨天登录过
+	if user.LoginTime.Before(today) {
+		//全部领取完重置
+		if user.LoginTimes == 127 && user.LoginPrize == 127 {
+			user.LoginTimes = (1 << 0)
+			user.LoginPrize = 0
+			return
+		}
+        //新的一天
+		var i uint32
+		for i = 0; i < 7; i++ {
+			if (user.LoginTimes & (1 << i)) == 0 {
+				user.LoginTimes |= (1 << i)
+				break
+			}
+		}
+	}
+}
+
+//getLoginPrize 领取连续登录奖励
+func getLoginPrize(day uint32, user *models.User) (l []models.LoginPrizeProp, err pb.ErrCode) {
+	if (user.LoginPrize & (1 << day)) != 0 {
+        beego.Error("getLoginPrize error ", day, user.LoginPrize)
+        err = pb.AlreadyAward
+        return
+	}
+	if (user.LoginTimes & (1 << day)) == 0 {
+        beego.Error("getLoginPrize failed ", day, user.LoginTimes)
+        err = pb.AwardFailed
+        return
+	}
+    prize := models.GetLoginPrize(day)
+    if prize == nil {
+        beego.Error("getLoginPrize failed ", day, user.LoginTimes)
+        err = pb.AwardFailed
+        return
+    }
+	user.LoginPrize |= (1 << day)
+	return prize.Prize, pb.OK
+}
+
+//loginPrizeInfo 获取连续登录信息
+func loginPrizeInfo(user *models.User) (msg []*pb.LoginPrize) {
+	list := models.GetLoginPrizes()
+	for _, v := range list {
+		msg2 := new(pb.LoginPrize)
+		msg2.Day = v.Day
+        for _, val := range v.Prize {
+            msg3 := &pb.LoginPrizeProp{
+                Type: pb.PropType(val.Type),
+                Number: val.Number,
+            }
+            msg2.Prize = append(msg2.Prize, msg3)
+        }
+		if (user.LoginPrize & (1 << v.Day)) != 0 {
+			msg2.Status = pb.LoginPrizeGot
+		} else if (user.LoginTimes & (1 << v.Day)) != 0 {
+			msg2.Status = pb.LoginPrizeDone
+		}
+		msg = append(msg, msg2)
+	}
+	return
 }

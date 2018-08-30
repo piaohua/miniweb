@@ -55,7 +55,12 @@ message LoginPrize
         LoginPrizeGot = 2;//已经领取
     }
     uint32 day     = 1;//
-    int64  coin    = 2;//金币奖励
-    int64  diamond = 3;//钻石奖励
-    LoginPrizeStatus status = 4;//状态
+    repeated LoginPrizeProp prize = 2;//
+    LoginPrizeStatus status = 3;//状态
+}
+
+message LoginPrizeProp
+{
+    PropType type = 1; //物品
+    int32 number = 2; //数量
 }
