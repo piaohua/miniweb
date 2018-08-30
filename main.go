@@ -52,13 +52,13 @@ func main() {
 	//models.RunStatics()
 	//models.RunTask()
 
-    //test use
-	models.SetShopList()
-    models.SetLoginPrizeList()
+	//test use
+	//models.SetShopList()
+	//models.SetLoginPrizeList()
 
-    //init cache
-    models.InitShopList()
-    models.InitLoginPrizeList()
+	//init cache
+	models.InitShopList()
+	models.InitLoginPrizeList()
 
 	beego.Run()
 }

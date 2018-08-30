@@ -246,6 +246,10 @@
             "num": {
               "type": "int64",
               "id": 3
+            },
+            "total": {
+              "type": "int64",
+              "id": 4
             }
           }
         },

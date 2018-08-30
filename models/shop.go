@@ -52,11 +52,11 @@ func SetShopList() {
 
 //InitShopList init shop to cache
 func InitShopList() {
-    list := GetShopList()
-    Cache.Put("shop", list, 0)
-    for k, v := range list {
-        Cache.Put(ShopKey(v.ID), &list[k], 0)
-    }
+	list := GetShopList()
+	Cache.Put("shop", list, 0)
+	for k, v := range list {
+		Cache.Put(ShopKey(v.ID), &list[k], 0)
+	}
 }
 
 //NewShop 添加商品
@@ -83,20 +83,20 @@ func ShopKey(id string) string {
 
 //GetShops from cache
 func GetShops() (l []Shop) {
-    if v := Cache.Get("shop"); v != nil {
-        if val, ok := v.([]Shop); ok {
-            l = val
-        }
-    }
-    return
+	if v := Cache.Get("shop"); v != nil {
+		if val, ok := v.([]Shop); ok {
+			l = val
+		}
+	}
+	return
 }
 
 //GetShop get shop from cache by id
 func GetShop(id string) (shop *Shop) {
-    if v := Cache.Get(ShopKey(id)); v != nil {
-        if val, ok := v.(*Shop); ok {
-            shop = val
-        }
-    }
-    return
+	if v := Cache.Get(ShopKey(id)); v != nil {
+		if val, ok := v.(*Shop); ok {
+			shop = val
+		}
+	}
+	return
 }

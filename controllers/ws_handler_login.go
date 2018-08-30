@@ -45,7 +45,7 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 	if ws.user == nil {
 		return
 	}
-	beego.Debug("userid %s, msg %#v", ws.user.ID, msg)
+	beego.Debug("userid ", ws.user.ID, " msg ", msg)
 	switch arg := msg.(type) {
 	case *pb.CUserData:
 		ws.getUserData(arg)
@@ -116,8 +116,8 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 	if msg != nil {
 		ws.Send(msg)
 	}
-    //更新连续登录
-    ws.loginPrizeInit()
+	//更新连续登录
+	ws.loginPrizeInit()
 }
 
 //普通登录验证

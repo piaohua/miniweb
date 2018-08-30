@@ -118,6 +118,7 @@ func AddCoinMsg(user *User, num int64) (msg *pb.SPushProp) {
 		//Type: pb.LOG_TYPE0,
 		Ptype: pb.PROP_TYPE2,
 		Num:   num,
+		Total: user.Coin,
 	}
 	return
 }
@@ -127,8 +128,9 @@ func AddDiamondMsg(user *User, num int64) (msg *pb.SPushProp) {
 	user.AddDiamond(num)
 	msg = &pb.SPushProp{
 		//Type: pb.LOG_TYPE0,
-		Ptype: pb.PROP_TYPE2,
+		Ptype: pb.PROP_TYPE1,
 		Num:   num,
+		Total: user.Diamond,
 	}
 	return
 }

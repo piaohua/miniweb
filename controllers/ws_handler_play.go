@@ -9,7 +9,7 @@
 package controllers
 
 import (
-    "time"
+	"time"
 
 	"miniweb/models"
 	"miniweb/pb"
@@ -95,44 +95,44 @@ func (ws *WSConn) getShopData() {
 func (ws *WSConn) buy(arg *pb.CBuy) {
 	s2c := new(pb.SBuy)
 	shop := models.GetShop(arg.GetId())
-    if shop == nil {
-        beego.Error("order failed ", arg.GetId())
-        s2c.Error = pb.OrderFailed
-        ws.Send(s2c)
-        return
-    }
-    switch shop.Payway {
-    case int32(pb.PAY_WAY0):
-        //TODO RMB
-        beego.Error("buy failed no money ", arg.GetId())
-        s2c.Error = pb.OrderFailed
-        ws.Send(s2c)
-        return
-    case int32(pb.PAY_WAY1):
-        if ws.user.Diamond < int64(shop.Price) {
-            s2c.Error = pb.DiamondNotEnough
-            s2c.Status = pb.BuyFailed
-            ws.Send(s2c)
-            return
-        }
-        msg1 := models.AddDiamondMsg(ws.user, -1 * int64(shop.Price))
-        ws.Send(msg1)
-    case int32(pb.PAY_WAY2):
-        if ws.user.Coin < int64(shop.Price) {
-            s2c.Error = pb.CoinNotEnough
-            s2c.Status = pb.BuyFailed
-            ws.Send(s2c)
-            return
-        }
-        msg1 := models.AddCoinMsg(ws.user, -1 * int64(shop.Price))
-        ws.Send(msg1)
-    }
-    s2c.Status = pb.BuySuccess
+	if shop == nil {
+		beego.Error("order failed ", arg.GetId())
+		s2c.Error = pb.OrderFailed
+		ws.Send(s2c)
+		return
+	}
+	switch shop.Payway {
+	case int32(pb.PAY_WAY0):
+		//TODO RMB
+		beego.Error("buy failed no money ", arg.GetId())
+		s2c.Error = pb.OrderFailed
+		ws.Send(s2c)
+		return
+	case int32(pb.PAY_WAY1):
+		if ws.user.Diamond < int64(shop.Price) {
+			s2c.Error = pb.DiamondNotEnough
+			s2c.Status = pb.BuyFailed
+			ws.Send(s2c)
+			return
+		}
+		msg1 := models.AddDiamondMsg(ws.user, -1*int64(shop.Price))
+		ws.Send(msg1)
+	case int32(pb.PAY_WAY2):
+		if ws.user.Coin < int64(shop.Price) {
+			s2c.Error = pb.CoinNotEnough
+			s2c.Status = pb.BuyFailed
+			ws.Send(s2c)
+			return
+		}
+		msg1 := models.AddCoinMsg(ws.user, -1*int64(shop.Price))
+		ws.Send(msg1)
+	}
+	s2c.Status = pb.BuySuccess
 	ws.Send(s2c)
-    //发货
-    key := models.PropKey(int32(shop.Ptype))
-    msg2 := models.AddPropMsg(ws.user, key, int64(shop.Number), pb.PropType(shop.Ptype))
-    ws.Send(msg2)
+	//发货
+	key := models.PropKey(int32(shop.Ptype))
+	msg2 := models.AddPropMsg(ws.user, key, int64(shop.Number), pb.PropType(shop.Ptype))
+	ws.Send(msg2)
 }
 
 //over handler
@@ -158,13 +158,13 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 		//add new gateid
 		nextid := gateID + 1
 		models.AddNewGate(ws.user, Type, nextid)
-        //gate info
-        s2c.GateInfo = &pb.GateData{
-            Type:   arg.GetType(),
-            Gateid: gateID,
-            Num:    ws.user.Gate[key].Num,
-            Star:   ws.user.Gate[key].Star,
-        }
+		//gate info
+		s2c.GateInfo = &pb.GateData{
+			Type:   arg.GetType(),
+			Gateid: gateID,
+			Num:    ws.user.Gate[key].Num,
+			Star:   ws.user.Gate[key].Star,
+		}
 		ws.Send(s2c)
 		return
 	}
@@ -235,10 +235,11 @@ func (ws *WSConn) useProp(arg *pb.CUseProp) {
 //game start handler
 func (ws *WSConn) gameStart(arg *pb.CStart) {
 	s2c := new(pb.SStart)
-    if ws.user.Energy < 5 {
-        s2c.Error = pb.EnergyNotEnough
-        ws.Send(s2c)
-    }
+	if ws.user.Energy < 5 {
+		s2c.Error = pb.EnergyNotEnough
+		ws.Send(s2c)
+		return
+	}
 	//检测关卡
 	key := models.GateKey(int32(arg.GetType()), arg.GetGateid())
 	if val, ok := ws.user.Gate[key]; ok {
@@ -249,7 +250,7 @@ func (ws *WSConn) gameStart(arg *pb.CStart) {
 			Star:   val.Star,
 		}
 		ws.Send(s2c)
-        msg := models.AddEnergyMsg(ws.user, -5)
+		msg := models.AddEnergyMsg(ws.user, -5)
 		ws.Send(msg)
 		return
 	}
@@ -270,34 +271,34 @@ func (ws *WSConn) loginPrize(arg *pb.CLoginPrize) {
 	msg.Type = arg.Type
 	switch arg.Type {
 	case pb.LoginPrizeSelect:
-        msg.List = loginPrizeInfo(ws.user)
+		msg.List = loginPrizeInfo(ws.user)
 	case pb.LoginPrizeDraw:
 		l, errCode := getLoginPrize(arg.Day, ws.user)
 		if errCode == pb.OK {
 			//奖励发放
-            ws.sendLoginPrize(l)
-            msg.List = loginPrizeInfo(ws.user)
+			ws.sendLoginPrize(l)
+			msg.List = loginPrizeInfo(ws.user)
 		} else {
-            msg.Error = errCode
-        }
+			msg.Error = errCode
+		}
 	}
 	ws.Send(msg)
 }
 
 //奖励发放
 func (ws *WSConn) sendLoginPrize(list []models.LoginPrizeProp) {
-    for _, v := range list {
-        key := models.PropKey(int32(v.Type))
-        msg := models.AddPropMsg(ws.user, key, int64(v.Number), pb.PropType(v.Type))
-        ws.Send(msg)
-    }
+	for _, v := range list {
+		key := models.PropKey(int32(v.Type))
+		msg := models.AddPropMsg(ws.user, key, int64(v.Number), pb.PropType(v.Type))
+		ws.Send(msg)
+	}
 }
 
 //setLoginPrize 连续登录处理
 func setLoginPrize(user *models.User) {
 	now := time.Now()
-    today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
-    yesterDay := today.AddDate(0, 0, -1)
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+	yesterDay := today.AddDate(0, 0, -1)
 	if user.LoginTime.Before(yesterDay) {
 		//隔天登录重置
 		user.LoginTimes = (1 << 0)
@@ -312,7 +313,7 @@ func setLoginPrize(user *models.User) {
 			user.LoginPrize = 0
 			return
 		}
-        //新的一天
+		//新的一天
 		var i uint32
 		for i = 0; i < 7; i++ {
 			if (user.LoginTimes & (1 << i)) == 0 {
@@ -326,21 +327,21 @@ func setLoginPrize(user *models.User) {
 //getLoginPrize 领取连续登录奖励
 func getLoginPrize(day uint32, user *models.User) (l []models.LoginPrizeProp, err pb.ErrCode) {
 	if (user.LoginPrize & (1 << day)) != 0 {
-        beego.Error("getLoginPrize error ", day, user.LoginPrize)
-        err = pb.AlreadyAward
-        return
+		beego.Error("getLoginPrize error ", day, user.LoginPrize)
+		err = pb.AlreadyAward
+		return
 	}
 	if (user.LoginTimes & (1 << day)) == 0 {
-        beego.Error("getLoginPrize failed ", day, user.LoginTimes)
-        err = pb.AwardFailed
-        return
+		beego.Error("getLoginPrize failed ", day, user.LoginTimes)
+		err = pb.AwardFailed
+		return
 	}
-    prize := models.GetLoginPrize(day)
-    if prize == nil {
-        beego.Error("getLoginPrize failed ", day, user.LoginTimes)
-        err = pb.AwardFailed
-        return
-    }
+	prize := models.GetLoginPrize(day)
+	if prize == nil {
+		beego.Error("getLoginPrize failed ", day, user.LoginTimes)
+		err = pb.AwardFailed
+		return
+	}
 	user.LoginPrize |= (1 << day)
 	return prize.Prize, pb.OK
 }
@@ -351,13 +352,13 @@ func loginPrizeInfo(user *models.User) (msg []*pb.LoginPrize) {
 	for _, v := range list {
 		msg2 := new(pb.LoginPrize)
 		msg2.Day = v.Day
-        for _, val := range v.Prize {
-            msg3 := &pb.LoginPrizeProp{
-                Type: pb.PropType(val.Type),
-                Number: val.Number,
-            }
-            msg2.Prize = append(msg2.Prize, msg3)
-        }
+		for _, val := range v.Prize {
+			msg3 := &pb.LoginPrizeProp{
+				Type:   pb.PropType(val.Type),
+				Number: val.Number,
+			}
+			msg2.Prize = append(msg2.Prize, msg3)
+		}
 		if (user.LoginPrize & (1 << v.Day)) != 0 {
 			msg2.Status = pb.LoginPrizeGot
 		} else if (user.LoginTimes & (1 << v.Day)) != 0 {

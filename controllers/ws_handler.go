@@ -55,8 +55,8 @@ func (ws *WSConn) Handler(msg interface{}, ctx actor.Context) {
 func (ws *WSConn) start(ctx actor.Context) {
 	beego.Info("ws start: ", ctx.Self().String())
 	ctx.SetReceiveTimeout(waitForLogin) //login timeout set
-    //启动时钟
-    go ws.ticker(ctx)
+	//启动时钟
+	go ws.ticker(ctx)
 }
 
 func (ws *WSConn) stop(ctx actor.Context) {
@@ -65,10 +65,10 @@ func (ws *WSConn) stop(ctx actor.Context) {
 	ws.Close()
 	//表示已经断开
 	ws.online = false
-    //TODO 优化缓存
-    if ws.user != nil {
-        ws.user.Save()
-    }
+	//TODO 优化缓存
+	if ws.user != nil {
+		ws.user.Save()
+	}
 	ctx.Self().Stop()
 }
 
@@ -79,10 +79,14 @@ func (ws *WSConn) ding(ctx actor.Context) {
 		return
 	}
 	ws.timer = 0
-    msg := models.CheckEnergy(ws.user)
-    if msg != nil {
-        ws.Send(msg)
-    }
+	//TODO 优化
+	if ws.user != nil {
+		ws.user.Save()
+	}
+	msg := models.CheckEnergy(ws.user)
+	if msg != nil {
+		ws.Send(msg)
+	}
 	if !ws.online {
 		return
 	}

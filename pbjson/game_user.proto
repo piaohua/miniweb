@@ -68,4 +68,5 @@ message SPushProp
     LogType type   = 1;//日志类型
     PropType ptype = 2;//道具类型
     int64 num      = 3;//变更数量
+    int64 total    = 4;//总数量
 }
