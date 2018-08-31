@@ -107,7 +107,7 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 	ws.online = true
 	beego.Info("login success: ", userid)
 	ws.user.LoginIP = ws.GetIPAddr()
-	ws.user.LoginTime = time.Now()
+	//ws.user.LoginTime = time.Now()
 	//初始化
 	models.PropInit(ws.user)
 	models.GateInit(ws.user)
