@@ -33,9 +33,9 @@ enum PropType {
     PROP_TYPE6  =  6;//炸弹
     PROP_TYPE7  =  7;//时间冻结
     PROP_TYPE8  =  8;//时间回流
-    PROP_TYPE10 = 10;//初级精力瓶
-    PROP_TYPE11 = 11;//中级精力瓶
-    PROP_TYPE12 = 12;//高级精力瓶
+    PROP_TYPE9  =  9;//初级精力瓶
+    PROP_TYPE10 = 10;//中级精力瓶
+    PROP_TYPE11 = 11;//高级精力瓶
 }
 
 //支付方式

@@ -18,6 +18,7 @@ type LoginPrize struct {
 	Ctime time.Time        `bson:"ctime" json:"ctime"` //创建时间
 }
 
+//LoginPrizeProp 登录奖励
 type LoginPrizeProp struct {
 	Type   int32 `bson:"type" json:"type"`     //物品类型
 	Number int32 `bson:"number" json:"number"` //物品数量
@@ -44,7 +45,7 @@ func SetLoginPrizeList() {
 	var i uint32
 	for i = 0; i < 7; i++ {
 		prize := []LoginPrizeProp{}
-		var num int32 = 10000 + int32(i)*5000
+		var num = 10000 + int32(i)*5000
 		prize1 := NewLoginPrizeProp(int32(pb.PROP_TYPE2), num)
 		NewLoginPrize(i, append(prize, prize1, prize2, prize3, prize4))
 	}

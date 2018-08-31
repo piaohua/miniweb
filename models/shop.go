@@ -42,11 +42,11 @@ func SetShopList() {
 		int32(pb.PAY_WAY1), 10000, 100, "金币", "100钻石兑换10000金币")
 	NewShop("2", int32(pb.SHOP_STATUS1), int32(pb.PROP_TYPE1),
 		int32(pb.PAY_WAY0), 10000, 100, "钻石", "100元兑换10000钻石")
-	NewShop("3", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE3),
+	NewShop("3", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE9),
 		int32(pb.PAY_WAY1), 100, 10, "初级精力瓶", "10钻石兑换100初级精力瓶")
-	NewShop("4", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE3),
+	NewShop("4", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE10),
 		int32(pb.PAY_WAY1), 100, 10, "中级精力瓶", "10钻石兑换100中级精力瓶")
-	NewShop("5", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE3),
+	NewShop("5", int32(pb.SHOP_STATUS2), int32(pb.PROP_TYPE11),
 		int32(pb.PAY_WAY1), 100, 10, "高级精力瓶", "10钻石兑换100高级精力瓶")
 }
 

@@ -215,11 +215,11 @@ func (ws *WSConn) useProp(arg *pb.CUseProp) {
 	}
 	var msg interface{}
 	switch arg.GetPtype() {
-	case pb.PROP_TYPE10:
+	case pb.PROP_TYPE9:
 		msg = models.AddEnergyMsg(ws.user, 1)
-	case pb.PROP_TYPE11:
+	case pb.PROP_TYPE10:
 		msg = models.AddEnergyMsg(ws.user, 5)
-	case pb.PROP_TYPE12:
+	case pb.PROP_TYPE11:
 		msg = models.AddEnergyMsg(ws.user, 30)
 	}
 	ws.Send(s2c)
@@ -357,6 +357,7 @@ func loginPrizeInfo(user *models.User) (msg []*pb.LoginPrize) {
 				Type:   pb.PropType(val.Type),
 				Number: val.Number,
 			}
+			msg3.Name = models.GetPropName(val.Type)
 			msg2.Prize = append(msg2.Prize, msg3)
 		}
 		if (user.LoginPrize & (1 << v.Day)) != 0 {

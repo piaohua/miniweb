@@ -63,4 +63,5 @@ message LoginPrizeProp
 {
     PropType type = 1; //物品
     int32 number = 2; //数量
+    string name = 3;//名字
 }

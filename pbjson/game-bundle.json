@@ -117,9 +117,9 @@
             "PROP_TYPE6": 6,
             "PROP_TYPE7": 7,
             "PROP_TYPE8": 8,
+            "PROP_TYPE9": 9,
             "PROP_TYPE10": 10,
-            "PROP_TYPE11": 11,
-            "PROP_TYPE12": 12
+            "PROP_TYPE11": 11
           }
         },
         "PayWay": {
@@ -400,6 +400,10 @@
             "number": {
               "type": "int32",
               "id": 2
+            },
+            "name": {
+              "type": "string",
+              "id": 3
             }
           }
         },
