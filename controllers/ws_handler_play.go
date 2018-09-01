@@ -101,10 +101,17 @@ func (ws *WSConn) buy(arg *pb.CBuy) {
 		ws.Send(s2c)
 		return
 	}
+	switch shop.Status {
+	case int32(pb.SHOP_STATUS3):
+		beego.Error("buy failed ", arg.GetId())
+		s2c.Error = pb.OrderFailed
+		ws.Send(s2c)
+		return
+	}
 	switch shop.Payway {
 	case int32(pb.PAY_WAY0):
 		//TODO RMB
-		beego.Error("buy failed no money ", arg.GetId())
+		beego.Error("buy failed ", arg.GetId())
 		s2c.Error = pb.OrderFailed
 		ws.Send(s2c)
 		return
@@ -133,6 +140,18 @@ func (ws *WSConn) buy(arg *pb.CBuy) {
 	key := models.PropKey(int32(shop.Ptype))
 	msg2 := models.AddPropMsg(ws.user, key, int64(shop.Number), pb.PropType(shop.Ptype))
 	ws.Send(msg2)
+	//奖励发放
+	ws.sendShopPrize(shop.Prize)
+	//TODO 下单购买日志
+}
+
+//奖励发放
+func (ws *WSConn) sendShopPrize(list []models.ShopPrizeProp) {
+	for _, v := range list {
+		key := models.PropKey(int32(v.Type))
+		msg := models.AddPropMsg(ws.user, key, int64(v.Number), pb.PropType(v.Type))
+		ws.Send(msg)
+	}
 }
 
 //over handler
@@ -143,7 +162,7 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 	key := models.GateKey(Type, gateID)
 	if val, ok := ws.user.Gate[key]; ok {
 		//send prize
-		coin, energy := overPrize(arg.GetStar(), val.Num == 0)
+		coin, energy := overPrize(arg.GetGateid(), arg.GetStar(), val.Num == 0)
 		if coin > 0 {
 			msg1 := models.AddCoinMsg(ws.user, coin)
 			ws.Send(msg1)
@@ -174,25 +193,18 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 }
 
 //over prize
-func overPrize(star int32, first bool) (coin, energy int64) {
-	if first {
-		switch star {
-		case 1:
-			coin, energy = 100, 1
-		case 2:
-			coin, energy = 300, 3
-		case 3:
-			coin, energy = 500, 5
-		}
-		return
-	}
+func overPrize(gate, star int32, first bool) (coin, energy int64) {
 	switch star {
 	case 1:
-		coin, energy = 30, 0
 	case 2:
-		coin, energy = 70, 0
+		energy = 2
 	case 3:
-		coin, energy = 100, 0
+		energy = 5
+	}
+	if first {
+		coin = int64((10 * (gate - 1)) + 500 + (100 * star * star))
+	} else {
+		coin = int64(50 + (30 * star))
 	}
 	return
 }

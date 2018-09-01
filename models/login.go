@@ -67,12 +67,7 @@ func GetSession(jscode, ip string) (session string, err error) {
 	user.OpenId = wxs.OpenId
 	user.SessionKey = wxs.SessionKey
 	user.UnionId = wxs.UnionId
-	user.Session = session
-	//user.SessionTime = time.Now()
-	user.ID = id
-	user.RegistIP = ip
-	user.Ctime = time.Now()
-	user.Energy = 30
+	initUserLogin(id, ip, session, user)
 	if !user.Save() {
 		err = errors.New("session save failed")
 	}
@@ -148,12 +143,7 @@ func GetSessionByCode(jscode, ip string) (session string, err error) {
 	}
 	user := new(User)
 	user.OpenId = jscode
-	user.Session = session
-	//user.SessionTime = time.Now()
-	user.ID = id
-	user.RegistIP = ip
-	user.Ctime = time.Now()
-	user.Energy = 30
+	initUserLogin(id, ip, session, user)
 	if !user.Save() {
 		err = errors.New("session save failed")
 	}
@@ -175,4 +165,16 @@ func VerifyUserLogin(arg *pb.CLogin, session string) (*User, error) {
 		return nil, errors.New("session expire")
 	}
 	return user, nil
+}
+
+//initUserLogin login init
+func initUserLogin(id, ip, session string, user *User) {
+	user.ID = id
+	user.RegistIP = ip
+	user.Ctime = time.Now()
+	user.Session = session
+	//user.SessionTime = time.Now()
+	user.Energy = 30
+	user.Coin = 5000
+	user.Diamond = 10
 }

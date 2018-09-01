@@ -6,6 +6,9 @@ enum LogType {
     LOG_TYPE0  =  0;//无
     LOG_TYPE1  =  1;//注册赠送
     LOG_TYPE2  =  2;//通关奖励
+    LOG_TYPE3  =  3;//购买获得
+    LOG_TYPE4  =  4;//购买奖励
+    LOG_TYPE5  =  5;//登录奖励
 }
 
 //关卡类型
@@ -28,14 +31,17 @@ enum PropType {
     PROP_TYPE1  =  1;//钻石
     PROP_TYPE2  =  2;//金币
     PROP_TYPE3  =  3;//精力
-    PROP_TYPE4  =  4;//快速提示
-    PROP_TYPE5  =  5;//重新整理
+    PROP_TYPE4  =  4;//提示卡
+    PROP_TYPE5  =  5;//重置卡
     PROP_TYPE6  =  6;//炸弹
-    PROP_TYPE7  =  7;//时间冻结
-    PROP_TYPE8  =  8;//时间回流
+    PROP_TYPE7  =  7;//时间冻结(5秒)
+    PROP_TYPE8  =  8;//时间回流(3秒)
     PROP_TYPE9  =  9;//初级精力瓶
     PROP_TYPE10 = 10;//中级精力瓶
     PROP_TYPE11 = 11;//高级精力瓶
+    PROP_TYPE12 = 12;//锤子
+    PROP_TYPE13 = 13;//时间回流(10秒)
+    PROP_TYPE14 = 14;//翻牌卡
 }
 
 //支付方式
@@ -50,6 +56,7 @@ enum ShopStatus {
     SHOP_STATUS0  =  0;//普通(默认)
     SHOP_STATUS1  =  1;//热卖
     SHOP_STATUS2  =  2;//新品
+    SHOP_STATUS3  =  3;//下架
 }
 
 //登录奖励类型

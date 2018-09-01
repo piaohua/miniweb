@@ -82,14 +82,23 @@
             "DiamondNotEnough": 7,
             "AlreadyAward": 8,
             "AwardFailed": 9,
-            "OrderFailed": 10
+            "OrderFailed": 10,
+            "Failed": 11,
+            "WSGetFailed": 12,
+            "WSLoginFailed": 13,
+            "SetShopFailed": 14,
+            "SetPropFailed": 15,
+            "SetPrizeFailed": 16
           }
         },
         "LogType": {
           "values": {
             "LOG_TYPE0": 0,
             "LOG_TYPE1": 1,
-            "LOG_TYPE2": 2
+            "LOG_TYPE2": 2,
+            "LOG_TYPE3": 3,
+            "LOG_TYPE4": 4,
+            "LOG_TYPE5": 5
           }
         },
         "GateType": {
@@ -119,7 +128,10 @@
             "PROP_TYPE8": 8,
             "PROP_TYPE9": 9,
             "PROP_TYPE10": 10,
-            "PROP_TYPE11": 11
+            "PROP_TYPE11": 11,
+            "PROP_TYPE12": 12,
+            "PROP_TYPE13": 13,
+            "PROP_TYPE14": 14
           }
         },
         "PayWay": {
@@ -133,7 +145,8 @@
           "values": {
             "SHOP_STATUS0": 0,
             "SHOP_STATUS1": 1,
-            "SHOP_STATUS2": 2
+            "SHOP_STATUS2": 2,
+            "SHOP_STATUS3": 3
           }
         },
         "LoginPrizeType": {

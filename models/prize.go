@@ -4,8 +4,10 @@ import (
 	"strconv"
 	"time"
 
+	"miniweb/libs"
 	"miniweb/pb"
 
+	"github.com/astaxie/beego"
 	"github.com/globalsign/mgo/bson"
 )
 
@@ -37,6 +39,16 @@ func (t *LoginPrize) Save() bool {
 	return Insert(LoginPrizes, t)
 }
 
+//Upsert 更新数据库
+func (t *LoginPrize) Upsert() bool {
+	return Upsert(LoginPrizes, bson.M{"day": t.Day}, t)
+}
+
+//Delete 删除数据
+func (t *LoginPrize) Delete() bool {
+	return Delete(LoginPrizes, bson.M{"day": t.Day})
+}
+
 //SetLoginPrizeList 添加登录奖励
 func SetLoginPrizeList() {
 	prize2 := NewLoginPrizeProp(int32(pb.PROP_TYPE11), 1)
@@ -49,6 +61,17 @@ func SetLoginPrizeList() {
 		prize1 := NewLoginPrizeProp(int32(pb.PROP_TYPE2), num)
 		NewLoginPrize(i, append(prize, prize1, prize2, prize3, prize4))
 	}
+}
+
+//LoadLoginPrizeList load login prize info by prize.json
+func LoadLoginPrizeList() []LoginPrize {
+	filePath := "static/prize.json"
+	list := make([]LoginPrize, 0)
+	err := libs.Load(filePath, &list)
+	if err != nil {
+		beego.Error("load prize err ", err)
+	}
+	return list
 }
 
 //NewLoginPrizeProp 添加奖励
@@ -72,13 +95,54 @@ func NewLoginPrize(day uint32, prize []LoginPrizeProp) {
 //InitLoginPrizeList init login prize to cache
 func InitLoginPrizeList() {
 	list := GetLoginPrizeList()
+	//test use
+	if !RunMode() {
+		if len(list) == 0 {
+			//SetLoginPrizeList()
+			list = LoadLoginPrizeList()
+		}
+	}
 	Cache.Put("prize", list, 0)
 	for k, v := range list {
 		Cache.Put(PrizeKey(v.Day), &list[k], 0)
 	}
 }
 
-//PrizeKey unique key
+//UpsertPrize upsert prize
+func UpsertPrize(prize LoginPrize) bool {
+	key := PrizeKey(prize.Day)
+	list := GetLoginPrizes()
+	if prize.Del != 0 {
+		if !prize.Delete() {
+			beego.Error("prize delete err: ", prize)
+			return false
+		}
+		Cache.Delete(key)
+		for k, v := range list {
+			if v.Day == prize.Day {
+				list = append(list[:k], list[k+1:]...)
+				break
+			}
+		}
+		Cache.Put("prize", list, 0)
+		return true
+	}
+	if !prize.Upsert() {
+		beego.Error("prize upsert err: ", prize)
+		return false
+	}
+	Cache.Put(key, &prize, 0)
+	for k, v := range list {
+		if v.Day == prize.Day {
+			list[k] = prize
+			break
+		}
+	}
+	Cache.Put("prize", list, 0)
+	return true
+}
+
+//PrizeKey cache prize unique key
 func PrizeKey(day uint32) string {
 	return "prize" + strconv.Itoa(int(day))
 }

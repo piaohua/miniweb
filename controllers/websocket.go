@@ -52,7 +52,7 @@ func (this *WebSocketController) Get() {
 	}
 	if err != nil {
 		jsonData.WxErr = models.WxErr{
-			ErrCode: 1,
+			ErrCode: int(pb.WSGetFailed),
 			ErrMsg:  err.Error(),
 		}
 	}
@@ -79,7 +79,7 @@ func (this *WebSocketController) Login() {
 		beego.Error("Not a websocket handshake: ", val.Error())
 		//http.Error(this.Ctx.ResponseWriter, "Not a websocket handshake", 400)
 		jsonData := &models.WxErr{
-			ErrCode: 400,
+			ErrCode: int(pb.WSLoginFailed),
 			ErrMsg:  err.Error(),
 		}
 		this.jsonResult(jsonData)
@@ -87,7 +87,7 @@ func (this *WebSocketController) Login() {
 	} else if err != nil {
 		beego.Error("Cannot setup WebSocket connection:", err)
 		jsonData := &models.WxErr{
-			ErrCode: 401,
+			ErrCode: int(pb.WSLoginFailed),
 			ErrMsg:  err.Error(),
 		}
 		this.jsonResult(jsonData)

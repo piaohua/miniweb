@@ -19,6 +19,7 @@ type Gate struct {
 	Ptype  int32     `bson:"ptype" json:"ptype"`   //prop type
 	Num    int32     `bson:"num" json:"num"`       //prop number
 	Incr   bool      `bson:"incr" json:"incr"`     //有序递增
+	Del    int       `bson:"del" json:"del"`       //是否移除
 	Ctime  time.Time `bson:"ctime" json:"ctime"`   //创建时间
 }
 
@@ -33,7 +34,7 @@ type GateInfo struct {
 //GetGateList get prop list
 func GetGateList() []Gate {
 	var list []Gate
-	ListByQ(Gates, nil, &list)
+	ListByQ(Gates, bson.M{"del": 0}, &list)
 	return list
 }
 
@@ -43,12 +44,12 @@ func (t *Gate) Save() bool {
 	return Insert(Gates, t)
 }
 
-//GateKey unique key
+//GateKey user gate unique key
 func GateKey(Type, Gateid int32) string {
 	return strconv.Itoa(int(Type)) + strconv.Itoa(int(Gateid))
 }
 
-//GateUniqueKey unique key
+//GateUniqueKey cache gate unique key
 func GateUniqueKey(Type, Gateid int32) string {
 	return "gate" + strconv.Itoa(int(Type)) + strconv.Itoa(int(Gateid))
 }

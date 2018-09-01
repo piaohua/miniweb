@@ -52,11 +52,8 @@ func main() {
 	//models.RunStatics()
 	//models.RunTask()
 
-	//test use
-	//models.SetShopList()
-	//models.SetLoginPrizeList()
-
 	//init cache
+	models.InitPropList()
 	models.InitShopList()
 	models.InitLoginPrizeList()
 

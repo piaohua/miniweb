@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"miniweb/models"
+	"miniweb/pb"
 
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
@@ -19,7 +20,7 @@ func (c *MainController) Get() {
 	//c.TplName = "index.tpl"
 	//
 	json := make(map[string]interface{}, 0)
-	json["errcode"] = 10001
+	json["errcode"] = int(pb.Failed)
 	json["errmsg"] = "failed"
 	c.jsonResult(json)
 }
@@ -57,7 +58,7 @@ func (this *MainController) Code() {
 	}
 	if err != nil {
 		jsonData.WxErr = models.WxErr{
-			ErrCode: 1,
+			ErrCode: int(pb.Failed),
 			ErrMsg:  err.Error(),
 		}
 	}

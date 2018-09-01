@@ -17,4 +17,10 @@ enum ErrCode {
     AlreadyAward           =  8; //已经领取奖励
     AwardFailed            =  9; //领取奖励失败
     OrderFailed            = 10; //下单失败
+    Failed                 = 11; //错误请求
+    WSGetFailed            = 12; //请求session错误
+    WSLoginFailed          = 13; //请求登录错误
+    SetShopFailed          = 14; //设置shop错误
+    SetPropFailed          = 15; //设置prop错误
+    SetPrizeFailed         = 16; //设置prize错误
 }

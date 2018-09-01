@@ -4,8 +4,10 @@ import (
 	"strconv"
 	"time"
 
+	"miniweb/libs"
 	"miniweb/pb"
 
+	"github.com/astaxie/beego"
 	"github.com/globalsign/mgo/bson"
 )
 
@@ -15,6 +17,7 @@ type Prop struct {
 	Name  string    `bson:"name" json:"name"`   //name
 	Type  int32     `bson:"type" json:"type"`   //type unique
 	Attr  int32     `bson:"attr" json:"attr"`   //属性
+	Del   int       `bson:"del" json:"del"`     //是否移除
 	Ctime time.Time `bson:"ctime" json:"ctime"` //创建时间
 }
 
@@ -28,7 +31,7 @@ type PropInfo struct {
 //GetPropList get prop list
 func GetPropList() []Prop {
 	var list []Prop
-	ListByQ(Props, nil, &list)
+	ListByQ(Props, bson.M{"del": 0}, &list)
 	return list
 }
 
@@ -36,6 +39,16 @@ func GetPropList() []Prop {
 func (t *Prop) Save() bool {
 	t.Ctime = bson.Now()
 	return Insert(Props, t)
+}
+
+//Upsert 更新数据库
+func (t *Prop) Upsert() bool {
+	return Upsert(Props, bson.M{"type": t.Type}, t)
+}
+
+//Delete 删除数据
+func (t *Prop) Delete() bool {
+	return Delete(Props, bson.M{"type": t.Type})
 }
 
 //AddPropMsg add prop msg, TODO 日志
@@ -68,12 +81,12 @@ func AddPropMsg(user *User, key string, num int64,
 	return
 }
 
-//PropKey unique key
+//PropKey user prop unique key
 func PropKey(Type int32) string {
 	return strconv.Itoa(int(Type))
 }
 
-//PropUniqueKey unique key
+//PropUniqueKey cache prop unique key
 func PropUniqueKey(Type int32) string {
 	return "prop" + strconv.Itoa(int(Type))
 }
@@ -84,6 +97,77 @@ func PropInit(user *User) {
 		return
 	}
 	user.Prop = make(map[string]PropInfo)
+}
+
+//LoadPropList load prop info by prop.json
+func LoadPropList() []Prop {
+	filePath := "static/prop.json"
+	list := make([]Prop, 0)
+	err := libs.Load(filePath, &list)
+	if err != nil {
+		beego.Error("load prop err ", err)
+	}
+	return list
+}
+
+//InitPropList init prop to cache
+func InitPropList() {
+	list := GetPropList()
+	//test use
+	if !RunMode() {
+		if len(list) == 0 {
+			//SetPropList()
+			list = LoadPropList()
+		}
+	}
+	Cache.Put("prop", list, 0)
+	for k, v := range list {
+		Cache.Put(PropUniqueKey(v.Type), &list[k], 0)
+	}
+}
+
+//UpsertProp upsert prop
+func UpsertProp(prop Prop) bool {
+	key := PropUniqueKey(prop.Type)
+	list := GetProps()
+	if prop.Del != 0 {
+		if !prop.Delete() {
+			beego.Error("prop delete err: ", prop)
+			return false
+		}
+		Cache.Delete(key)
+		for k, v := range list {
+			if v.Type == prop.Type {
+				list = append(list[:k], list[k+1:]...)
+				break
+			}
+		}
+		Cache.Put("prop", list, 0)
+		return true
+	}
+	if !prop.Upsert() {
+		beego.Error("prop upsert err: ", prop)
+		return false
+	}
+	Cache.Put(key, &prop, 0)
+	for k, v := range list {
+		if v.Type == prop.Type {
+			list[k] = prop
+			break
+		}
+	}
+	Cache.Put("prop", list, 0)
+	return true
+}
+
+//GetProps from cache
+func GetProps() (l []Prop) {
+	if v := Cache.Get("prop"); v != nil {
+		if val, ok := v.([]Prop); ok {
+			l = val
+		}
+	}
+	return
 }
 
 //GetProp get prop by type

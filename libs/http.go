@@ -10,16 +10,8 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 )
-
-// ExecCmd 执行shell命令
-func ExecCmd(c string) ([]byte, error) {
-	cmd := exec.Command("sh", "-c", c)
-	out, err := cmd.Output()
-	return out, err
-}
 
 // GetJson 发送GET请求解析json
 func GetJson(uri string, v interface{}) error {
