@@ -46,6 +46,8 @@ type User struct {
 	//
 	Gate map[string]GateInfo `bson:"gate" json:"gate"` // 关卡
 	Prop map[string]PropInfo `bson:"prop" json:"prop"` // 道具
+	//
+	TempProp map[string]TempPropInfo `bson:"temp_prop" json:"temp_prop"` // 道具
 }
 
 //Save 保存

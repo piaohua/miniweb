@@ -57,6 +57,8 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 		ws.getCurrency()
 	case *pb.CShop:
 		ws.getShopData()
+	case *pb.CTempShop:
+		ws.getTempShopData(arg)
 	case *pb.CBuy:
 		ws.buy(arg)
 	case *pb.COverData:

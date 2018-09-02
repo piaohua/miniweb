@@ -28,6 +28,15 @@ type PropInfo struct {
 	Num  int32 `bson:"num" json:"num"`   //num
 }
 
+//TempPropInfo temp prop info
+type TempPropInfo struct {
+	GType  int32 `bson:"gtype" json:"gtype"`   //gate type
+	Gateid int32 `bson:"gateid" json:"gateid"` //gate id
+	Type   int32 `bson:"type" json:"type"`     //prop type
+	Attr   int32 `bson:"attr" json:"attr"`     //属性
+	Num    int32 `bson:"num" json:"num"`       //num
+}
+
 //GetPropList get prop list
 func GetPropList() []Prop {
 	var list []Prop
@@ -54,7 +63,23 @@ func (t *Prop) Delete() bool {
 //AddPropMsg add prop msg, TODO 日志
 func AddPropMsg(user *User, key string, num int64,
 	ptype pb.PropType) (msg *pb.SPushProp) {
+	msg = addPropMsg(user, key, num, ptype, false)
+	return
+}
+
+//AddTempPropMsg add temp prop msg, TODO 日志
+func AddTempPropMsg(user *User, key string, num int64,
+	ptype pb.PropType) (msg *pb.SPushProp) {
+	msg = addPropMsg(user, key, num, ptype, true)
+	return
+}
+
+//addPropMsg add prop msg, TODO 日志
+func addPropMsg(user *User, key string, num int64,
+	ptype pb.PropType, temp bool) (msg *pb.SPushProp) {
 	switch ptype {
+	case pb.PROP_TYPE0:
+		return
 	case pb.PROP_TYPE1:
 		msg = AddDiamondMsg(user, num)
 		return
@@ -70,12 +95,52 @@ func AddPropMsg(user *User, key string, num int64,
 		Ptype: ptype,
 		Num:   num,
 	}
+	if num < 0 { //use temp, TODO gate
+		if val, ok := user.TempProp[key]; ok {
+			val.Num += int32(num)
+			msg.Total = int64(val.Num)
+			if val.Num <= 0 {
+				msg.Total = 0
+				delete(user.TempProp, key)
+			} else {
+				user.TempProp[key] = val
+			}
+			return
+		}
+	}
+	if temp {
+		if val, ok := user.TempProp[key]; ok {
+			val.Num += int32(num)
+			msg.Total = int64(val.Num)
+			if val.Num <= 0 {
+				msg.Total = 0
+				delete(user.TempProp, key)
+			} else {
+				user.TempProp[key] = val
+			}
+		} else if num > 0 {
+			msg.Total = int64(num)
+			user.TempProp[key] = TempPropInfo{
+				Type: int32(ptype),
+				Num:  int32(num),
+			}
+		}
+		return
+	}
 	if val, ok := user.Prop[key]; ok {
 		val.Num += int32(num)
 		msg.Total = int64(val.Num)
 		if val.Num <= 0 {
 			msg.Total = 0
 			delete(user.Prop, key)
+		} else {
+			user.Prop[key] = val
+		}
+	} else if num > 0 {
+		msg.Total = int64(num)
+		user.Prop[key] = PropInfo{
+			Type: int32(ptype),
+			Num:  int32(num),
 		}
 	}
 	return
@@ -93,10 +158,12 @@ func PropUniqueKey(Type int32) string {
 
 //PropInit prop init
 func PropInit(user *User) {
-	if user.Prop != nil {
-		return
+	if user.Prop == nil {
+		user.Prop = make(map[string]PropInfo)
 	}
-	user.Prop = make(map[string]PropInfo)
+	if user.TempProp == nil {
+		user.TempProp = make(map[string]TempPropInfo)
+	}
 }
 
 //LoadPropList load prop info by prop.json

@@ -2,6 +2,7 @@ syntax = "proto3";
 package pb;
 import "game_code.proto";
 import "game_pub.proto";
+import "game_type.proto";
 
 // 商城
 message CShop
@@ -28,4 +29,17 @@ message SBuy
     }
     BuyStatus status  = 1; //0购买成功,1失败
     ErrCode error  = 2; //错误码
+}
+
+// 商城
+message CTempShop
+{
+    GateType type = 1;//类型
+    int32 gateid  = 2;//关卡id
+}
+
+message STempShop
+{
+    repeated Shop list = 1; //商品列表
+    ErrCode error = 2;//错误码
 }

@@ -4,11 +4,12 @@ import "game_code.proto";
 import "game_pub.proto";
 import "game_type.proto";
 
-// 开始
+// 开始,TODO 数据验证
 message CStart
 {
     GateType type = 1;//类型
     int32 gateid  = 2;//关卡id
+    repeated string ids = 3;//购买ID
 }
 
 message SStart

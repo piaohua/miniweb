@@ -37,21 +37,24 @@ func Rpacket(msg interface{}) (uint32, []byte, error) {
 	case *CBuy:
 		b, err := msg.(*CBuy).Marshal()
 		return 1012, b, err
+	case *CTempShop:
+		b, err := msg.(*CTempShop).Marshal()
+		return 1013, b, err
 	case *COverData:
 		b, err := msg.(*COverData).Marshal()
-		return 1013, b, err
+		return 1014, b, err
 	case *CCard:
 		b, err := msg.(*CCard).Marshal()
-		return 1014, b, err
+		return 1015, b, err
 	case *CLoginPrize:
 		b, err := msg.(*CLoginPrize).Marshal()
-		return 1015, b, err
+		return 1016, b, err
 	case *CUseProp:
 		b, err := msg.(*CUseProp).Marshal()
-		return 1016, b, err
+		return 1017, b, err
 	case *CStart:
 		b, err := msg.(*CStart).Marshal()
-		return 1017, b, err
+		return 1018, b, err
 	default:
 		return 0, []byte{}, errors.New("unknown message")
 	}

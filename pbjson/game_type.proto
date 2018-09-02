@@ -57,6 +57,7 @@ enum ShopStatus {
     SHOP_STATUS1  =  1;//热卖
     SHOP_STATUS2  =  2;//新品
     SHOP_STATUS3  =  3;//下架
+    SHOP_STATUS4  =  4;//临时
 }
 
 //登录奖励类型

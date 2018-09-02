@@ -11,16 +11,22 @@ import (
 
 //Gate gate
 type Gate struct {
-	ID     string    `bson:"_id" json:"id"`        //unique ID
-	Gateid int32     `bson:"gateid" json:"gateid"` //unique
-	Type   int32     `bson:"type" json:"type"`     //type
-	Star   int32     `bson:"star" json:"star"`     //星数量
-	Data   []byte    `bson:"data" json:"data"`     //数据
-	Ptype  int32     `bson:"ptype" json:"ptype"`   //prop type
-	Num    int32     `bson:"num" json:"num"`       //prop number
-	Incr   bool      `bson:"incr" json:"incr"`     //有序递增
-	Del    int       `bson:"del" json:"del"`       //是否移除
-	Ctime  time.Time `bson:"ctime" json:"ctime"`   //创建时间
+	ID       string          `bson:"_id" json:"id"`              //unique ID
+	Gateid   int32           `bson:"gateid" json:"gateid"`       //unique
+	Type     int32           `bson:"type" json:"type"`           //type
+	Star     int32           `bson:"star" json:"star"`           //星数量
+	Data     []byte          `bson:"data" json:"data"`           //数据
+	TempShop []string        `bson:"temp_shop" json:"temp_shop"` //temp shop ids
+	Prize    []GatePrizeProp `bson:"prize" json:"prize"`         //prize
+	Incr     bool            `bson:"incr" json:"incr"`           //有序递增
+	Del      int             `bson:"del" json:"del"`             //是否移除
+	Ctime    time.Time       `bson:"ctime" json:"ctime"`         //创建时间
+}
+
+//GatePrizeProp 奖励
+type GatePrizeProp struct {
+	Type   int32 `bson:"type" json:"type"`     //物品类型
+	Number int32 `bson:"number" json:"number"` //物品数量
 }
 
 //GateInfo gate info

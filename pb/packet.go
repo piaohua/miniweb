@@ -43,21 +43,24 @@ func Packet(msg interface{}) (uint32, uint32, []byte, error) {
 	case *SBuy:
 		b, err := msg.(*SBuy).Marshal()
 		return 1012, 0, b, err
+	case *STempShop:
+		b, err := msg.(*STempShop).Marshal()
+		return 1013, 0, b, err
 	case *SOverData:
 		b, err := msg.(*SOverData).Marshal()
-		return 1013, 0, b, err
+		return 1014, 0, b, err
 	case *SCard:
 		b, err := msg.(*SCard).Marshal()
-		return 1014, 0, b, err
+		return 1015, 0, b, err
 	case *SLoginPrize:
 		b, err := msg.(*SLoginPrize).Marshal()
-		return 1015, 0, b, err
+		return 1016, 0, b, err
 	case *SUseProp:
 		b, err := msg.(*SUseProp).Marshal()
-		return 1016, 0, b, err
+		return 1017, 0, b, err
 	case *SStart:
 		b, err := msg.(*SStart).Marshal()
-		return 1017, 0, b, err
+		return 1018, 0, b, err
 	default:
 		return 0, 0, []byte{}, errors.New("unknown message")
 	}

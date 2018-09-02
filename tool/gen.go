@@ -61,12 +61,13 @@ var protosUnpack = map[string][]proto{
 		//shop
 		{code: 1011, name: "CShop"},
 		{code: 1012, name: "CBuy"},
+		{code: 1013, name: "CTempShop"},
 		//play
-		{code: 1013, name: "COverData"},
-		{code: 1014, name: "CCard"},
-		{code: 1015, name: "CLoginPrize"},
-		{code: 1016, name: "CUseProp"},
-		{code: 1017, name: "CStart"},
+		{code: 1014, name: "COverData"},
+		{code: 1015, name: "CCard"},
+		{code: 1016, name: "CLoginPrize"},
+		{code: 1017, name: "CUseProp"},
+		{code: 1018, name: "CStart"},
 	},
 }
 
@@ -87,12 +88,13 @@ var protosPacket = map[string][]proto{
 		//shop
 		{code: 1011, name: "SShop"},
 		{code: 1012, name: "SBuy"},
+		{code: 1013, name: "STempShop"},
 		//play
-		{code: 1013, name: "SOverData"},
-		{code: 1014, name: "SCard"},
-		{code: 1015, name: "SLoginPrize"},
-		{code: 1016, name: "SUseProp"},
-		{code: 1017, name: "SStart"},
+		{code: 1014, name: "SOverData"},
+		{code: 1015, name: "SCard"},
+		{code: 1016, name: "SLoginPrize"},
+		{code: 1017, name: "SUseProp"},
+		{code: 1018, name: "SStart"},
 	},
 }
 

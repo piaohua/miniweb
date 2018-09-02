@@ -46,6 +46,8 @@ It has these top-level messages:
 	SShop
 	CBuy
 	SBuy
+	CTempShop
+	STempShop
 	CPing
 	SPing
 	CUserData

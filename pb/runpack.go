@@ -55,22 +55,26 @@ func Runpack(id uint32, b []byte) (interface{}, error) {
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1013:
-		msg := new(SOverData)
+		msg := new(STempShop)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1014:
-		msg := new(SCard)
+		msg := new(SOverData)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1015:
-		msg := new(SLoginPrize)
+		msg := new(SCard)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1016:
-		msg := new(SUseProp)
+		msg := new(SLoginPrize)
 		err := msg.Unmarshal(b)
 		return msg, err
 	case 1017:
+		msg := new(SUseProp)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1018:
 		msg := new(SStart)
 		err := msg.Unmarshal(b)
 		return msg, err

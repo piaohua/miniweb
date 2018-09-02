@@ -71,11 +71,56 @@ func (ws *WSConn) getPropData() {
 	ws.Send(s2c)
 }
 
+//get temp shop data info
+func (ws *WSConn) getTempShopData(arg *pb.CTempShop) {
+	s2c := new(pb.STempShop)
+	m := make(map[string]bool, 0)
+	gate := models.GetGate(int32(arg.GetType()), arg.GetGateid())
+	if gate != nil {
+		for _, v := range gate.TempShop {
+			m[v] = true
+		}
+	}
+	//默认 TODO 优化
+	if len(m) == 0 {
+		m["17"] = true
+		m["18"] = true
+		m["19"] = true
+	}
+	list := models.GetShops() //优化
+	for _, v := range list {
+		switch v.Status {
+		case int32(pb.SHOP_STATUS4): //temp shop
+		default:
+			continue
+		}
+		if _, ok := m[v.ID]; !ok {
+			continue
+		}
+		shop := &pb.Shop{
+			Id:     v.ID,
+			Status: pb.ShopStatus(v.Status),
+			Type:   pb.PropType(v.Ptype),
+			Way:    pb.PayWay(v.Payway),
+			Number: v.Number,
+			Price:  v.Price,
+			Name:   v.Name,
+			Info:   v.Info,
+		}
+		s2c.List = append(s2c.List, shop)
+	}
+	ws.Send(s2c)
+}
+
 //get shop data info
 func (ws *WSConn) getShopData() {
 	s2c := new(pb.SShop)
 	list := models.GetShops()
 	for _, v := range list {
+		switch v.Status {
+		case int32(pb.SHOP_STATUS4): //temp shop
+			continue
+		}
 		shop := &pb.Shop{
 			Id:     v.ID,
 			Status: pb.ShopStatus(v.Status),
@@ -145,6 +190,57 @@ func (ws *WSConn) buy(arg *pb.CBuy) {
 	//TODO 下单购买日志
 }
 
+//buy temp prop handler
+func (ws *WSConn) buyTemp(ids []string) (err pb.ErrCode) {
+	if len(ids) == 0 {
+		return
+	}
+	var coin, diamond int64
+	l := []struct {
+		Ptype  int32
+		Number uint32
+	}{}
+	for _, id := range ids {
+		shop := models.GetShop(id)
+		switch shop.Payway {
+		case int32(pb.PAY_WAY1):
+			diamond += int64(shop.Price)
+		case int32(pb.PAY_WAY2):
+			coin += int64(shop.Price)
+		default:
+			err = pb.OrderFailed
+			return
+		}
+		l = append(l, struct {
+			Ptype  int32
+			Number uint32
+		}{Ptype: shop.Ptype, Number: shop.Number})
+	}
+	if ws.user.Coin < int64(coin) {
+		err = pb.CoinNotEnough
+		return
+	}
+	if ws.user.Diamond < int64(diamond) {
+		err = pb.DiamondNotEnough
+		return
+	}
+	if diamond > 0 {
+		msg1 := models.AddDiamondMsg(ws.user, -1*int64(diamond))
+		ws.Send(msg1)
+	}
+	if coin > 0 {
+		msg2 := models.AddCoinMsg(ws.user, -1*int64(coin))
+		ws.Send(msg2)
+	}
+	//奖励发放
+	for _, v := range l {
+		key := models.PropKey(int32(v.Ptype))
+		msg2 := models.AddTempPropMsg(ws.user, key, int64(v.Number), pb.PropType(v.Ptype))
+		ws.Send(msg2)
+	}
+	return
+}
+
 //奖励发放
 func (ws *WSConn) sendShopPrize(list []models.ShopPrizeProp) {
 	for _, v := range list {
@@ -185,11 +281,17 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 			Star:   ws.user.Gate[key].Star,
 		}
 		ws.Send(s2c)
+		ws.tempClean()
 		return
 	}
 	s2c.Error = pb.GateUnreachable
 	ws.Send(s2c)
 	beego.Error("overData error ", arg)
+}
+
+//temp prop clean
+func (ws *WSConn) tempClean() {
+	ws.user.TempProp = make(map[string]models.TempPropInfo)
 }
 
 //over prize
@@ -246,6 +348,7 @@ func (ws *WSConn) useProp(arg *pb.CUseProp) {
 
 //game start handler
 func (ws *WSConn) gameStart(arg *pb.CStart) {
+	ws.tempClean()
 	s2c := new(pb.SStart)
 	if ws.user.Energy < 5 {
 		s2c.Error = pb.EnergyNotEnough
@@ -255,6 +358,13 @@ func (ws *WSConn) gameStart(arg *pb.CStart) {
 	//检测关卡
 	key := models.GateKey(int32(arg.GetType()), arg.GetGateid())
 	if val, ok := ws.user.Gate[key]; ok {
+		//购买临时道具
+		err := ws.buyTemp(arg.GetIds())
+		if err != pb.OK {
+			s2c.Error = err
+			ws.Send(s2c)
+			return
+		}
 		s2c.GateInfo = &pb.GateData{
 			Type:   arg.GetType(),
 			Gateid: arg.GetGateid(),

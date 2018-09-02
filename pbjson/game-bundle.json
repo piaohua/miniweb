@@ -146,7 +146,8 @@
             "SHOP_STATUS0": 0,
             "SHOP_STATUS1": 1,
             "SHOP_STATUS2": 2,
-            "SHOP_STATUS3": 3
+            "SHOP_STATUS3": 3,
+            "SHOP_STATUS4": 4
           }
         },
         "LoginPrizeType": {
@@ -429,6 +430,11 @@
             "gateid": {
               "type": "int32",
               "id": 2
+            },
+            "ids": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 3
             }
           }
         },
@@ -591,6 +597,31 @@
                 "BuySuccess": 0,
                 "BuyFailed": 1
               }
+            }
+          }
+        },
+        "CTempShop": {
+          "fields": {
+            "type": {
+              "type": "GateType",
+              "id": 1
+            },
+            "gateid": {
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "STempShop": {
+          "fields": {
+            "list": {
+              "rule": "repeated",
+              "type": "Shop",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
             }
           }
         }
