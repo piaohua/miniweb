@@ -74,8 +74,17 @@ func (ws *WSConn) getPropData() {
 //get temp shop data info
 func (ws *WSConn) getTempShopData(arg *pb.CTempShop) {
 	s2c := new(pb.STempShop)
+	Type := int32(arg.GetType())
+	gateID := arg.GetGateid()
+	key := models.GateKey(Type, gateID)
+	if _, ok := ws.user.Gate[key]; !ok {
+		s2c.Error = pb.GateUnreachable
+		ws.Send(s2c)
+		beego.Error("get temp shop error ", arg)
+		return
+	}
 	m := make(map[string]bool, 0)
-	gate := models.GetGate(int32(arg.GetType()), arg.GetGateid())
+	gate := models.GetGate(Type, gateID)
 	if gate != nil {
 		for _, v := range gate.TempShop {
 			m[v] = true
