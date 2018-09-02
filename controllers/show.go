@@ -45,3 +45,16 @@ func (s *ShowController) Prop() {
 
 	s.jsonResult(list)
 }
+
+// Gate show gate list
+func (s *ShowController) Gate() {
+
+	if s.isPost() {
+		s.Redirect("/", 302)
+		return
+	}
+
+	list := models.GetGates()
+
+	s.jsonResult(list)
+}

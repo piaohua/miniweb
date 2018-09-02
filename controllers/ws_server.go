@@ -29,6 +29,7 @@ func init() {
 }
 
 type WSHandler struct {
+	close           bool               //是否关闭监听
 	maxConnNum      int                //最大连接数
 	pendingWriteNum int                //等待写入消息长度
 	maxMsgLen       uint32             //最大消息长
@@ -61,6 +62,7 @@ func (handler *WSHandler) Add(conn *websocket.Conn) {
 func (handler *WSHandler) Close() {
 
 	handler.mutexConns.Lock()
+	handler.close = true
 	for conn := range handler.conns {
 		conn.Close()
 	}

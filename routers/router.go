@@ -27,9 +27,14 @@ func init() {
 	beego.Router("/show/shop", &controllers.ShowController{}, "get:Shop")
 	beego.Router("/show/prize", &controllers.ShowController{}, "get:Prize")
 	beego.Router("/show/prop", &controllers.ShowController{}, "get:Prop")
+	beego.Router("/show/gate", &controllers.ShowController{}, "get:Gate")
 
 	// Set
 	beego.Router("/set/shop", &controllers.SetController{}, "post:Shop")
 	beego.Router("/set/prize", &controllers.SetController{}, "post:Prize")
 	beego.Router("/set/prop", &controllers.SetController{}, "post:Prop")
+	beego.Router("/set/coin", &controllers.SetController{}, "post:Coin")
+	beego.Router("/set/diamond", &controllers.SetController{}, "post:Diamond")
+	beego.Router("/set/close", &controllers.SetController{}, "post:Close")
+	beego.Router("/set/gate", &controllers.SetController{}, "post:Gate")
 }

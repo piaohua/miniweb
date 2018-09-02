@@ -73,6 +73,15 @@ func (this *WebSocketController) Login() {
 		return
 	}
 
+	if Handler.close {
+		jsonData := &models.WxErr{
+			ErrCode: int(pb.WSLoginFailed),
+			ErrMsg:  "closed",
+		}
+		this.jsonResult(jsonData)
+		return
+	}
+
 	// Upgrade from http request to WebSocket.
 	ws, err := Handler.upgrader.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil)
 	if val, ok := err.(websocket.HandshakeError); ok {

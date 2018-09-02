@@ -23,4 +23,5 @@ enum ErrCode {
     SetShopFailed          = 14; //设置shop错误
     SetPropFailed          = 15; //设置prop错误
     SetPrizeFailed         = 16; //设置prize错误
+    SetGateFailed          = 17; //设置gate错误
 }

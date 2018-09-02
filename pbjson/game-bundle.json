@@ -88,7 +88,8 @@
             "WSLoginFailed": 13,
             "SetShopFailed": 14,
             "SetPropFailed": 15,
-            "SetPrizeFailed": 16
+            "SetPrizeFailed": 16,
+            "SetGateFailed": 17
           }
         },
         "LogType": {

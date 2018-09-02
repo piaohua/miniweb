@@ -14,7 +14,7 @@ type SetController struct {
 	baseController // Embed to use methods that are implemented in baseController.
 }
 
-// Shop show shop list
+// Shop set shop list
 func (s *SetController) Shop() {
 
 	if !s.isPost() {
@@ -82,7 +82,7 @@ func (s *SetController) Prize() {
 	s.jsonResult(prize)
 }
 
-// Prop show prize list
+// Prop set prize list
 func (s *SetController) Prop() {
 
 	if !s.isPost() {
@@ -109,9 +109,101 @@ func (s *SetController) Prop() {
 			ErrMsg:  "set prop failed",
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set prize err: ", err)
+		beego.Error("set prop err: ", err)
 		return
 	}
 
 	s.jsonResult(prop)
+}
+
+// Gate set gate info
+func (s *SetController) Gate() {
+
+	if !s.isPost() {
+		s.Redirect("/", 302)
+		return
+	}
+
+	var gate models.Gate
+	var err error
+	err = json.Unmarshal(s.Ctx.Input.RequestBody, &gate)
+	if err != nil {
+		jsonData := models.WxErr{
+			ErrCode: int(pb.SetGateFailed),
+			ErrMsg:  err.Error(),
+		}
+		s.jsonResult(jsonData)
+		beego.Error("set gate err: ", err)
+		return
+	}
+
+	if !models.UpsertGate(gate) {
+		jsonData := models.WxErr{
+			ErrCode: int(pb.SetGateFailed),
+			ErrMsg:  "set gate failed",
+		}
+		s.jsonResult(jsonData)
+		beego.Error("set gate err: ", err)
+		return
+	}
+
+	s.jsonResult(gate)
+}
+
+// Coin set coin
+func (s *SetController) Coin() {
+
+	if !s.isPost() {
+		s.Redirect("/", 302)
+		return
+	}
+
+	userid := s.GetString("userid")
+	num, err := s.GetInt64("num")
+	if err != nil {
+		beego.Error("set coin err: ", err)
+		s.Redirect("/", 302)
+		return
+	}
+	beego.Debug("set coin userid: ", userid, ", num: ", num)
+
+	//TODO
+
+	//s.jsonResult(prop)
+}
+
+// Diamond set coin
+func (s *SetController) Diamond() {
+
+	if !s.isPost() {
+		s.Redirect("/", 302)
+		return
+	}
+
+	userid := s.GetString("userid")
+	num, err := s.GetInt64("num")
+	if err != nil {
+		beego.Error("set diamond err: ", err)
+		s.Redirect("/", 302)
+		return
+	}
+	beego.Debug("set diamond userid: ", userid, ", num: ", num)
+
+	//TODO
+
+	//s.jsonResult(prop)
+}
+
+// Close ws close
+func (s *SetController) Close() {
+
+	if !s.isPost() {
+		s.Redirect("/", 302)
+		return
+	}
+
+	Handler.Close()
+
+	jsonData := &models.WxErr{}
+	s.jsonResult(jsonData)
 }

@@ -110,6 +110,10 @@ func InitLoginPrizeList() {
 
 //UpsertPrize upsert prize
 func UpsertPrize(prize LoginPrize) bool {
+	if len(prize.ID) == 0 {
+		beego.Error("prize id err: ", prize)
+		return false
+	}
 	key := PrizeKey(prize.Day)
 	list := GetLoginPrizes()
 	if prize.Del != 0 {

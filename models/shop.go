@@ -98,6 +98,10 @@ func InitShopList() {
 
 //UpsertShop upsert shop
 func UpsertShop(shop Shop) bool {
+	if len(shop.ID) == 0 {
+		beego.Error("shop id err: ", shop)
+		return false
+	}
 	key := ShopKey(shop.ID)
 	list := GetShops()
 	if shop.Del != 0 {

@@ -4,8 +4,10 @@ import (
 	"strconv"
 	"time"
 
+	"miniweb/libs"
 	"miniweb/pb"
 
+	"github.com/astaxie/beego"
 	"github.com/globalsign/mgo/bson"
 )
 
@@ -48,6 +50,16 @@ func GetGateList() []Gate {
 func (t *Gate) Save() bool {
 	t.Ctime = bson.Now()
 	return Insert(Gates, t)
+}
+
+//Upsert 更新数据库
+func (t *Gate) Upsert() bool {
+	return Upsert(Gates, bson.M{"type": t.Type, "gateid": t.Gateid}, t)
+}
+
+//Delete 删除数据
+func (t *Gate) Delete() bool {
+	return Delete(Gates, bson.M{"type": t.Type, "gateid": t.Gateid})
 }
 
 //GateKey user gate unique key
@@ -96,6 +108,81 @@ func AddNewGate(user *User, Type, id int32) {
 			Type:   Type,
 		}
 	}
+}
+
+//LoadGateList load gate info by gate.json
+func LoadGateList() []Gate {
+	filePath := "static/gate.json"
+	list := make([]Gate, 0)
+	err := libs.Load(filePath, &list)
+	if err != nil {
+		beego.Error("load gate err ", err)
+	}
+	return list
+}
+
+//InitGateList init gate to cache
+func InitGateList() {
+	list := GetGateList()
+	//test use
+	if !RunMode() {
+		if len(list) == 0 {
+			//SetGateList()
+			list = LoadGateList()
+		}
+	}
+	Cache.Put("gate", list, 0)
+	for k, v := range list {
+		Cache.Put(GateUniqueKey(v.Type, v.Gateid), &list[k], 0)
+	}
+}
+
+//UpsertGate upsert gate
+func UpsertGate(gate Gate) bool {
+	if len(gate.ID) == 0 {
+		beego.Error("gate id err: ", gate)
+		return false
+	}
+	key := GateUniqueKey(gate.Type, gate.Gateid)
+	list := GetGates()
+	if gate.Del != 0 {
+		if !gate.Delete() {
+			beego.Error("gate delete err: ", gate)
+			return false
+		}
+		Cache.Delete(key)
+		for k, v := range list {
+			if v.Type == gate.Type && v.Gateid == gate.Gateid {
+				list = append(list[:k], list[k+1:]...)
+				break
+			}
+		}
+		Cache.Put("gate", list, 0)
+		return true
+	}
+	if !gate.Upsert() {
+		beego.Error("gate upsert err: ", gate)
+		return false
+	}
+	Cache.Put(key, &gate, 0)
+	for k, v := range list {
+		if v.Type == gate.Type && v.Gateid == gate.Gateid {
+			list[k] = gate
+			break
+		}
+	}
+	Cache.Put("gate", list, 0)
+	return true
+}
+
+//GetGates from cache
+func GetGates() (l []Gate) {
+	if v := Cache.Get("gate"); v != nil {
+		if val, ok := v.([]Gate); ok {
+			l = val
+		}
+	}
+	return
 }
 
 //GetGate get gate by type and id

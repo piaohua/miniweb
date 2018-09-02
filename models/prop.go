@@ -195,6 +195,10 @@ func InitPropList() {
 
 //UpsertProp upsert prop
 func UpsertProp(prop Prop) bool {
+	if len(prop.ID) == 0 {
+		beego.Error("prop id err: ", prop)
+		return false
+	}
 	key := PropUniqueKey(prop.Type)
 	list := GetProps()
 	if prop.Del != 0 {
