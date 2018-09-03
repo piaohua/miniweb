@@ -1,6 +1,7 @@
 package test
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -8,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"miniweb/models"
 	_ "miniweb/routers"
 
 	"github.com/astaxie/beego"
@@ -57,4 +59,25 @@ func TestWS(t *testing.T) {
 		beego.Trace("close conn\n")
 		c.Close()
 	}
+}
+
+// TestSetGate set gate
+func TestSetGate(t *testing.T) {
+	gate := models.Gate{
+		ID:       "ObjectIdHex(\"5b8a252bc3666ed1e4225d99\")",
+		Gateid:   1,
+		Type:     1,
+		Star:     3,
+		Data:     []byte{},
+		TempShop: []string{"17", "18", "19"},
+		//Prize: [],
+		Incr:  true,
+		Del:   0,
+		Ctime: time.Now(),
+	}
+	body, err := json.Marshal(&gate)
+	t.Logf("body %v, err %v\n", body, err)
+	gate2 := new(models.Gate)
+	err = json.Unmarshal(body, gate2)
+	t.Logf("gate2 %#v, err %v\n", gate2, err)
 }

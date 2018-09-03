@@ -26,22 +26,22 @@ func (s *SetController) Shop() {
 	var err error
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &shop)
 	if err != nil {
+		beego.Error("set shop err: ", err)
 		jsonData := models.WxErr{
 			ErrCode: int(pb.SetShopFailed),
 			ErrMsg:  err.Error(),
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set shop err: ", err)
 		return
 	}
 
 	if !models.UpsertShop(shop) {
+		beego.Error("set shop err: ", err)
 		jsonData := models.WxErr{
 			ErrCode: int(pb.SetShopFailed),
 			ErrMsg:  "set shop failed",
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set shop err: ", err)
 		return
 	}
 	beego.Info("set shop success: ", shop)
@@ -61,22 +61,22 @@ func (s *SetController) Prize() {
 	var err error
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &prize)
 	if err != nil {
+		beego.Error("set prize err: ", err)
 		jsonData := models.WxErr{
 			ErrCode: int(pb.SetPrizeFailed),
 			ErrMsg:  err.Error(),
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set prize err: ", err)
 		return
 	}
 
 	if !models.UpsertPrize(prize) {
+		beego.Error("set prize err: ", err)
 		jsonData := models.WxErr{
 			ErrCode: int(pb.SetPrizeFailed),
 			ErrMsg:  "set prize failed",
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set prize err: ", err)
 		return
 	}
 	beego.Info("set prize success: ", prize)
@@ -96,22 +96,22 @@ func (s *SetController) Prop() {
 	var err error
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &prop)
 	if err != nil {
+		beego.Error("set prop err: ", err)
 		jsonData := models.WxErr{
 			ErrCode: int(pb.SetPropFailed),
 			ErrMsg:  err.Error(),
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set prop err: ", err)
 		return
 	}
 
 	if !models.UpsertProp(prop) {
+		beego.Error("set prop err: ", err)
 		jsonData := models.WxErr{
 			ErrCode: int(pb.SetPropFailed),
 			ErrMsg:  "set prop failed",
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set prop err: ", err)
 		return
 	}
 	beego.Info("set prop success: ", prop)
@@ -127,26 +127,27 @@ func (s *SetController) Gate() {
 		return
 	}
 
+	beego.Info("set prop json: ", string(s.Ctx.Input.RequestBody))
 	var gate models.Gate
 	var err error
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &gate)
 	if err != nil {
+		beego.Error("set gate err: ", err)
 		jsonData := models.WxErr{
 			ErrCode: int(pb.SetGateFailed),
 			ErrMsg:  err.Error(),
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set gate err: ", err)
 		return
 	}
 
 	if !models.UpsertGate(gate) {
+		beego.Error("set gate err: ", err)
 		jsonData := models.WxErr{
 			ErrCode: int(pb.SetGateFailed),
 			ErrMsg:  "set gate failed",
 		}
 		s.jsonResult(jsonData)
-		beego.Error("set gate err: ", err)
 		return
 	}
 	beego.Info("set gate success: ", gate)
