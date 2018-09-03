@@ -26,13 +26,15 @@ func CheckEnergy(user *User) (msg *pb.SPushProp) {
 }
 
 //AddEnergyMsg add energy msg
-func AddEnergyMsg(user *User, n int64) (msg *pb.SPushProp) {
-	user.AddEnergy(n)
+func AddEnergyMsg(user *User, num int64) (msg *pb.SPushProp) {
+	user.AddEnergy(num)
 	msg = &pb.SPushProp{
 		//Type: pb.LOG_TYPE0,
-		Ptype: pb.PROP_TYPE3,
-		Num:   n,
-		Total: user.Energy,
+		Num: num,
+		PropInfo: &pb.PropData{
+			Type: pb.PROP_TYPE3,
+			Num:  user.Energy,
+		},
 	}
 	return
 }

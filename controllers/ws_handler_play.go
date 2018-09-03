@@ -62,7 +62,7 @@ func (ws *WSConn) getPropData() {
 	for _, v := range ws.user.Prop {
 		prop := &pb.PropData{
 			Type: pb.PropType(v.Type),
-			Num:  v.Num,
+			Num:  int64(v.Num),
 			Attr: v.Attr,
 		}
 		prop.Name = models.GetPropName(v.Type)
@@ -250,6 +250,18 @@ func (ws *WSConn) buyTemp(ids []string) (err pb.ErrCode) {
 	return
 }
 
+//change change currency
+func (ws *WSConn) change(arg *pb.ChangeCurrency) {
+	if arg.Diamond != 0 {
+		msg1 := models.AddDiamondMsg(ws.user, int64(arg.Diamond))
+		ws.Send(msg1)
+	}
+	if arg.Coin != 0 {
+		msg2 := models.AddCoinMsg(ws.user, int64(arg.Coin))
+		ws.Send(msg2)
+	}
+}
+
 //奖励发放
 func (ws *WSConn) sendShopPrize(list []models.ShopPrizeProp) {
 	for _, v := range list {
@@ -322,6 +334,11 @@ func overPrize(gate, star int32, first bool) (coin, energy int64) {
 
 //card handler
 func (ws *WSConn) card(arg *pb.CCard) {
+	//test
+	msg1 := models.AddCoinMsg(ws.user, 30000)
+	ws.Send(msg1)
+	msg2 := models.AddDiamondMsg(ws.user, 1000)
+	ws.Send(msg2)
 	s2c := new(pb.SCard)
 	ws.Send(s2c)
 }

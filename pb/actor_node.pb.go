@@ -2,69 +2,77 @@
 // source: actor_node.proto
 
 /*
-Package pb is a generated protocol buffer package.
+	Package pb is a generated protocol buffer package.
 
-It is generated from these files:
-	actor_node.proto
-	game_code.proto
-	game_login.proto
-	game_play.proto
-	game_pub.proto
-	game_shop.proto
-	game_type.proto
-	game_user.proto
+	It is generated from these files:
+		actor_node.proto
+		game_code.proto
+		game_login.proto
+		game_play.proto
+		game_pub.proto
+		game_shop.proto
+		game_type.proto
+		game_user.proto
 
-It has these top-level messages:
-	ServeStart
-	ServeStarted
-	ServeStop
-	ServeStoped
-	ServeClose
-	Tick
-	CWxLogin
-	SWxLogin
-	SLoginOut
-	CLogin
-	SLogin
-	CStart
-	SStart
-	COverData
-	SOverData
-	CCard
-	SCard
-	CLoginPrize
-	SLoginPrize
-	CUseProp
-	SUseProp
-	UserData
-	GateData
-	PropData
-	Shop
-	LoginPrize
-	LoginPrizeProp
-	CShop
-	SShop
-	CBuy
-	SBuy
-	CTempShop
-	STempShop
-	CPing
-	SPing
-	CUserData
-	SUserData
-	CGateData
-	SGateData
-	CPropData
-	SPropData
-	CGetCurrency
-	SGetCurrency
-	SPushProp
+	It has these top-level messages:
+		ServeStart
+		ServeStarted
+		ServeStop
+		ServeStoped
+		ServeClose
+		Tick
+		Select
+		Selected
+		Login
+		Logined
+		Logout
+		Logouted
+		ChangeCurrency
+		CWxLogin
+		SWxLogin
+		SLoginOut
+		CLogin
+		SLogin
+		CStart
+		SStart
+		COverData
+		SOverData
+		CCard
+		SCard
+		CLoginPrize
+		SLoginPrize
+		CUseProp
+		SUseProp
+		UserData
+		GateData
+		PropData
+		Shop
+		LoginPrize
+		LoginPrizeProp
+		CShop
+		SShop
+		CBuy
+		SBuy
+		CTempShop
+		STempShop
+		CPing
+		SPing
+		CUserData
+		SUserData
+		CGateData
+		SGateData
+		CPropData
+		SPropData
+		CGetCurrency
+		SGetCurrency
+		SPushProp
 */
 package pb
 
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
+import actor "github.com/AsynkronIT/protoactor-go/actor"
 
 import strings "strings"
 import reflect "reflect"
@@ -168,6 +176,171 @@ func (m *Tick) Reset()                    { *m = Tick{} }
 func (*Tick) ProtoMessage()               {}
 func (*Tick) Descriptor() ([]byte, []int) { return fileDescriptorActorNode, []int{5} }
 
+// 查询pid
+type Select struct {
+	Session string `protobuf:"bytes,1,opt,name=Session,proto3" json:"Session,omitempty"`
+}
+
+func (m *Select) Reset()                    { *m = Select{} }
+func (*Select) ProtoMessage()               {}
+func (*Select) Descriptor() ([]byte, []int) { return fileDescriptorActorNode, []int{6} }
+
+func (m *Select) GetSession() string {
+	if m != nil {
+		return m.Session
+	}
+	return ""
+}
+
+type Selected struct {
+	WSPid *actor.PID `protobuf:"bytes,1,opt,name=WSPid" json:"WSPid,omitempty"`
+}
+
+func (m *Selected) Reset()                    { *m = Selected{} }
+func (*Selected) ProtoMessage()               {}
+func (*Selected) Descriptor() ([]byte, []int) { return fileDescriptorActorNode, []int{7} }
+
+func (m *Selected) GetWSPid() *actor.PID {
+	if m != nil {
+		return m.WSPid
+	}
+	return nil
+}
+
+// 登录成功
+type Login struct {
+	Userid  string     `protobuf:"bytes,1,opt,name=Userid,proto3" json:"Userid,omitempty"`
+	Session string     `protobuf:"bytes,2,opt,name=Session,proto3" json:"Session,omitempty"`
+	WSPid   *actor.PID `protobuf:"bytes,3,opt,name=WSPid" json:"WSPid,omitempty"`
+}
+
+func (m *Login) Reset()                    { *m = Login{} }
+func (*Login) ProtoMessage()               {}
+func (*Login) Descriptor() ([]byte, []int) { return fileDescriptorActorNode, []int{8} }
+
+func (m *Login) GetUserid() string {
+	if m != nil {
+		return m.Userid
+	}
+	return ""
+}
+
+func (m *Login) GetSession() string {
+	if m != nil {
+		return m.Session
+	}
+	return ""
+}
+
+func (m *Login) GetWSPid() *actor.PID {
+	if m != nil {
+		return m.WSPid
+	}
+	return nil
+}
+
+type Logined struct {
+	Userid  string `protobuf:"bytes,1,opt,name=Userid,proto3" json:"Userid,omitempty"`
+	Session string `protobuf:"bytes,2,opt,name=Session,proto3" json:"Session,omitempty"`
+}
+
+func (m *Logined) Reset()                    { *m = Logined{} }
+func (*Logined) ProtoMessage()               {}
+func (*Logined) Descriptor() ([]byte, []int) { return fileDescriptorActorNode, []int{9} }
+
+func (m *Logined) GetUserid() string {
+	if m != nil {
+		return m.Userid
+	}
+	return ""
+}
+
+func (m *Logined) GetSession() string {
+	if m != nil {
+		return m.Session
+	}
+	return ""
+}
+
+// 登出
+type Logout struct {
+	Userid  string `protobuf:"bytes,1,opt,name=Userid,proto3" json:"Userid,omitempty"`
+	Session string `protobuf:"bytes,2,opt,name=Session,proto3" json:"Session,omitempty"`
+}
+
+func (m *Logout) Reset()                    { *m = Logout{} }
+func (*Logout) ProtoMessage()               {}
+func (*Logout) Descriptor() ([]byte, []int) { return fileDescriptorActorNode, []int{10} }
+
+func (m *Logout) GetUserid() string {
+	if m != nil {
+		return m.Userid
+	}
+	return ""
+}
+
+func (m *Logout) GetSession() string {
+	if m != nil {
+		return m.Session
+	}
+	return ""
+}
+
+type Logouted struct {
+	Userid string `protobuf:"bytes,1,opt,name=Userid,proto3" json:"Userid,omitempty"`
+}
+
+func (m *Logouted) Reset()                    { *m = Logouted{} }
+func (*Logouted) ProtoMessage()               {}
+func (*Logouted) Descriptor() ([]byte, []int) { return fileDescriptorActorNode, []int{11} }
+
+func (m *Logouted) GetUserid() string {
+	if m != nil {
+		return m.Userid
+	}
+	return ""
+}
+
+// 同步变动货币数据
+type ChangeCurrency struct {
+	Userid  string `protobuf:"bytes,1,opt,name=Userid,proto3" json:"Userid,omitempty"`
+	Type    int32  `protobuf:"varint,2,opt,name=Type,proto3" json:"Type,omitempty"`
+	Coin    int64  `protobuf:"varint,3,opt,name=Coin,proto3" json:"Coin,omitempty"`
+	Diamond int64  `protobuf:"varint,4,opt,name=Diamond,proto3" json:"Diamond,omitempty"`
+}
+
+func (m *ChangeCurrency) Reset()                    { *m = ChangeCurrency{} }
+func (*ChangeCurrency) ProtoMessage()               {}
+func (*ChangeCurrency) Descriptor() ([]byte, []int) { return fileDescriptorActorNode, []int{12} }
+
+func (m *ChangeCurrency) GetUserid() string {
+	if m != nil {
+		return m.Userid
+	}
+	return ""
+}
+
+func (m *ChangeCurrency) GetType() int32 {
+	if m != nil {
+		return m.Type
+	}
+	return 0
+}
+
+func (m *ChangeCurrency) GetCoin() int64 {
+	if m != nil {
+		return m.Coin
+	}
+	return 0
+}
+
+func (m *ChangeCurrency) GetDiamond() int64 {
+	if m != nil {
+		return m.Diamond
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*ServeStart)(nil), "pb.ServeStart")
 	proto.RegisterType((*ServeStarted)(nil), "pb.ServeStarted")
@@ -175,6 +348,13 @@ func init() {
 	proto.RegisterType((*ServeStoped)(nil), "pb.ServeStoped")
 	proto.RegisterType((*ServeClose)(nil), "pb.ServeClose")
 	proto.RegisterType((*Tick)(nil), "pb.Tick")
+	proto.RegisterType((*Select)(nil), "pb.Select")
+	proto.RegisterType((*Selected)(nil), "pb.Selected")
+	proto.RegisterType((*Login)(nil), "pb.Login")
+	proto.RegisterType((*Logined)(nil), "pb.Logined")
+	proto.RegisterType((*Logout)(nil), "pb.Logout")
+	proto.RegisterType((*Logouted)(nil), "pb.Logouted")
+	proto.RegisterType((*ChangeCurrency)(nil), "pb.ChangeCurrency")
 }
 func (this *ServeStart) Equal(that interface{}) bool {
 	if that == nil {
@@ -317,6 +497,195 @@ func (this *Tick) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *Select) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Select)
+	if !ok {
+		that2, ok := that.(Select)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Session != that1.Session {
+		return false
+	}
+	return true
+}
+func (this *Selected) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Selected)
+	if !ok {
+		that2, ok := that.(Selected)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.WSPid.Equal(that1.WSPid) {
+		return false
+	}
+	return true
+}
+func (this *Login) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Login)
+	if !ok {
+		that2, ok := that.(Login)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Userid != that1.Userid {
+		return false
+	}
+	if this.Session != that1.Session {
+		return false
+	}
+	if !this.WSPid.Equal(that1.WSPid) {
+		return false
+	}
+	return true
+}
+func (this *Logined) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Logined)
+	if !ok {
+		that2, ok := that.(Logined)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Userid != that1.Userid {
+		return false
+	}
+	if this.Session != that1.Session {
+		return false
+	}
+	return true
+}
+func (this *Logout) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Logout)
+	if !ok {
+		that2, ok := that.(Logout)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Userid != that1.Userid {
+		return false
+	}
+	if this.Session != that1.Session {
+		return false
+	}
+	return true
+}
+func (this *Logouted) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Logouted)
+	if !ok {
+		that2, ok := that.(Logouted)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Userid != that1.Userid {
+		return false
+	}
+	return true
+}
+func (this *ChangeCurrency) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ChangeCurrency)
+	if !ok {
+		that2, ok := that.(ChangeCurrency)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Userid != that1.Userid {
+		return false
+	}
+	if this.Type != that1.Type {
+		return false
+	}
+	if this.Coin != that1.Coin {
+		return false
+	}
+	if this.Diamond != that1.Diamond {
+		return false
+	}
+	return true
+}
 func (this *ServeStart) GoString() string {
 	if this == nil {
 		return "nil"
@@ -373,6 +742,87 @@ func (this *Tick) GoString() string {
 	}
 	s := make([]string, 0, 4)
 	s = append(s, "&pb.Tick{")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Select) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&pb.Select{")
+	s = append(s, "Session: "+fmt.Sprintf("%#v", this.Session)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Selected) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&pb.Selected{")
+	if this.WSPid != nil {
+		s = append(s, "WSPid: "+fmt.Sprintf("%#v", this.WSPid)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Login) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 7)
+	s = append(s, "&pb.Login{")
+	s = append(s, "Userid: "+fmt.Sprintf("%#v", this.Userid)+",\n")
+	s = append(s, "Session: "+fmt.Sprintf("%#v", this.Session)+",\n")
+	if this.WSPid != nil {
+		s = append(s, "WSPid: "+fmt.Sprintf("%#v", this.WSPid)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Logined) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&pb.Logined{")
+	s = append(s, "Userid: "+fmt.Sprintf("%#v", this.Userid)+",\n")
+	s = append(s, "Session: "+fmt.Sprintf("%#v", this.Session)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Logout) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&pb.Logout{")
+	s = append(s, "Userid: "+fmt.Sprintf("%#v", this.Userid)+",\n")
+	s = append(s, "Session: "+fmt.Sprintf("%#v", this.Session)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Logouted) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&pb.Logouted{")
+	s = append(s, "Userid: "+fmt.Sprintf("%#v", this.Userid)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *ChangeCurrency) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 8)
+	s = append(s, "&pb.ChangeCurrency{")
+	s = append(s, "Userid: "+fmt.Sprintf("%#v", this.Userid)+",\n")
+	s = append(s, "Type: "+fmt.Sprintf("%#v", this.Type)+",\n")
+	s = append(s, "Coin: "+fmt.Sprintf("%#v", this.Coin)+",\n")
+	s = append(s, "Diamond: "+fmt.Sprintf("%#v", this.Diamond)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -522,6 +972,221 @@ func (m *Tick) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *Select) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Select) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Session) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Session)))
+		i += copy(dAtA[i:], m.Session)
+	}
+	return i, nil
+}
+
+func (m *Selected) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Selected) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.WSPid != nil {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(m.WSPid.Size()))
+		n1, err := m.WSPid.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n1
+	}
+	return i, nil
+}
+
+func (m *Login) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Login) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Userid) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Userid)))
+		i += copy(dAtA[i:], m.Userid)
+	}
+	if len(m.Session) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Session)))
+		i += copy(dAtA[i:], m.Session)
+	}
+	if m.WSPid != nil {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(m.WSPid.Size()))
+		n2, err := m.WSPid.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n2
+	}
+	return i, nil
+}
+
+func (m *Logined) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Logined) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Userid) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Userid)))
+		i += copy(dAtA[i:], m.Userid)
+	}
+	if len(m.Session) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Session)))
+		i += copy(dAtA[i:], m.Session)
+	}
+	return i, nil
+}
+
+func (m *Logout) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Logout) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Userid) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Userid)))
+		i += copy(dAtA[i:], m.Userid)
+	}
+	if len(m.Session) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Session)))
+		i += copy(dAtA[i:], m.Session)
+	}
+	return i, nil
+}
+
+func (m *Logouted) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Logouted) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Userid) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Userid)))
+		i += copy(dAtA[i:], m.Userid)
+	}
+	return i, nil
+}
+
+func (m *ChangeCurrency) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ChangeCurrency) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Userid) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(len(m.Userid)))
+		i += copy(dAtA[i:], m.Userid)
+	}
+	if m.Type != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(m.Type))
+	}
+	if m.Coin != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(m.Coin))
+	}
+	if m.Diamond != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintActorNode(dAtA, i, uint64(m.Diamond))
+	}
+	return i, nil
+}
+
 func encodeVarintActorNode(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -584,6 +1249,101 @@ func (m *ServeClose) Size() (n int) {
 func (m *Tick) Size() (n int) {
 	var l int
 	_ = l
+	return n
+}
+
+func (m *Select) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Session)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	return n
+}
+
+func (m *Selected) Size() (n int) {
+	var l int
+	_ = l
+	if m.WSPid != nil {
+		l = m.WSPid.Size()
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	return n
+}
+
+func (m *Login) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Userid)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	l = len(m.Session)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	if m.WSPid != nil {
+		l = m.WSPid.Size()
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	return n
+}
+
+func (m *Logined) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Userid)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	l = len(m.Session)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	return n
+}
+
+func (m *Logout) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Userid)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	l = len(m.Session)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	return n
+}
+
+func (m *Logouted) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Userid)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	return n
+}
+
+func (m *ChangeCurrency) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Userid)
+	if l > 0 {
+		n += 1 + l + sovActorNode(uint64(l))
+	}
+	if m.Type != 0 {
+		n += 1 + sovActorNode(uint64(m.Type))
+	}
+	if m.Coin != 0 {
+		n += 1 + sovActorNode(uint64(m.Coin))
+	}
+	if m.Diamond != 0 {
+		n += 1 + sovActorNode(uint64(m.Diamond))
+	}
 	return n
 }
 
@@ -655,6 +1415,83 @@ func (this *Tick) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&Tick{`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Select) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Select{`,
+		`Session:` + fmt.Sprintf("%v", this.Session) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Selected) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Selected{`,
+		`WSPid:` + strings.Replace(fmt.Sprintf("%v", this.WSPid), "PID", "actor.PID", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Login) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Login{`,
+		`Userid:` + fmt.Sprintf("%v", this.Userid) + `,`,
+		`Session:` + fmt.Sprintf("%v", this.Session) + `,`,
+		`WSPid:` + strings.Replace(fmt.Sprintf("%v", this.WSPid), "PID", "actor.PID", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Logined) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Logined{`,
+		`Userid:` + fmt.Sprintf("%v", this.Userid) + `,`,
+		`Session:` + fmt.Sprintf("%v", this.Session) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Logout) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Logout{`,
+		`Userid:` + fmt.Sprintf("%v", this.Userid) + `,`,
+		`Session:` + fmt.Sprintf("%v", this.Session) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Logouted) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Logouted{`,
+		`Userid:` + fmt.Sprintf("%v", this.Userid) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ChangeCurrency) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ChangeCurrency{`,
+		`Userid:` + fmt.Sprintf("%v", this.Userid) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Coin:` + fmt.Sprintf("%v", this.Coin) + `,`,
+		`Diamond:` + fmt.Sprintf("%v", this.Diamond) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1112,6 +1949,740 @@ func (m *Tick) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *Select) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActorNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Select: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Select: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Session = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActorNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Selected) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActorNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Selected: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Selected: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field WSPid", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.WSPid == nil {
+				m.WSPid = &actor.PID{}
+			}
+			if err := m.WSPid.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActorNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Login) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActorNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Login: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Login: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Userid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Userid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Session = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field WSPid", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.WSPid == nil {
+				m.WSPid = &actor.PID{}
+			}
+			if err := m.WSPid.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActorNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Logined) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActorNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Logined: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Logined: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Userid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Userid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Session = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActorNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Logout) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActorNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Logout: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Logout: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Userid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Userid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Session = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActorNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Logouted) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActorNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Logouted: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Logouted: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Userid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Userid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActorNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ChangeCurrency) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowActorNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ChangeCurrency: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ChangeCurrency: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Userid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Userid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			m.Type = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Type |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coin", wireType)
+			}
+			m.Coin = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Coin |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Diamond", wireType)
+			}
+			m.Diamond = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowActorNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Diamond |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipActorNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthActorNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func skipActorNode(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1220,17 +2791,30 @@ var (
 func init() { proto.RegisterFile("actor_node.proto", fileDescriptorActorNode) }
 
 var fileDescriptorActorNode = []byte{
-	// 177 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x48, 0x4c, 0x2e, 0xc9,
-	0x2f, 0x8a, 0xcf, 0xcb, 0x4f, 0x49, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48,
-	0x52, 0x52, 0xe3, 0xe2, 0x0a, 0x4e, 0x2d, 0x2a, 0x4b, 0x0d, 0x2e, 0x49, 0x2c, 0x2a, 0x11, 0x92,
-	0xe0, 0x62, 0xf7, 0x4d, 0x2d, 0x2e, 0x4e, 0x4c, 0x4f, 0x95, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c,
-	0x82, 0x71, 0x95, 0x34, 0xb8, 0x78, 0x10, 0xea, 0x52, 0x53, 0xf0, 0xa8, 0x54, 0xe5, 0xe2, 0x84,
-	0xaa, 0xcc, 0x2f, 0xc0, 0xa3, 0x4c, 0x9d, 0x8b, 0x1b, 0xae, 0x0c, 0xaf, 0x79, 0x30, 0x17, 0x3a,
-	0xe7, 0xe4, 0x17, 0xa7, 0xe2, 0x51, 0xc7, 0xc6, 0xc5, 0x12, 0x92, 0x99, 0x9c, 0xed, 0xa4, 0x73,
-	0xe1, 0xa1, 0x1c, 0xc3, 0x8d, 0x87, 0x72, 0x0c, 0x1f, 0x1e, 0xca, 0x31, 0x36, 0x3c, 0x92, 0x63,
-	0x5c, 0xf1, 0x48, 0x8e, 0xf1, 0xc4, 0x23, 0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92,
-	0x63, 0x7c, 0xf1, 0x48, 0x8e, 0xe1, 0xc3, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x92, 0xd8,
-	0xc0, 0x41, 0x61, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x3a, 0x78, 0x42, 0x4b, 0x1e, 0x01, 0x00,
-	0x00,
+	// 387 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0xbd, 0x8e, 0xd3, 0x40,
+	0x14, 0x85, 0x3d, 0xf9, 0x71, 0x92, 0x1b, 0x84, 0x90, 0x0b, 0x14, 0x51, 0x8c, 0xa2, 0x91, 0x80,
+	0x14, 0xc1, 0x91, 0x40, 0xa2, 0x80, 0x0a, 0x9c, 0x26, 0x52, 0x90, 0x22, 0x3b, 0x88, 0x82, 0x02,
+	0x39, 0xf6, 0x95, 0x63, 0x92, 0xcc, 0x58, 0x33, 0x0e, 0x52, 0x3a, 0x1e, 0x81, 0xc7, 0xe0, 0x51,
+	0x28, 0x53, 0x52, 0x12, 0xd3, 0x6c, 0x99, 0x47, 0x58, 0x65, 0x6c, 0x6f, 0x76, 0x8b, 0x58, 0xda,
+	0xed, 0xee, 0xb9, 0xfe, 0xce, 0x39, 0x33, 0xd6, 0xc0, 0x13, 0x3f, 0x48, 0x85, 0xfc, 0xc6, 0x45,
+	0x88, 0x76, 0x22, 0x45, 0x2a, 0xac, 0x5a, 0xb2, 0x78, 0xf6, 0x36, 0x8a, 0xd3, 0xe5, 0x76, 0x61,
+	0x07, 0x62, 0x33, 0xfa, 0xa0, 0x76, 0x7c, 0x25, 0x05, 0x9f, 0xcc, 0x47, 0x1a, 0xd0, 0x86, 0x57,
+	0x91, 0x18, 0xe9, 0x21, 0xdf, 0xa9, 0xdc, 0xcb, 0x5e, 0x00, 0x78, 0x28, 0x7f, 0xa0, 0x97, 0xfa,
+	0x32, 0xb5, 0x7a, 0xd0, 0xfa, 0x84, 0x4a, 0xf9, 0x11, 0xf6, 0x48, 0x9f, 0x0c, 0x3a, 0x6e, 0x29,
+	0xd9, 0x00, 0x1e, 0x9d, 0x39, 0x0c, 0x2b, 0xc8, 0xe7, 0xd0, 0x29, 0x48, 0x91, 0x54, 0x60, 0x2f,
+	0xa1, 0x7b, 0x83, 0x55, 0xe6, 0x95, 0x27, 0x74, 0xd6, 0x42, 0x61, 0x05, 0x67, 0x42, 0x63, 0x1e,
+	0x07, 0x2b, 0xc6, 0xc0, 0xf4, 0x70, 0x8d, 0x81, 0xbe, 0x8d, 0x87, 0x4a, 0xc5, 0x82, 0x97, 0x6c,
+	0x21, 0xd9, 0x10, 0xda, 0x39, 0x83, 0xa1, 0xd5, 0x87, 0xe6, 0x17, 0x6f, 0x16, 0x87, 0x9a, 0xe9,
+	0xbe, 0x06, 0x5b, 0xff, 0x25, 0x7b, 0x36, 0x19, 0xbb, 0xf9, 0x07, 0xf6, 0x15, 0x9a, 0x53, 0x11,
+	0xc5, 0xdc, 0x7a, 0x0a, 0xe6, 0x67, 0x85, 0xb2, 0x60, 0x3b, 0x6e, 0xa1, 0x6e, 0x17, 0xd5, 0xee,
+	0x14, 0x9d, 0xc3, 0xeb, 0x97, 0xc2, 0xdf, 0x43, 0x4b, 0x87, 0x63, 0x78, 0xff, 0x78, 0xf6, 0x0e,
+	0xcc, 0xa9, 0x88, 0xc4, 0x36, 0x7d, 0x80, 0x97, 0x41, 0x3b, 0xf7, 0x5e, 0x6e, 0x66, 0xdf, 0xe1,
+	0xb1, 0xb3, 0xf4, 0x79, 0x84, 0xce, 0x56, 0x4a, 0xe4, 0xc1, 0xee, 0x62, 0x8f, 0x05, 0x8d, 0xf9,
+	0x2e, 0x41, 0x5d, 0xd2, 0x74, 0xf5, 0x7c, 0xda, 0x39, 0x22, 0xe6, 0xfa, 0xee, 0x75, 0x57, 0xcf,
+	0xa7, 0xf3, 0x8c, 0x63, 0x7f, 0x23, 0x78, 0xd8, 0x6b, 0xe8, 0x75, 0x29, 0x3f, 0x0e, 0xf7, 0x07,
+	0x6a, 0xfc, 0x3d, 0x50, 0xe3, 0x78, 0xa0, 0xe4, 0x67, 0x46, 0xc9, 0xef, 0x8c, 0x92, 0x3f, 0x19,
+	0x25, 0xfb, 0x8c, 0x92, 0x7f, 0x19, 0x25, 0x57, 0x19, 0x35, 0x8e, 0x19, 0x25, 0xbf, 0xfe, 0x53,
+	0x63, 0x61, 0xea, 0xe7, 0xfb, 0xe6, 0x3a, 0x00, 0x00, 0xff, 0xff, 0x6e, 0x09, 0xec, 0xfe, 0x0e,
+	0x03, 0x00, 0x00,
 }

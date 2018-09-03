@@ -167,9 +167,14 @@ func (s *SetController) Coin() {
 	}
 	beego.Debug("set coin userid: ", userid, ", num: ", num)
 
-	//TODO
+	msg := &pb.ChangeCurrency{
+		Userid: userid,
+		Coin:   num,
+	}
+	MSPid.Tell(msg)
 
-	//s.jsonResult(prop)
+	jsonData := &models.WxErr{}
+	s.jsonResult(jsonData)
 }
 
 // Diamond set coin
@@ -189,9 +194,14 @@ func (s *SetController) Diamond() {
 	}
 	beego.Debug("set diamond userid: ", userid, ", num: ", num)
 
-	//TODO
+	msg := &pb.ChangeCurrency{
+		Userid:  userid,
+		Diamond: num,
+	}
+	MSPid.Tell(msg)
 
-	//s.jsonResult(prop)
+	jsonData := &models.WxErr{}
+	s.jsonResult(jsonData)
 }
 
 // Close ws close
@@ -202,7 +212,9 @@ func (s *SetController) Close() {
 		return
 	}
 
+	//close
 	Handler.Close()
+	StopMS()
 
 	jsonData := &models.WxErr{}
 	s.jsonResult(jsonData)

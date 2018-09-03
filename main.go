@@ -9,6 +9,7 @@
 package main
 
 import (
+	"miniweb/controllers"
 	"miniweb/models"
 	_ "miniweb/routers"
 
@@ -56,6 +57,9 @@ func main() {
 	models.InitPropList()
 	models.InitShopList()
 	models.InitLoginPrizeList()
+
+	//init ms pid
+	controllers.NewMS()
 
 	beego.Run()
 }

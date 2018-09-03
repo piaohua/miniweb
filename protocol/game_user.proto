@@ -66,7 +66,6 @@ message SGetCurrency
 message SPushProp
 {
     LogType type   = 1;//日志类型
-    PropType ptype = 2;//道具类型
+    PropData propInfo = 2; //道具信息
     int64 num      = 3;//变更数量
-    int64 total    = 4;//总数量
 }

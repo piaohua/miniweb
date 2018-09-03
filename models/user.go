@@ -75,6 +75,12 @@ func HasID(id string) bool {
 	return Has(Users, bson.M{"_id": id})
 }
 
+//UpdateCurrency 更新Currency
+func UpdateCurrency(arg *pb.ChangeCurrency) bool {
+	return Update(Users, bson.M{"_id": arg.Userid},
+		bson.M{"$inc": bson.M{"coin": arg.Coin, "diamond": arg.Diamond}})
+}
+
 //GetBySession  通过session获取
 func (u *User) GetBySession(session string) {
 	GetByQ(Users, bson.M{"session": session}, u)
@@ -118,9 +124,11 @@ func AddCoinMsg(user *User, num int64) (msg *pb.SPushProp) {
 	user.AddCoin(num)
 	msg = &pb.SPushProp{
 		//Type: pb.LOG_TYPE0,
-		Ptype: pb.PROP_TYPE2,
-		Num:   num,
-		Total: user.Coin,
+		Num: num,
+		PropInfo: &pb.PropData{
+			Type: pb.PROP_TYPE2,
+			Num:  user.Coin,
+		},
 	}
 	return
 }
@@ -130,9 +138,11 @@ func AddDiamondMsg(user *User, num int64) (msg *pb.SPushProp) {
 	user.AddDiamond(num)
 	msg = &pb.SPushProp{
 		//Type: pb.LOG_TYPE0,
-		Ptype: pb.PROP_TYPE1,
-		Num:   num,
-		Total: user.Diamond,
+		Num: num,
+		PropInfo: &pb.PropData{
+			Type: pb.PROP_TYPE1,
+			Num:  user.Diamond,
+		},
 	}
 	return
 }

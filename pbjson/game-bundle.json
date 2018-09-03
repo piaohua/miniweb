@@ -254,17 +254,13 @@
               "type": "LogType",
               "id": 1
             },
-            "ptype": {
-              "type": "PropType",
+            "propInfo": {
+              "type": "PropData",
               "id": 2
             },
             "num": {
               "type": "int64",
               "id": 3
-            },
-            "total": {
-              "type": "int64",
-              "id": 4
             }
           }
         },
@@ -331,7 +327,7 @@
               "id": 1
             },
             "num": {
-              "type": "int32",
+              "type": "int64",
               "id": 2
             },
             "attr": {

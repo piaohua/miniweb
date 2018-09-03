@@ -28,7 +28,7 @@ message GateData
 message PropData
 {
     PropType type = 1;//类型
-    int32 num     = 2;//数量
+    int64 num     = 2;//数量
     int32 attr    = 3;//属性
     string name   = 4;//名字
 }

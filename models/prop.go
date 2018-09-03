@@ -92,15 +92,19 @@ func addPropMsg(user *User, key string, num int64,
 	}
 	msg = &pb.SPushProp{
 		//Type: pb.LOG_TYPE0,
-		Ptype: ptype,
-		Num:   num,
+		Num: num,
+		PropInfo: &pb.PropData{
+			Type: ptype,
+			Name: GetPropName(int32(ptype)),
+		},
 	}
 	if num < 0 { //use temp, TODO gate
 		if val, ok := user.TempProp[key]; ok {
 			val.Num += int32(num)
-			msg.Total = int64(val.Num)
+			msg.PropInfo.Num = int64(val.Num)
+			msg.PropInfo.Attr = int32(val.Attr)
 			if val.Num <= 0 {
-				msg.Total = 0
+				msg.PropInfo.Num = 0
 				delete(user.TempProp, key)
 			} else {
 				user.TempProp[key] = val
@@ -111,15 +115,16 @@ func addPropMsg(user *User, key string, num int64,
 	if temp {
 		if val, ok := user.TempProp[key]; ok {
 			val.Num += int32(num)
-			msg.Total = int64(val.Num)
+			msg.PropInfo.Num = int64(val.Num)
+			msg.PropInfo.Attr = int32(val.Attr)
 			if val.Num <= 0 {
-				msg.Total = 0
+				msg.PropInfo.Num = 0
 				delete(user.TempProp, key)
 			} else {
 				user.TempProp[key] = val
 			}
 		} else if num > 0 {
-			msg.Total = int64(num)
+			msg.PropInfo.Num = int64(num)
 			user.TempProp[key] = TempPropInfo{
 				Type: int32(ptype),
 				Num:  int32(num),
@@ -129,15 +134,16 @@ func addPropMsg(user *User, key string, num int64,
 	}
 	if val, ok := user.Prop[key]; ok {
 		val.Num += int32(num)
-		msg.Total = int64(val.Num)
+		msg.PropInfo.Num = int64(val.Num)
+		msg.PropInfo.Attr = int32(val.Attr)
 		if val.Num <= 0 {
-			msg.Total = 0
+			msg.PropInfo.Num = 0
 			delete(user.Prop, key)
 		} else {
 			user.Prop[key] = val
 		}
 	} else if num > 0 {
-		msg.Total = int64(num)
+		msg.PropInfo.Num = int64(num)
 		user.Prop[key] = PropInfo{
 			Type: int32(ptype),
 			Num:  int32(num),

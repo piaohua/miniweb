@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-//
+//Handler global handler
 var Handler *WSHandler
 
 func init() {
@@ -28,6 +28,7 @@ func init() {
 	Handler.conns = make(WebsocketConnSet)
 }
 
+//WSHandler ws handler
 type WSHandler struct {
 	close           bool               //是否关闭监听
 	maxConnNum      int                //最大连接数
@@ -39,6 +40,7 @@ type WSHandler struct {
 	wg              sync.WaitGroup     //同步机制
 }
 
+//Add add conn
 func (handler *WSHandler) Add(conn *websocket.Conn) {
 	handler.wg.Add(1)
 	defer handler.wg.Done()
@@ -59,6 +61,7 @@ func (handler *WSHandler) Add(conn *websocket.Conn) {
 	handler.mutexConns.Unlock()
 }
 
+//Close close all conn
 func (handler *WSHandler) Close() {
 
 	handler.mutexConns.Lock()

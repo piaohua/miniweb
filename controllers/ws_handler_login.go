@@ -71,6 +71,8 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 		ws.useProp(arg)
 	case *pb.CStart:
 		ws.gameStart(arg)
+	case *pb.ChangeCurrency:
+		ws.change(arg)
 	case proto.Message:
 		//响应
 		ws.Send(arg)
@@ -120,6 +122,13 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 	}
 	//更新连续登录
 	ws.loginPrizeInit()
+	//管理消息
+	msg2 := &pb.Login{
+		Userid:  ws.user.ID,
+		Session: ws.session,
+		WSPid:   ws.pid,
+	}
+	MSPid.Request(msg2, ctx.Self())
 }
 
 //普通登录验证

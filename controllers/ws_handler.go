@@ -69,6 +69,13 @@ func (ws *WSConn) stop(ctx actor.Context) {
 	if ws.user != nil {
 		ws.user.Save()
 	}
+	//管理消息
+	msg2 := &pb.Logout{
+		Userid:  ws.user.ID,
+		Session: ws.session,
+	}
+	MSPid.Request(msg2, ctx.Self())
+	//close self
 	ctx.Self().Stop()
 }
 

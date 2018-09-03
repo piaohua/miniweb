@@ -21,13 +21,16 @@ const (
 	waitForLogin   = 20 * time.Second    // 连接建立后5秒内没有收到登陆请求,断开socket
 )
 
+//WSPING ws ping msg
 type WSPING int
 
 //通道关闭信号
 type closeFlag int
 
+//WebsocketConnSet ws connect set
 type WebsocketConnSet map[*websocket.Conn]struct{}
 
+//WSConn ws connect
 type WSConn struct {
 	conn *websocket.Conn // websocket连接
 
@@ -36,8 +39,8 @@ type WSConn struct {
 	stopCh chan struct{}    // 关闭通道
 	msgCh  chan interface{} // 消息通道
 
-	pid     *actor.PID // ws进程ID,登录成功后切换为rs进程
-	rolePid *actor.PID // 角色服务
+	pid *actor.PID // ws进程ID,登录成功后切换为rs进程
+	//rolePid *actor.PID // 角色服务
 
 	//TODO 玩家数据redis缓存或者保留pid不关闭
 	user *models.User
@@ -69,11 +72,12 @@ func (ws *WSConn) remoteAddr() string {
 	return ws.conn.RemoteAddr().String()
 }
 
+//GetIPAddr get ip addr
 func (ws *WSConn) GetIPAddr() string {
 	return strings.Split(ws.remoteAddr(), ":")[0]
 }
 
-//断开连接
+//Close 断开连接
 func (ws *WSConn) Close() {
 	select {
 	case <-ws.stopCh:

@@ -1,6 +1,6 @@
 syntax = "proto3";
 package pb;
-//import "github.com/AsynkronIT/protoactor-go/actor/protos.proto";
+import "github.com/AsynkronIT/protoactor-go/actor/protos.proto";
 
 //节点行为操作
 
@@ -29,4 +29,43 @@ message ServeClose {
 
 //时钟嘀嗒
 message Tick {
+}
+
+//查询pid
+message Select {
+    string Session = 1;
+}
+
+message Selected {
+    actor.PID WSPid = 1;
+}
+
+//登录成功
+message Login {
+    string Userid = 1;
+    string Session = 2;
+    actor.PID WSPid = 3;
+}
+
+message Logined {
+    string Userid = 1;
+    string Session = 2;
+}
+
+//登出
+message Logout {
+    string Userid = 1;
+    string Session = 2;
+}
+
+message Logouted {
+    string Userid = 1;
+}
+
+//同步变动货币数据
+message ChangeCurrency {
+    string Userid = 1;
+    int32 Type = 2;//变动类型,充值等等
+    int64 Coin = 3;//变动金币数量
+    int64 Diamond = 4;//变动钻石数量
 }
