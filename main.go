@@ -57,6 +57,7 @@ func main() {
 	models.InitPropList()
 	models.InitShopList()
 	models.InitLoginPrizeList()
+	models.InitGateList()
 
 	//init ms pid
 	controllers.NewMS()

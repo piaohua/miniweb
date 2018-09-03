@@ -79,6 +79,7 @@ func GateInit(user *User) {
 	}
 	user.Gate = make(map[string]GateInfo)
 	AddGate(user, int32(pb.GATE_TYPE1), 1, 0)
+	//TODO 副本操作
 }
 
 //AddGate add new gate

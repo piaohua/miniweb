@@ -77,8 +77,8 @@ func (ws *WSConn) getTempShopData(arg *pb.CTempShop) {
 	Type := int32(arg.GetType())
 	gateID := arg.GetGateid()
 	key := models.GateKey(Type, gateID)
-	if _, ok := ws.user.Gate[key]; !ok {
-		s2c.Error = pb.GateUnreachable
+	s2c.Error = ws.isReachable(Type, key)
+	if s2c.Error != pb.OK {
 		ws.Send(s2c)
 		beego.Error("get temp shop error ", arg)
 		return
@@ -119,6 +119,21 @@ func (ws *WSConn) getTempShopData(arg *pb.CTempShop) {
 		s2c.List = append(s2c.List, shop)
 	}
 	ws.Send(s2c)
+}
+
+//gate is reachable
+func (ws *WSConn) isReachable(Type int32, key string) pb.ErrCode {
+	switch Type {
+	case int32(pb.GATE_TYPE1): //单人
+		if _, ok := ws.user.Gate[key]; !ok {
+			return pb.GateUnreachable
+		}
+	case int32(pb.GATE_TYPE2):
+		//TODO 副本操作
+	default:
+		return pb.GateUnreachable
+	}
+	return pb.OK
 }
 
 //get shop data info
@@ -381,8 +396,10 @@ func (ws *WSConn) gameStart(arg *pb.CStart) {
 		ws.Send(s2c)
 		return
 	}
-	//检测关卡
-	key := models.GateKey(int32(arg.GetType()), arg.GetGateid())
+	Type := int32(arg.GetType())
+	gateID := arg.GetGateid()
+	//检测关卡 //TODO 副本操作
+	key := models.GateKey(Type, gateID)
 	if val, ok := ws.user.Gate[key]; ok {
 		//购买临时道具
 		err := ws.buyTemp(arg.GetIds())
@@ -393,9 +410,14 @@ func (ws *WSConn) gameStart(arg *pb.CStart) {
 		}
 		s2c.GateInfo = &pb.GateData{
 			Type:   arg.GetType(),
-			Gateid: arg.GetGateid(),
+			Gateid: gateID,
 			Num:    val.Num,
 			Star:   val.Star,
+		}
+		//data 配置数据
+		gate := models.GetGate(Type, gateID)
+		if gate != nil {
+			s2c.GateInfo.Data = gate.Data
 		}
 		ws.Send(s2c)
 		msg := models.AddEnergyMsg(ws.user, -5)

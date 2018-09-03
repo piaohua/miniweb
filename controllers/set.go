@@ -44,6 +44,7 @@ func (s *SetController) Shop() {
 		beego.Error("set shop err: ", err)
 		return
 	}
+	beego.Info("set shop success: ", shop)
 
 	s.jsonResult(shop)
 }
@@ -78,6 +79,7 @@ func (s *SetController) Prize() {
 		beego.Error("set prize err: ", err)
 		return
 	}
+	beego.Info("set prize success: ", prize)
 
 	s.jsonResult(prize)
 }
@@ -112,6 +114,7 @@ func (s *SetController) Prop() {
 		beego.Error("set prop err: ", err)
 		return
 	}
+	beego.Info("set prop success: ", prop)
 
 	s.jsonResult(prop)
 }
@@ -146,6 +149,7 @@ func (s *SetController) Gate() {
 		beego.Error("set gate err: ", err)
 		return
 	}
+	beego.Info("set gate success: ", gate)
 
 	s.jsonResult(gate)
 }
