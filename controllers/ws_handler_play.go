@@ -376,6 +376,16 @@ func (ws *WSConn) useProp(arg *pb.CUseProp) {
 		beego.Error("useProp error ", arg)
 		return
 	}
+	switch arg.GetPtype() {
+	case pb.PROP_TYPE9,
+		pb.PROP_TYPE10,
+		pb.PROP_TYPE11:
+		if ws.user.Energy >= 30 {
+			s2c.Error = pb.EnergyEnough
+			ws.Send(s2c)
+			return
+		}
+	}
 	var msg interface{}
 	switch arg.GetPtype() {
 	case pb.PROP_TYPE9:

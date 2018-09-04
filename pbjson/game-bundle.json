@@ -89,7 +89,8 @@
             "SetShopFailed": 14,
             "SetPropFailed": 15,
             "SetPrizeFailed": 16,
-            "SetGateFailed": 17
+            "SetGateFailed": 17,
+            "EnergyEnough": 18
           }
         },
         "LogType": {

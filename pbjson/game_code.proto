@@ -24,4 +24,5 @@ enum ErrCode {
     SetPropFailed          = 15; //设置prop错误
     SetPrizeFailed         = 16; //设置prize错误
     SetGateFailed          = 17; //设置gate错误
+    EnergyEnough           = 18; //精力足够
 }

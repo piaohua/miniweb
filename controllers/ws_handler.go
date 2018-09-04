@@ -63,18 +63,18 @@ func (ws *WSConn) stop(ctx actor.Context) {
 	beego.Info("ws stop: ", ctx.Self().String())
 	//断开连接
 	ws.Close()
-	//表示已经断开
-	ws.online = false
-	//TODO 优化缓存
-	if ws.user != nil {
+	//管理消息
+	if ws.online && ws.user != nil {
+		msg2 := &pb.Logout{
+			Userid:  ws.user.ID,
+			Session: ws.session,
+		}
+		MSPid.Request(msg2, ctx.Self())
+		//TODO 优化缓存
 		ws.user.Save()
 	}
-	//管理消息
-	msg2 := &pb.Logout{
-		Userid:  ws.user.ID,
-		Session: ws.session,
-	}
-	MSPid.Request(msg2, ctx.Self())
+	//表示已经断开
+	ws.online = false
 	//close self
 	ctx.Self().Stop()
 }

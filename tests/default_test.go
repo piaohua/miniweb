@@ -2,6 +2,7 @@ package test
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -80,4 +81,33 @@ func TestSetGate(t *testing.T) {
 	gate2 := new(models.Gate)
 	err = json.Unmarshal(body, gate2)
 	t.Logf("gate2 %#v, err %v\n", gate2, err)
+}
+
+// TestSetGate set gate
+func TestSetClose(t *testing.T) {
+	url := "http://127.0.0.1:8080/set/close"
+	b, err := HTTPPost(url, []byte{})
+	t.Logf("b %v, err %v\n", b, err)
+	//curl -d "" -H "token:your-token" http://127.0.0.1:8080/set/close
+}
+
+// HTTPPost post request
+func HTTPPost(url string, body []byte) (b []byte, err error) {
+	client := &http.Client{}
+
+	req, err := http.NewRequest("POST", url, body)
+	if err != nil {
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("token", "your-token")
+
+	resp, err := client.Do(req)
+
+	defer resp.Body.Close()
+
+	b, err = ioutil.ReadAll(resp.Body)
+
+	return b, err
 }

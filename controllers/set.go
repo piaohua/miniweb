@@ -11,14 +11,18 @@ import (
 
 // SetController show
 type SetController struct {
-	baseController // Embed to use methods that are implemented in baseController.
+	baseController      // Embed to use methods that are implemented in baseController.
+	token          bool // have token
 }
 
 // Shop set shop list
 func (s *SetController) Shop() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
 
 	if !s.isPost() {
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
 		return
 	}
 
@@ -27,33 +31,28 @@ func (s *SetController) Shop() {
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &shop)
 	if err != nil {
 		beego.Error("set shop err: ", err)
-		jsonData := models.WxErr{
-			ErrCode: int(pb.SetShopFailed),
-			ErrMsg:  err.Error(),
-		}
-		s.jsonResult(jsonData)
+		jsonData.ErrCode = int(pb.SetShopFailed)
+		jsonData.ErrMsg = err.Error()
 		return
 	}
 
 	if !models.UpsertShop(shop) {
 		beego.Error("set shop err: ", err)
-		jsonData := models.WxErr{
-			ErrCode: int(pb.SetShopFailed),
-			ErrMsg:  "set shop failed",
-		}
-		s.jsonResult(jsonData)
+		jsonData.ErrCode = int(pb.SetShopFailed)
+		jsonData.ErrMsg = "set shop failed"
 		return
 	}
 	beego.Info("set shop success: ", shop)
-
-	s.jsonResult(shop)
 }
 
 // Prize show prize list
 func (s *SetController) Prize() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
 
 	if !s.isPost() {
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
 		return
 	}
 
@@ -62,33 +61,28 @@ func (s *SetController) Prize() {
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &prize)
 	if err != nil {
 		beego.Error("set prize err: ", err)
-		jsonData := models.WxErr{
-			ErrCode: int(pb.SetPrizeFailed),
-			ErrMsg:  err.Error(),
-		}
-		s.jsonResult(jsonData)
+		jsonData.ErrCode = int(pb.SetPrizeFailed)
+		jsonData.ErrMsg = err.Error()
 		return
 	}
 
 	if !models.UpsertPrize(prize) {
 		beego.Error("set prize err: ", err)
-		jsonData := models.WxErr{
-			ErrCode: int(pb.SetPrizeFailed),
-			ErrMsg:  "set prize failed",
-		}
-		s.jsonResult(jsonData)
+		jsonData.ErrCode = int(pb.SetPropFailed)
+		jsonData.ErrMsg = "set prize failed"
 		return
 	}
 	beego.Info("set prize success: ", prize)
-
-	s.jsonResult(prize)
 }
 
 // Prop set prize list
 func (s *SetController) Prop() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
 
 	if !s.isPost() {
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
 		return
 	}
 
@@ -97,33 +91,28 @@ func (s *SetController) Prop() {
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &prop)
 	if err != nil {
 		beego.Error("set prop err: ", err)
-		jsonData := models.WxErr{
-			ErrCode: int(pb.SetPropFailed),
-			ErrMsg:  err.Error(),
-		}
-		s.jsonResult(jsonData)
+		jsonData.ErrCode = int(pb.SetPropFailed)
+		jsonData.ErrMsg = err.Error()
 		return
 	}
 
 	if !models.UpsertProp(prop) {
 		beego.Error("set prop err: ", err)
-		jsonData := models.WxErr{
-			ErrCode: int(pb.SetPropFailed),
-			ErrMsg:  "set prop failed",
-		}
-		s.jsonResult(jsonData)
+		jsonData.ErrCode = int(pb.SetPropFailed)
+		jsonData.ErrMsg = "set prop failed"
 		return
 	}
 	beego.Info("set prop success: ", prop)
-
-	s.jsonResult(prop)
 }
 
 // Gate set gate info
 func (s *SetController) Gate() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
 
 	if !s.isPost() {
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
 		return
 	}
 
@@ -133,33 +122,28 @@ func (s *SetController) Gate() {
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &gate)
 	if err != nil {
 		beego.Error("set gate err: ", err)
-		jsonData := models.WxErr{
-			ErrCode: int(pb.SetGateFailed),
-			ErrMsg:  err.Error(),
-		}
-		s.jsonResult(jsonData)
+		jsonData.ErrCode = int(pb.SetGateFailed)
+		jsonData.ErrMsg = err.Error()
 		return
 	}
 
 	if !models.UpsertGate(gate) {
 		beego.Error("set gate err: ", err)
-		jsonData := models.WxErr{
-			ErrCode: int(pb.SetGateFailed),
-			ErrMsg:  "set gate failed",
-		}
-		s.jsonResult(jsonData)
+		jsonData.ErrCode = int(pb.SetGateFailed)
+		jsonData.ErrMsg = "set gate failed"
 		return
 	}
 	beego.Info("set gate success: ", gate)
-
-	s.jsonResult(gate)
 }
 
 // Coin set coin
 func (s *SetController) Coin() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
 
 	if !s.isPost() {
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
 		return
 	}
 
@@ -167,7 +151,8 @@ func (s *SetController) Coin() {
 	num, err := s.GetInt64("num")
 	if err != nil {
 		beego.Error("set coin err: ", err)
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = err.Error()
 		return
 	}
 	beego.Debug("set coin userid: ", userid, ", num: ", num)
@@ -177,16 +162,16 @@ func (s *SetController) Coin() {
 		Coin:   num,
 	}
 	MSPid.Tell(msg)
-
-	jsonData := &models.WxErr{}
-	s.jsonResult(jsonData)
 }
 
 // Diamond set coin
 func (s *SetController) Diamond() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
 
 	if !s.isPost() {
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
 		return
 	}
 
@@ -194,7 +179,8 @@ func (s *SetController) Diamond() {
 	num, err := s.GetInt64("num")
 	if err != nil {
 		beego.Error("set diamond err: ", err)
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = err.Error()
 		return
 	}
 	beego.Debug("set diamond userid: ", userid, ", num: ", num)
@@ -204,23 +190,36 @@ func (s *SetController) Diamond() {
 		Diamond: num,
 	}
 	MSPid.Tell(msg)
-
-	jsonData := &models.WxErr{}
-	s.jsonResult(jsonData)
 }
 
 // Close ws close
 func (s *SetController) Close() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
 
 	if !s.isPost() {
-		s.Redirect("/", 302)
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
+		return
+	}
+
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
 		return
 	}
 
 	//close
 	Handler.Close()
 	StopMS()
+}
 
-	jsonData := &models.WxErr{}
-	s.jsonResult(jsonData)
+// Prepare implemented Prepare() method for baseController.
+func (s *SetController) Prepare() {
+	token := s.Ctx.Request.Header.Get("token")
+	setToken := beego.AppConfig.String("set.token")
+	beego.Debug("token: ", token, ", setToken: ", setToken)
+	if token != "" && token == setToken {
+		s.token = true
+	}
 }

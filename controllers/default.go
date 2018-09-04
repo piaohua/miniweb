@@ -27,42 +27,44 @@ func (c *MainController) Get() {
 
 // Code method handles POST requests for AppController.
 func (this *MainController) Code() {
+	jsonData := &models.SessionResult{}
+	defer this.jsonResult(jsonData)
+
 	// Get form value.
 	jscode := this.GetString("js_code")
 
 	// Check valid.
 	if len(jscode) == 0 {
-		this.Redirect("/", 302)
+		jsonData.WxErr.ErrCode = int(pb.Failed)
+		jsonData.WxErr.ErrMsg = "parameter error"
 		return
 	}
 	beego.Info("get session by jscode: " + jscode)
 
 	if models.RunMode() {
-		this.Redirect("/", 302)
+		jsonData.WxErr.ErrCode = int(pb.Failed)
+		jsonData.WxErr.ErrMsg = "mode closed"
 		return
 	}
 
 	if !this.isPost() {
-		this.Redirect("/", 302)
+		jsonData.WxErr.ErrCode = int(pb.Failed)
+		jsonData.WxErr.ErrMsg = "method error"
 		return
 	}
 
 	//test TODO 控制频率
 	ip := this.getClientIp()
 	session, err := models.GetSessionByCode(jscode, ip)
-	wsaddr := beego.AppConfig.String("ws.addr")
-
-	jsonData := &models.SessionResult{
-		Session: session,
-		WsAddr:  wsaddr + session,
-	}
 	if err != nil {
-		jsonData.WxErr = models.WxErr{
-			ErrCode: int(pb.Failed),
-			ErrMsg:  err.Error(),
-		}
+		jsonData.WxErr.ErrCode = int(pb.Failed)
+		jsonData.WxErr.ErrMsg = err.Error()
+		return
 	}
-	this.jsonResult(jsonData)
+
+	wsaddr := beego.AppConfig.String("ws.addr")
+	jsonData.Session = session
+	jsonData.WsAddr = wsaddr + session
 }
 
 var langTypes []string // Languages that are supported.
@@ -97,9 +99,9 @@ func (this *baseController) Prepare() {
 	this.Ctx.Output.Header("X-Author-By", "piaohua")
 	// Set header
 	if origin := this.Ctx.Request.Header.Get("Origin"); origin != "" {
-		this.Ctx.Request.Header.Set("Access-Control-Allow-Origin", "*")
-		this.Ctx.Request.Header.Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		this.Ctx.Request.Header.Set("Access-Control-Allow-Headers", "*")
+		this.Ctx.Output.Header("Access-Control-Allow-Origin", "*")
+		this.Ctx.Output.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		this.Ctx.Output.Header("Access-Control-Allow-Headers", "*")
 	}
 	// Reset language option.
 	this.Lang = "" // This field is from i18n.Locale.
