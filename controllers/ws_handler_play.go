@@ -53,6 +53,15 @@ func (ws *WSConn) getGateData() {
 		}
 		s2c.GateInfo = append(s2c.GateInfo, gate)
 	}
+	//gate count
+	list := models.GetGateCount()
+	for _, v := range list {
+		count := &pb.GateCount{
+			Type: pb.GateType(v.Type),
+			Num:  v.Number,
+		}
+		s2c.Counts = append(s2c.Counts, count)
+	}
 	ws.Send(s2c)
 }
 
@@ -124,12 +133,11 @@ func (ws *WSConn) getTempShopData(arg *pb.CTempShop) {
 //gate is reachable
 func (ws *WSConn) isReachable(Type int32, key string) pb.ErrCode {
 	switch Type {
-	case int32(pb.GATE_TYPE1): //单人
+	case int32(pb.GATE_TYPE1), //单人
+		int32(pb.GATE_TYPE2): //副本
 		if _, ok := ws.user.Gate[key]; !ok {
 			return pb.GateUnreachable
 		}
-	case int32(pb.GATE_TYPE2):
-		//TODO 副本操作
 	default:
 		return pb.GateUnreachable
 	}
@@ -398,7 +406,7 @@ func (ws *WSConn) gameStart(arg *pb.CStart) {
 	}
 	Type := int32(arg.GetType())
 	gateID := arg.GetGateid()
-	//检测关卡 //TODO 副本操作
+	//检测关卡
 	key := models.GateKey(Type, gateID)
 	if val, ok := ws.user.Gate[key]; ok {
 		//购买临时道具

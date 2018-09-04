@@ -36,7 +36,8 @@ message CGateData
 message SGateData
 {
     repeated GateData gateInfo = 1; //关卡信息
-    ErrCode error = 2;//错误码
+    repeated GateCount counts = 2; //关卡信息
+    ErrCode error = 3;//错误码
 }
 
 // 玩家的道具数据

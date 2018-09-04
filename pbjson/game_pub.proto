@@ -24,6 +24,13 @@ message GateData
     int32 star    = 5;//星数
 }
 
+// 关卡数
+message GateCount
+{
+    GateType type = 1;//类型
+    int32 num     = 2;//关卡数
+}
+
 // 道具数据
 message PropData
 {

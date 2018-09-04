@@ -45,6 +45,7 @@
 		SUseProp
 		UserData
 		GateData
+		GateCount
 		PropData
 		Shop
 		LoginPrize

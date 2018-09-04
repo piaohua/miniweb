@@ -207,9 +207,14 @@
               "type": "GateData",
               "id": 1
             },
+            "counts": {
+              "rule": "repeated",
+              "type": "GateCount",
+              "id": 2
+            },
             "error": {
               "type": "ErrCode",
-              "id": 2
+              "id": 3
             }
           }
         },
@@ -317,6 +322,18 @@
             "star": {
               "type": "int32",
               "id": 5
+            }
+          }
+        },
+        "GateCount": {
+          "fields": {
+            "type": {
+              "type": "GateType",
+              "id": 1
+            },
+            "num": {
+              "type": "int32",
+              "id": 2
             }
           }
         },

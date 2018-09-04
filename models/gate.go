@@ -31,6 +31,12 @@ type GatePrizeProp struct {
 	Number int32 `bson:"number" json:"number"` //物品数量
 }
 
+//GateCount 关卡统计
+type GateCount struct {
+	Type   int32 `bson:"type" json:"type"`     //关卡类型
+	Number int32 `bson:"number" json:"number"` //关卡数量
+}
+
 //GateInfo gate info
 type GateInfo struct {
 	Gateid int32 `bson:"gateid" json:"gateid"` //unique
@@ -74,12 +80,19 @@ func GateUniqueKey(Type, Gateid int32) string {
 
 //GateInit gate init
 func GateInit(user *User) {
-	if user.Gate != nil {
-		return
+	if user.Gate == nil {
+		user.Gate = make(map[string]GateInfo)
 	}
-	user.Gate = make(map[string]GateInfo)
-	AddGate(user, int32(pb.GATE_TYPE1), 1, 0)
-	//TODO 副本操作
+	//单人
+	key := GateKey(int32(pb.GATE_TYPE1), 1)
+	if _, ok := user.Gate[key]; !ok {
+		AddGate(user, int32(pb.GATE_TYPE1), 1, 0)
+	}
+	//副本
+	key = GateKey(int32(pb.GATE_TYPE2), 1)
+	if _, ok := user.Gate[key]; !ok {
+		AddGate(user, int32(pb.GATE_TYPE2), 1, 0)
+	}
 }
 
 //AddGate add new gate
@@ -136,6 +149,35 @@ func InitGateList() {
 	for k, v := range list {
 		Cache.Put(GateUniqueKey(v.Type, v.Gateid), &list[k], 0)
 	}
+	//count init
+	InitGateCount(list)
+}
+
+//GetGateCount get gate numbers by type
+func GetGateCount() (list []GateCount) {
+	if v := Cache.Get("gatecount"); v != nil {
+		if val, ok := v.([]GateCount); ok {
+			list = val
+		}
+	}
+	return
+}
+
+//InitGateCount gate numbers
+func InitGateCount(list []Gate) {
+	m := make(map[int32]int32)
+	for _, v := range list {
+		m[v.Type]++
+	}
+	l := make([]GateCount, 0)
+	for k, v := range m {
+		g := GateCount{
+			Type:   k,
+			Number: v,
+		}
+		l = append(l, g)
+	}
+	Cache.Put("gatecount", l, 0)
 }
 
 //UpsertGate upsert gate
@@ -173,6 +215,8 @@ func UpsertGate(gate Gate) bool {
 		}
 	}
 	Cache.Put("gate", list, 0)
+	//count init
+	InitGateCount(list)
 	return true
 }
 
