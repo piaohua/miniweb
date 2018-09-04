@@ -1,6 +1,7 @@
 package test
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -95,7 +96,7 @@ func TestSetClose(t *testing.T) {
 func HTTPPost(url string, body []byte) (b []byte, err error) {
 	client := &http.Client{}
 
-	req, err := http.NewRequest("POST", url, body)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		return
 	}

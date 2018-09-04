@@ -23,7 +23,7 @@ type User struct {
 	AvatarUrl   string    `bson:"avatar_url", json:"avatar_url"`
 	Gender      int32     `bson:"gender", json:"gender"`
 	Session     string    `bson:"session", json:"session"`
-	SessionTime time.Time `bson:"session_time", json:"session_time"`
+	SessionTime time.Time `bson:"session_time,omitempty", json:"session_time,omitempty"`
 	OpenId      string    `bson:"openid", json:"openid"`
 	SessionKey  string    `bson:"session_key", json:"session_key"`
 	UnionId     string    `bson:"unionid", json:"unionid"`
@@ -39,15 +39,15 @@ type User struct {
 	LoginTimes uint32 `bson:"login_times" json:"login_times"` //连续登录次数
 	LoginPrize uint32 `bson:"login_prize" json:"login_prize"` //连续登录奖励
 	//
-	Diamond    int64 `bson:"diamond" json:"diamond"`         // 钻石
-	Coin       int64 `bson:"coin" json:"coin"`               // 金币
-	Energy     int64 `bson:"energy" json:"energy"`           // 精力
-	EnergyTime int64 `bson:"energy_time" json:"energy_time"` // 精力恢复时间
+	Diamond    int64 `bson:"diamond" json:"diamond"`                             // 钻石
+	Coin       int64 `bson:"coin" json:"coin"`                                   // 金币
+	Energy     int64 `bson:"energy" json:"energy"`                               // 精力
+	EnergyTime int64 `bson:"energy_time,omitempty" json:"energy_time,omitempty"` // 精力恢复时间
 	//
-	Gate map[string]GateInfo `bson:"gate" json:"gate"` // 关卡
-	Prop map[string]PropInfo `bson:"prop" json:"prop"` // 道具
+	Gate map[string]GateInfo `bson:"gate,omitempty" json:"gate,omitempty"` // 关卡
+	Prop map[string]PropInfo `bson:"prop,omitempty" json:"prop,omitempty"` // 道具
 	//
-	TempProp map[string]TempPropInfo `bson:"temp_prop" json:"temp_prop"` // 道具
+	TempProp map[string]TempPropInfo `bson:"temp_prop,omitempty" json:"temp_prop,omitempty"` // 道具
 }
 
 //Save 保存

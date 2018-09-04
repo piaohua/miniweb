@@ -6,6 +6,9 @@
 
 ## Usage
 
+[API](./api.md)
+
+
 ```
 c2s
 [4byte(自定义id) + msgdata(protobuf)]

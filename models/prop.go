@@ -23,18 +23,18 @@ type Prop struct {
 
 //PropInfo prop info
 type PropInfo struct {
-	Type int32 `bson:"type" json:"type"` //type
-	Attr int32 `bson:"attr" json:"attr"` //属性
-	Num  int32 `bson:"num" json:"num"`   //num
+	Type int32 `bson:"type" json:"type"`                     //type
+	Attr int32 `bson:"attr,omitempty" json:"attr,omitempty"` //属性
+	Num  int32 `bson:"num,omitempty" json:"num,omitempty"`   //num
 }
 
 //TempPropInfo temp prop info
 type TempPropInfo struct {
-	GType  int32 `bson:"gtype" json:"gtype"`   //gate type
-	Gateid int32 `bson:"gateid" json:"gateid"` //gate id
-	Type   int32 `bson:"type" json:"type"`     //prop type
-	Attr   int32 `bson:"attr" json:"attr"`     //属性
-	Num    int32 `bson:"num" json:"num"`       //num
+	GType  int32 `bson:"gtype" json:"gtype"`                   //gate type
+	Gateid int32 `bson:"gateid" json:"gateid"`                 //gate id
+	Type   int32 `bson:"type" json:"type"`                     //prop type
+	Attr   int32 `bson:"attr,omitempty" json:"attr,omitempty"` //属性
+	Num    int32 `bson:"num,omitempty" json:"num,omitempty"`   //num
 }
 
 //GetPropList get prop list

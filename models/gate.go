@@ -39,10 +39,10 @@ type GateCount struct {
 
 //GateInfo gate info
 type GateInfo struct {
-	Gateid int32 `bson:"gateid" json:"gateid"` //unique
-	Type   int32 `bson:"type" json:"type"`     //type
-	Star   int32 `bson:"star" json:"star"`     //星数
-	Num    int32 `bson:"num" json:"num"`       //完成次数
+	Gateid int32 `bson:"gateid" json:"gateid"`                 //unique
+	Type   int32 `bson:"type" json:"type"`                     //type
+	Star   int32 `bson:"star,omitempty" json:"star,omitempty"` //星数
+	Num    int32 `bson:"num,omitempty" json:"num,omitempty"`   //完成次数
 }
 
 //GetGateList get prop list
