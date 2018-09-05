@@ -87,12 +87,15 @@ func VerifyUserInfo(arg *pb.CWxLogin, session string) (*User, error) {
 		return nil, errors.New("sign failed")
 	}
 	//验证敏感信息
-	b, err := libs.DecryptWechatAppletUser(arg.GetEncryptedData(), arg.GetIv(), user.SessionKey)
+	b, err := libs.DecryptWechatAppletUser(arg.GetEncryptedData(), user.SessionKey, arg.GetIv())
 	if err != nil {
+		beego.Error("VerifyUserInfo error: ", err)
 		return nil, err
 	}
+	beego.Info("VerifyUserInfo userinfo: ", string(b))
 	wxUserInfo, err := ParseUserInfo(b)
 	if err != nil {
+		beego.Error("VerifyUserInfo error: ", err)
 		return nil, err
 	}
 	if wxUserInfo.OpenId != user.OpenId {

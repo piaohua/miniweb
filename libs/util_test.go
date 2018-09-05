@@ -11,9 +11,9 @@ func TestCmd(t *testing.T) {
 }
 
 func TestLoad(t *testing.T) {
-	filePath := "shop.json"
-	list := make([]Shop, 0)
-	err := Load(filePath, &list)
-	t.Logf("err %v\n", err)
-	t.Logf("list %#v\n", list)
+	//filePath := "shop.json"
+	//list := make([]Shop, 0)
+	//err := Load(filePath, &list)
+	//t.Logf("err %v\n", err)
+	//t.Logf("list %#v\n", list)
 }
