@@ -45,6 +45,8 @@ type WSConn struct {
 	//TODO 玩家数据redis缓存或者保留pid不关闭
 	user *models.User
 
+	userInfo *models.WxUserInfo
+
 	online bool //在线状态
 
 	session string //session

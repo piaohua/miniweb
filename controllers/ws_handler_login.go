@@ -30,6 +30,8 @@ func (ws *WSConn) handlerLogin(msg interface{}, ctx actor.Context) {
 	case *pb.CLogin:
 		beego.Debug("CLogin ", arg)
 		ws.login(arg, ctx)
+	case *pb.LoginedElse:
+		ws.logon(arg, ctx)
 	case proto.Message:
 		ws.handlerLogined(arg, ctx)
 	default:
@@ -73,6 +75,8 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 		ws.gameStart(arg)
 	case *pb.ChangeCurrency:
 		ws.change(arg)
+	case *pb.LoginElse:
+		ws.loginElse(arg, ctx)
 	case proto.Message:
 		//响应
 		ws.Send(arg)
@@ -83,23 +87,80 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 
 //微信登录验证
 func (ws *WSConn) wxlogin(arg *pb.CWxLogin, ctx actor.Context) {
-	s2c := new(pb.SWxLogin)
-	user, err := models.VerifyUserInfo(arg, ws.session)
-	beego.Info("wxlogin user: ", user)
+	userInfo, err := models.VerifyUserInfo(arg, ws.session)
+	beego.Debug("wxlogin userInfo: ", userInfo)
 	if err != nil {
 		beego.Error("wxlogin err: ", err)
+		s2c := new(pb.SWxLogin)
 		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
 		return
 	}
-	if user == nil {
-		s2c.Error = pb.LoginFailed
-		ws.Send(s2c)
+	ws.userInfo = userInfo
+	//检测别处登录
+	ws.loginElseMsg(pb.WXLOGIN, ctx)
+}
+
+//检测别处登录
+func (ws *WSConn) loginElseMsg(Type pb.LoginType, ctx actor.Context) {
+	msg := &pb.LoginElse{
+		WSPid:   ws.pid,
+		Session: ws.session,
+		Type:    Type,
+	}
+	MSPid.Request(msg, ctx.Self())
+}
+
+//别处登录
+func (ws *WSConn) loginElse(arg *pb.LoginElse, ctx actor.Context) {
+	if arg.GetSession() != ws.session {
+		beego.Error("loginElse session error: ", arg)
 		return
 	}
+	//下线消息
+	msg := &pb.SLoginOut{
+		Type: pb.OUT_TYPE1,
+	}
+	ws.Send(msg)
+	//断开连接
+	ws.stop(ctx) //TODO 优化
+	//响应消息
+	rsp := new(pb.LoginedElse)
+	rsp.Session = arg.GetSession()
+	rsp.Type = arg.GetType()
+	arg.WSPid.Tell(rsp)
+}
+
+//验证通过后正式登录
+func (ws *WSConn) logon(arg *pb.LoginedElse, ctx actor.Context) {
+	user, err := models.LoginUserInfo(ws.userInfo, ws.session, arg.GetType())
+	switch arg.GetType() {
+	case pb.WXLOGIN:
+		s2c := new(pb.SWxLogin)
+		if err != nil {
+			beego.Error("wxlogin err: ", err)
+			s2c.Error = pb.LoginFailed
+			ws.Send(s2c)
+			return
+		}
+		s2c.Userid = user.ID
+		ws.Send(s2c)
+	case pb.CODELOGIN:
+		s2c := new(pb.SLogin)
+		if err != nil {
+			beego.Error("code login err: ", err)
+			s2c.Error = pb.LoginFailed
+			ws.Send(s2c)
+			return
+		}
+		s2c.Userid = user.ID
+		ws.Send(s2c)
+	default:
+		ws.Close()
+		return
+	}
+	ws.userInfo = nil
 	ws.user = user
-	s2c.Userid = user.ID
-	ws.Send(s2c)
 	//成功后处理
 	ws.logined(user.ID, ctx)
 }
@@ -133,29 +194,23 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 
 //普通登录验证
 func (ws *WSConn) login(arg *pb.CLogin, ctx actor.Context) {
-	s2c := new(pb.SLogin)
 	if models.RunMode() {
-		beego.Error("login runmode")
+		beego.Error("code login runmode")
+		s2c := new(pb.SLogin)
 		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
 		return
 	}
-	user, err := models.VerifyUserLogin(arg, ws.session)
-	beego.Info("login user: ", user)
+	userInfo, err := models.VerifyUserLogin(arg, ws.session)
+	beego.Info("code login userInfo: ", userInfo)
 	if err != nil {
-		beego.Error("login err: ", err)
+		beego.Error("code login err: ", err)
+		s2c := new(pb.SLogin)
 		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
 		return
 	}
-	if user == nil {
-		s2c.Error = pb.LoginFailed
-		ws.Send(s2c)
-		return
-	}
-	ws.user = user
-	s2c.Userid = user.ID
-	ws.Send(s2c)
-	//成功后处理
-	ws.logined(user.ID, ctx)
+	ws.userInfo = userInfo
+	//检测别处登录
+	ws.loginElseMsg(pb.CODELOGIN, ctx)
 }

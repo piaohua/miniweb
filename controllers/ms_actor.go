@@ -9,6 +9,8 @@
 package controllers
 
 import (
+	"time"
+
 	"miniweb/pb"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
@@ -76,4 +78,20 @@ func NewMS() {
 func StopMS() {
 	beego.Info("stop MSPid: ", MSPid.String())
 	MSPid.Tell(new(pb.ServeStop))
+}
+
+//CloseMS 关闭服务消息
+func CloseMS() {
+	beego.Info("close MSPid: ", MSPid.String())
+	timeout := 5 * time.Second
+	msg := new(pb.ServeClose)
+	res, err := MSPid.RequestFuture(msg, timeout).Result()
+	if err != nil {
+		beego.Error("close MS error: ", err)
+	}
+	if response, ok := res.(*pb.ServeClosed); ok {
+		beego.Info("close MS response: ", response)
+	} else {
+		beego.Error("close MS res: ", res)
+	}
 }

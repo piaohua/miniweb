@@ -8,6 +8,10 @@ host http://127.0.0.1:8080
 get session by js_code
 http://127.0.0.1:8080/ws?js_code=xxx
 
+get session by js_code (post request)
+http://127.0.0.1:8080/code
+curl -d "js_code=xxx" -H "token:your-token" host/code
+
 websocket connection by session
 http://127.0.0.1:8080/ws/login?3rd_session=xxx
 

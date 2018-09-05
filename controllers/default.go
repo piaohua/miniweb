@@ -11,7 +11,8 @@ import (
 )
 
 type MainController struct {
-	baseController // Embed to use methods that are implemented in baseController.
+	baseController      // Embed to use methods that are implemented in baseController.
+	token          bool // have token
 }
 
 func (c *MainController) Get() {
@@ -53,6 +54,12 @@ func (this *MainController) Code() {
 		return
 	}
 
+	if !this.token {
+		jsonData.WxErr.ErrCode = int(pb.Failed)
+		jsonData.WxErr.ErrMsg = "token error"
+		return
+	}
+
 	//test TODO 控制频率
 	ip := this.getClientIp()
 	session, err := models.GetSessionByCode(jscode, ip)
@@ -65,6 +72,16 @@ func (this *MainController) Code() {
 	wsaddr := beego.AppConfig.String("ws.addr")
 	jsonData.Session = session
 	jsonData.WsAddr = wsaddr + session
+}
+
+// Prepare implemented Prepare() method for baseController.
+func (this *MainController) Prepare() {
+	token := this.Ctx.Request.Header.Get("token")
+	setToken := beego.AppConfig.String("set.token")
+	beego.Debug("token: ", token, ", setToken: ", setToken)
+	if token != "" && token == setToken {
+		this.token = true
+	}
 }
 
 var langTypes []string // Languages that are supported.

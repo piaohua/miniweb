@@ -26,6 +26,12 @@ func (s *SetController) Shop() {
 		return
 	}
 
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
+		return
+	}
+
 	var shop models.Shop
 	var err error
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &shop)
@@ -53,6 +59,12 @@ func (s *SetController) Prize() {
 	if !s.isPost() {
 		jsonData.ErrCode = int(pb.Failed)
 		jsonData.ErrMsg = "method error"
+		return
+	}
+
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
 		return
 	}
 
@@ -86,6 +98,12 @@ func (s *SetController) Prop() {
 		return
 	}
 
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
+		return
+	}
+
 	var prop models.Prop
 	var err error
 	err = json.Unmarshal(s.Ctx.Input.RequestBody, &prop)
@@ -113,6 +131,12 @@ func (s *SetController) Gate() {
 	if !s.isPost() {
 		jsonData.ErrCode = int(pb.Failed)
 		jsonData.ErrMsg = "method error"
+		return
+	}
+
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
 		return
 	}
 
@@ -147,6 +171,12 @@ func (s *SetController) Coin() {
 		return
 	}
 
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
+		return
+	}
+
 	userid := s.GetString("userid")
 	num, err := s.GetInt64("num")
 	if err != nil {
@@ -172,6 +202,12 @@ func (s *SetController) Diamond() {
 	if !s.isPost() {
 		jsonData.ErrCode = int(pb.Failed)
 		jsonData.ErrMsg = "method error"
+		return
+	}
+
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
 		return
 	}
 
@@ -210,6 +246,7 @@ func (s *SetController) Close() {
 	}
 
 	//close
+	CloseMS()
 	Handler.Close()
 	StopMS()
 }

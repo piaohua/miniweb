@@ -75,19 +75,18 @@ func GetSession(jscode, ip string) (session string, err error) {
 }
 
 //VerifyUserInfo 校验用户信息,不包含 openid 等敏感信息
-func VerifyUserInfo(arg *pb.CWxLogin, session string) (*User, error) {
-	user := new(User)
-	user.GetBySession(session)
-	if len(user.Session) == 0 || len(user.ID) == 0 {
+func VerifyUserInfo(arg *pb.CWxLogin, session string) (*WxUserInfo, error) {
+	sessionKey := GetSessionKey(session)
+	if len(sessionKey) == 0 {
 		return nil, errors.New("session invaild")
 	}
-	////验证sha1( rawData + sessionkey )
-	sign := libs.Sha1Signature(arg.GetRawData(), user.SessionKey)
+	////验证sha1( rawData + sessionKey )
+	sign := libs.Sha1Signature(arg.GetRawData(), sessionKey)
 	if sign != arg.GetSignature() {
 		return nil, errors.New("sign failed")
 	}
 	//验证敏感信息
-	b, err := libs.DecryptWechatAppletUser(arg.GetEncryptedData(), user.SessionKey, arg.GetIv())
+	b, err := libs.DecryptWechatAppletUser(arg.GetEncryptedData(), sessionKey, arg.GetIv())
 	if err != nil {
 		beego.Error("VerifyUserInfo error: ", err)
 		return nil, err
@@ -98,14 +97,30 @@ func VerifyUserInfo(arg *pb.CWxLogin, session string) (*User, error) {
 		beego.Error("VerifyUserInfo error: ", err)
 		return nil, err
 	}
-	if wxUserInfo.OpenId != user.OpenId {
-		return nil, errors.New("openid error")
-	}
 	if wxUserInfo.Watermark.Appid != WX.Appid {
 		return nil, errors.New("appid error")
 	}
 	if wxUserInfo.Watermark.Timestamp < time.Now().Unix() {
 		return nil, errors.New("session expire")
+	}
+	return wxUserInfo, nil
+}
+
+//LoginUserInfo 登录获取玩家数据
+func LoginUserInfo(wxUserInfo *WxUserInfo, session string,
+	Type pb.LoginType) (*User, error) {
+	if wxUserInfo == nil {
+		return nil, errors.New("wxUserInfo error")
+	}
+	user := new(User)
+	user.GetBySession(session)
+	if wxUserInfo.OpenId != user.OpenId {
+		return nil, errors.New("openid error")
+	}
+	switch Type {
+	case pb.CODELOGIN:
+		return user, nil
+	case pb.WXLOGIN:
 	}
 	user.NickName = wxUserInfo.NickName
 	user.AvatarUrl = wxUserInfo.AvatarUrl
@@ -114,7 +129,7 @@ func VerifyUserInfo(arg *pb.CWxLogin, session string) (*User, error) {
 	user.Province = wxUserInfo.Province
 	user.Gender = wxUserInfo.Gender
 	if !user.Save() {
-		beego.Error("VerifyUserInfo save error: ", user)
+		beego.Error("LoginUserInfo save error: ", user)
 	}
 	return user, nil
 }
@@ -154,10 +169,9 @@ func GetSessionByCode(jscode, ip string) (session string, err error) {
 }
 
 //VerifyUserLogin 登录校验(test)
-func VerifyUserLogin(arg *pb.CLogin, session string) (*User, error) {
-	user := new(User)
-	user.GetBySession(session)
-	if len(user.Session) == 0 || len(user.ID) == 0 {
+func VerifyUserLogin(arg *pb.CLogin, session string) (*WxUserInfo, error) {
+	openid := GetOpenid(session)
+	if len(openid) == 0 {
 		return nil, errors.New("session invaild")
 	}
 	sign := libs.Sha1Signature(strconv.Itoa(int(arg.GetTimestamp())), session)
@@ -167,7 +181,7 @@ func VerifyUserLogin(arg *pb.CLogin, session string) (*User, error) {
 	if (time.Now().Unix() - arg.GetTimestamp()) > 10 {
 		return nil, errors.New("session expire")
 	}
-	return user, nil
+	return &WxUserInfo{OpenId: openid}, nil
 }
 
 //initUserLogin login init

@@ -25,7 +25,18 @@ func (ms *MSActor) Handler(msg interface{}, ctx actor.Context) {
 	case *pb.ServeClose:
 		beego.Debug("ms ServeClose ", arg)
 		//断开连接
-		ms.stop(ctx)
+		//ms.stop(ctx)
+		//关闭消息
+		msg2 := &pb.SLoginOut{
+			Type: pb.OUT_TYPE2,
+		}
+		for k, v := range ms.online {
+			beego.Info("ms online userid: ", k, ", pid: ", v.String())
+			v.Tell(msg2)
+		}
+		//响应
+		rsp := new(pb.ServeClosed)
+		ctx.Respond(rsp)
 	case *pb.ServeStop:
 		beego.Debug("ms ServeStop ", arg)
 		//断开连接
@@ -57,6 +68,16 @@ func (ms *MSActor) Handler(msg interface{}, ctx actor.Context) {
 		//rsp := new(pb.Logouted)
 		//rsp.Userid = arg.GetUserid()
 		//ctx.Respond(rsp)
+	case *pb.LoginElse:
+		userid := ms.userids[arg.GetSession()]
+		if v, ok := ms.online[userid]; ok {
+			v.Tell(arg)
+		} else {
+			rsp := new(pb.LoginedElse)
+			rsp.Session = arg.GetSession()
+			rsp.Type = arg.GetType()
+			ctx.Respond(rsp)
+		}
 	case *pb.ChangeCurrency:
 		if v, ok := ms.online[arg.GetUserid()]; ok {
 			v.Tell(arg)

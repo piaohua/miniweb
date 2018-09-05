@@ -27,18 +27,22 @@ message ServeClose {
     string Message = 1;
 }
 
+message ServeClosed {
+    string Message = 1;
+}
+
 //时钟嘀嗒
 message Tick {
 }
 
-//查询pid
-message Select {
-    string Session = 1;
-}
-
-message Selected {
-    actor.PID WSPid = 1;
-}
+////查询pid
+//message Select {
+//    string Session = 1;
+//}
+//
+//message Selected {
+//    actor.PID WSPid = 1;
+//}
 
 //登录成功
 message Login {
@@ -68,4 +72,23 @@ message ChangeCurrency {
     int32 Type = 2;//变动类型,充值等等
     int64 Coin = 3;//变动金币数量
     int64 Diamond = 4;//变动钻石数量
+}
+
+//登录方式
+enum LoginType {
+    WXLOGIN   =  0;//微信登录
+    CODELOGIN =  1;//code登录
+}
+
+//别处登录
+message LoginElse
+{
+    actor.PID WSPid = 1; //登录进程
+    string Session = 2;
+    LoginType Type = 3;
+}
+
+message LoginedElse {
+    string Session = 1;
+    LoginType Type = 2;
 }
