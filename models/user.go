@@ -87,14 +87,28 @@ func (u *User) GetBySession(session string) {
 }
 
 //GetOpenid  通过session获取openid
-func GetOpenid(session string) (openid string) {
-	GetByQWithFields(Users, bson.M{"session": session}, []string{"openid"}, &openid)
-	return
+func GetOpenid(session string) string {
+	u := new(User)
+	GetByQWithFields(Users, bson.M{"session": session}, []string{"openid"}, &u)
+	return u.OpenId
 }
 
 //GetSessionKey  通过session获取session_key
 func GetSessionKey(session string) (sessionKey string) {
-	GetByQWithFields(Users, bson.M{"session": session}, []string{"session_key"}, &sessionKey)
+	u := bson.M{}
+	GetByQWithFields(Users, bson.M{"session": session}, []string{"session_key"}, &u)
+	if val, ok := u["_id"]; ok {
+		if s, ok := val.(string); ok {
+			if len(s) == 0 {
+				return
+			}
+		}
+	}
+	if val, ok := u["session_key"]; ok {
+		if s, ok := val.(string); ok {
+			sessionKey = s
+		}
+	}
 	return
 }
 

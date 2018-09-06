@@ -82,6 +82,12 @@ func (this *MainController) Prepare() {
 	if token != "" && token == setToken {
 		this.token = true
 	}
+	// Set header
+	if origin := this.Ctx.Request.Header.Get("Origin"); origin != "" {
+		this.Ctx.Output.Header("Access-Control-Allow-Origin", "*")
+		this.Ctx.Output.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		this.Ctx.Output.Header("Access-Control-Allow-Headers", "*")
+	}
 }
 
 var langTypes []string // Languages that are supported.

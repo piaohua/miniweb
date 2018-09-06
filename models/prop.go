@@ -17,6 +17,8 @@ type Prop struct {
 	Name  string    `bson:"name" json:"name"`   //name
 	Type  int32     `bson:"type" json:"type"`   //type unique
 	Attr  int32     `bson:"attr" json:"attr"`   //属性
+	Scene uint32    `bson:"scene" json:"scene"` //使用场景
+	Color uint32    `bson:"color" json:"color"` //颜色品质
 	Del   int       `bson:"del" json:"del"`     //是否移除
 	Ctime time.Time `bson:"ctime" json:"ctime"` //创建时间
 }

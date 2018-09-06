@@ -50,3 +50,13 @@ func TestOr(t *testing.T) {
 	t.Logf("%#v", err2)
 	t.Logf("%#v", result)
 }
+
+func TestGet(t *testing.T) {
+	InitMgo("127.0.0.1", "27017", "", "", "test")
+	session := "ceab29767c5c6c9597aef576c2b1395b"
+	//session = "5b805210c3666ea6b3378407"
+	//openid := GetOpenid(session)
+	openid := GetSessionKey(session)
+	t.Logf("%s\n", openid)
+	Close()
+}
