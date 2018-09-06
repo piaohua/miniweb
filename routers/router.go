@@ -18,6 +18,7 @@ func init() {
 	beego.Router("/", &controllers.MainController{})
 	// Indicate AppController.Join method to handle POST requests.
 	beego.Router("/code", &controllers.MainController{}, "post:Code")
+	beego.Router("/code", &controllers.MainController{}, "options:Code")
 
 	// WebSocket.
 	beego.Router("/ws", &controllers.WebSocketController{})
