@@ -355,6 +355,14 @@
             "name": {
               "type": "string",
               "id": 4
+            },
+            "scene": {
+              "type": "int32",
+              "id": 5
+            },
+            "color": {
+              "type": "int32",
+              "id": 6
             }
           }
         },

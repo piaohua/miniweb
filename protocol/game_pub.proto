@@ -38,6 +38,8 @@ message PropData
     int64 num     = 2;//数量
     int32 attr    = 3;//属性
     string name   = 4;//名字
+    int32 scene   = 5;//使用场景
+    int32 color   = 6;//颜色品质
 }
 
 // 商品信息

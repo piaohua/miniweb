@@ -94,6 +94,8 @@ json = {
     "type": 4,
     "name": "提示卡",
     "attr": 0,
+    "scene": 0,
+    "color": 0,
     "ctime": "2018-09-01T13:35:02.521+08:00"
   }
 curl -d "json" -H "token:your-token" host/set/prop

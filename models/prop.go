@@ -13,30 +13,34 @@ import (
 
 //Prop prop info
 type Prop struct {
-	ID    string    `bson:"_id" json:"id"`      //unique ID
-	Name  string    `bson:"name" json:"name"`   //name
-	Type  int32     `bson:"type" json:"type"`   //type unique
-	Attr  int32     `bson:"attr" json:"attr"`   //属性
-	Scene uint32    `bson:"scene" json:"scene"` //使用场景
-	Color uint32    `bson:"color" json:"color"` //颜色品质
-	Del   int       `bson:"del" json:"del"`     //是否移除
-	Ctime time.Time `bson:"ctime" json:"ctime"` //创建时间
+	ID    string    `bson:"_id" json:"id"`                //unique ID
+	Name  string    `bson:"name" json:"name"`             //name
+	Type  int32     `bson:"type" json:"type"`             //type unique
+	Attr  int32     `bson:"attr" json:"attr"`             //属性
+	Scene int32     `bson:"scene" json:"scene,omitempty"` //使用场景
+	Color int32     `bson:"color" json:"color,omitempty"` //颜色品质
+	Del   int       `bson:"del" json:"del"`               //是否移除
+	Ctime time.Time `bson:"ctime" json:"ctime"`           //创建时间
 }
 
 //PropInfo prop info
 type PropInfo struct {
-	Type int32 `bson:"type" json:"type"`                     //type
-	Attr int32 `bson:"attr,omitempty" json:"attr,omitempty"` //属性
-	Num  int32 `bson:"num,omitempty" json:"num,omitempty"`   //num
+	Type  int32 `bson:"type" json:"type"`                       //type
+	Attr  int32 `bson:"attr,omitempty" json:"attr,omitempty"`   //属性
+	Num   int32 `bson:"num,omitempty" json:"num,omitempty"`     //num
+	Scene int32 `bson:"scene,omitempty" json:"scene,omitempty"` //使用场景
+	Color int32 `bson:"color,omitempty" json:"color,omitempty"` //颜色品质
 }
 
 //TempPropInfo temp prop info
 type TempPropInfo struct {
-	GType  int32 `bson:"gtype" json:"gtype"`                   //gate type
-	Gateid int32 `bson:"gateid" json:"gateid"`                 //gate id
-	Type   int32 `bson:"type" json:"type"`                     //prop type
-	Attr   int32 `bson:"attr,omitempty" json:"attr,omitempty"` //属性
-	Num    int32 `bson:"num,omitempty" json:"num,omitempty"`   //num
+	GType  int32 `bson:"gtype" json:"gtype"`                     //gate type
+	Gateid int32 `bson:"gateid" json:"gateid"`                   //gate id
+	Type   int32 `bson:"type" json:"type"`                       //prop type
+	Attr   int32 `bson:"attr,omitempty" json:"attr,omitempty"`   //属性
+	Num    int32 `bson:"num,omitempty" json:"num,omitempty"`     //num
+	Scene  int32 `bson:"scene,omitempty" json:"scene,omitempty"` //使用场景
+	Color  int32 `bson:"color,omitempty" json:"color,omitempty"` //颜色品质
 }
 
 //GetPropList get prop list
@@ -92,12 +96,20 @@ func addPropMsg(user *User, key string, num int64,
 		msg = AddEnergyMsg(user, num)
 		return
 	}
+	prop := GetProp(int32(ptype))
+	if prop == nil {
+		beego.Error("add prop ptype error: ", ptype)
+		return
+	}
 	msg = &pb.SPushProp{
 		//Type: pb.LOG_TYPE0,
 		Num: num,
 		PropInfo: &pb.PropData{
-			Type: ptype,
-			Name: GetPropName(int32(ptype)),
+			Type:  ptype,
+			Name:  prop.Name,
+			Attr:  prop.Attr,
+			Scene: prop.Scene,
+			Color: prop.Color,
 		},
 	}
 	if num < 0 { //use temp, TODO gate
@@ -105,6 +117,8 @@ func addPropMsg(user *User, key string, num int64,
 			val.Num += int32(num)
 			msg.PropInfo.Num = int64(val.Num)
 			msg.PropInfo.Attr = int32(val.Attr)
+			msg.PropInfo.Scene = int32(val.Scene)
+			msg.PropInfo.Color = int32(val.Color)
 			if val.Num <= 0 {
 				msg.PropInfo.Num = 0
 				delete(user.TempProp, key)
@@ -119,6 +133,8 @@ func addPropMsg(user *User, key string, num int64,
 			val.Num += int32(num)
 			msg.PropInfo.Num = int64(val.Num)
 			msg.PropInfo.Attr = int32(val.Attr)
+			msg.PropInfo.Scene = int32(val.Scene)
+			msg.PropInfo.Color = int32(val.Color)
 			if val.Num <= 0 {
 				msg.PropInfo.Num = 0
 				delete(user.TempProp, key)
@@ -128,8 +144,11 @@ func addPropMsg(user *User, key string, num int64,
 		} else if num > 0 {
 			msg.PropInfo.Num = int64(num)
 			user.TempProp[key] = TempPropInfo{
-				Type: int32(ptype),
-				Num:  int32(num),
+				Type:  int32(ptype),
+				Num:   int32(num),
+				Attr:  prop.Attr,
+				Scene: prop.Scene,
+				Color: prop.Color,
 			}
 		}
 		return
@@ -138,6 +157,8 @@ func addPropMsg(user *User, key string, num int64,
 		val.Num += int32(num)
 		msg.PropInfo.Num = int64(val.Num)
 		msg.PropInfo.Attr = int32(val.Attr)
+		msg.PropInfo.Scene = int32(val.Scene)
+		msg.PropInfo.Color = int32(val.Color)
 		if val.Num <= 0 {
 			msg.PropInfo.Num = 0
 			delete(user.Prop, key)
@@ -147,8 +168,11 @@ func addPropMsg(user *User, key string, num int64,
 	} else if num > 0 {
 		msg.PropInfo.Num = int64(num)
 		user.Prop[key] = PropInfo{
-			Type: int32(ptype),
-			Num:  int32(num),
+			Type:  int32(ptype),
+			Num:   int32(num),
+			Attr:  prop.Attr,
+			Scene: prop.Scene,
+			Color: prop.Color,
 		}
 	}
 	return

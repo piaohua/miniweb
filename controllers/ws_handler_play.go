@@ -70,9 +70,11 @@ func (ws *WSConn) getPropData() {
 	s2c := new(pb.SPropData)
 	for _, v := range ws.user.Prop {
 		prop := &pb.PropData{
-			Type: pb.PropType(v.Type),
-			Num:  int64(v.Num),
-			Attr: v.Attr,
+			Type:  pb.PropType(v.Type),
+			Num:   int64(v.Num),
+			Attr:  v.Attr,
+			Scene: v.Scene,
+			Color: v.Color,
 		}
 		prop.Name = models.GetPropName(v.Type)
 		s2c.PropInfo = append(s2c.PropInfo, prop)
