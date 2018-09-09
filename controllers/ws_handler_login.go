@@ -87,6 +87,13 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 
 //微信登录验证
 func (ws *WSConn) wxlogin(arg *pb.CWxLogin, ctx actor.Context) {
+	if ws.online {
+		beego.Error("wxlogin already")
+		s2c := new(pb.SWxLogin)
+		s2c.Error = pb.LoginFailed
+		ws.Send(s2c)
+		return
+	}
 	userInfo, err := models.VerifyUserInfo(arg, ws.session)
 	beego.Debug("wxlogin userInfo: ", userInfo)
 	if err != nil {
@@ -196,6 +203,13 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 func (ws *WSConn) login(arg *pb.CLogin, ctx actor.Context) {
 	if models.RunMode() {
 		beego.Error("code login runmode")
+		s2c := new(pb.SLogin)
+		s2c.Error = pb.LoginFailed
+		ws.Send(s2c)
+		return
+	}
+	if ws.online {
+		beego.Error("code login already")
 		s2c := new(pb.SLogin)
 		s2c.Error = pb.LoginFailed
 		ws.Send(s2c)
