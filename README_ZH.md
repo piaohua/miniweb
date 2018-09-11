@@ -16,4 +16,7 @@ c2s
 s2c
 [4byte(自定义id) + 1byte(暂时保留) + msgdata(protobuf)]
 
+> /usr/local/nginx/sbin/nginx -v
+nginx version: nginx/1.15.3
+
 ```
