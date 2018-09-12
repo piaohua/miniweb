@@ -58,6 +58,8 @@ func main() {
 	models.InitShopList()
 	models.InitLoginPrizeList()
 	models.InitGateList()
+	models.InitShareList()
+	models.InitInviteList()
 
 	//init ms pid
 	controllers.NewMS()
