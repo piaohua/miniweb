@@ -48,6 +48,20 @@ type User struct {
 	Prop map[string]PropInfo `bson:"prop,omitempty" json:"prop,omitempty"` // 道具
 	//
 	TempProp map[string]TempPropInfo `bson:"temp_prop,omitempty" json:"temp_prop,omitempty"` // 道具
+	//
+	ShareNum    int32                 `bson:"share_num,omitempty" json:"share_num,omitempty"`       //当天分享次数
+	ShareTime   time.Time             `bson:"share_time,omitempty" json:"share_time,omitempty"`     //当天分享时间
+	ShareInfo   map[string]ShareInfo  `bson:"share_info,omitempty" json:"share_info,omitempty"`     // share info
+	Invite      string                `bson:"invite,omitempty" json:"invite,omitempty"`             //邀请userid
+	InviteNum   int32                 `bson:"invite_num,omitempty" json:"invite_num,omitempty"`     //当天邀请总数
+	InviteTime  time.Time             `bson:"invite_time,omitempty" json:"invite_time,omitempty"`   //当天邀请时间
+	InviteCount int32                 `bson:"invite_count,omitempty" json:"invite_count,omitempty"` //累计邀请总数
+	InviteInfo  map[string]InviteInfo `bson:"invite_info,omitempty" json:"invite_info,omitempty"`   // invite info
+}
+
+//Get 加载
+func (u *User) Get() {
+	Get(Users, u.ID, u)
 }
 
 //Save 保存

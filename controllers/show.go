@@ -58,3 +58,29 @@ func (s *ShowController) Gate() {
 
 	s.jsonResult(list)
 }
+
+// Share show share list
+func (s *ShowController) Share() {
+
+	if s.isPost() {
+		s.Redirect("/", 302)
+		return
+	}
+
+	list := models.GetShares()
+
+	s.jsonResult(list)
+}
+
+// Invite show invite list
+func (s *ShowController) Invite() {
+
+	if s.isPost() {
+		s.Redirect("/", 302)
+		return
+	}
+
+	list := models.GetInvites()
+
+	s.jsonResult(list)
+}

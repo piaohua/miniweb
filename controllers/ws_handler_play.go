@@ -220,7 +220,7 @@ func (ws *WSConn) buy(arg *pb.CBuy) {
 	msg2 := models.AddPropMsg(ws.user, key, int64(shop.Number), pb.PropType(shop.Ptype))
 	ws.Send(msg2)
 	//奖励发放
-	ws.sendShopPrize(shop.Prize)
+	ws.sendPrize(shop.Prize)
 	//TODO 下单购买日志
 }
 
@@ -284,15 +284,6 @@ func (ws *WSConn) change(arg *pb.ChangeCurrency) {
 	if arg.Coin != 0 {
 		msg2 := models.AddCoinMsg(ws.user, int64(arg.Coin))
 		ws.Send(msg2)
-	}
-}
-
-//奖励发放
-func (ws *WSConn) sendShopPrize(list []models.ShopPrizeProp) {
-	for _, v := range list {
-		key := models.PropKey(int32(v.Type))
-		msg := models.AddPropMsg(ws.user, key, int64(v.Number), pb.PropType(v.Type))
-		ws.Send(msg)
 	}
 }
 
@@ -397,6 +388,7 @@ func (ws *WSConn) useProp(arg *pb.CUseProp) {
 	case pb.PROP_TYPE11:
 		msg = models.AddEnergyMsg(ws.user, 30)
 	}
+	s2c.Ptype = arg.GetPtype()
 	ws.Send(s2c)
 	if msg != nil {
 		ws.Send(msg)
@@ -460,13 +452,13 @@ func (ws *WSConn) loginPrize(arg *pb.CLoginPrize) {
 	msg := new(pb.SLoginPrize)
 	msg.Type = arg.Type
 	switch arg.Type {
-	case pb.LoginPrizeSelect:
+	case pb.PrizeSelect:
 		msg.List = loginPrizeInfo(ws.user)
-	case pb.LoginPrizeDraw:
+	case pb.PrizeDraw:
 		l, errCode := getLoginPrize(arg.Day, ws.user)
 		if errCode == pb.OK {
 			//奖励发放
-			ws.sendLoginPrize(l)
+			ws.sendPrize(l)
 			msg.List = loginPrizeInfo(ws.user)
 		} else {
 			msg.Error = errCode
@@ -476,7 +468,7 @@ func (ws *WSConn) loginPrize(arg *pb.CLoginPrize) {
 }
 
 //奖励发放
-func (ws *WSConn) sendLoginPrize(list []models.LoginPrizeProp) {
+func (ws *WSConn) sendPrize(list []models.PrizeProp) {
 	for _, v := range list {
 		key := models.PropKey(int32(v.Type))
 		msg := models.AddPropMsg(ws.user, key, int64(v.Number), pb.PropType(v.Type))
@@ -486,8 +478,7 @@ func (ws *WSConn) sendLoginPrize(list []models.LoginPrizeProp) {
 
 //setLoginPrize 连续登录处理
 func setLoginPrize(user *models.User) {
-	now := time.Now()
-	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+	today := todayTime()
 	yesterDay := today.AddDate(0, 0, -1)
 	if user.LoginTime.Before(yesterDay) {
 		//隔天登录重置
@@ -515,7 +506,7 @@ func setLoginPrize(user *models.User) {
 }
 
 //getLoginPrize 领取连续登录奖励
-func getLoginPrize(day uint32, user *models.User) (l []models.LoginPrizeProp, err pb.ErrCode) {
+func getLoginPrize(day uint32, user *models.User) (l []models.PrizeProp, err pb.ErrCode) {
 	if (user.LoginPrize & (1 << day)) != 0 {
 		beego.Error("getLoginPrize error ", day, user.LoginPrize)
 		err = pb.AlreadyAward
@@ -542,20 +533,252 @@ func loginPrizeInfo(user *models.User) (msg []*pb.LoginPrize) {
 	for _, v := range list {
 		msg2 := new(pb.LoginPrize)
 		msg2.Day = v.Day
-		for _, val := range v.Prize {
-			msg3 := &pb.LoginPrizeProp{
-				Type:   pb.PropType(val.Type),
-				Number: val.Number,
-			}
-			msg3.Name = models.GetPropName(val.Type)
-			msg2.Prize = append(msg2.Prize, msg3)
-		}
+		msg2.Prize = prizePropMsg(v.Prize)
 		if (user.LoginPrize & (1 << v.Day)) != 0 {
-			msg2.Status = pb.LoginPrizeGot
+			msg2.Status = pb.PrizeGot
 		} else if (user.LoginTimes & (1 << v.Day)) != 0 {
-			msg2.Status = pb.LoginPrizeDone
+			msg2.Status = pb.PrizeDone
 		}
 		msg = append(msg, msg2)
 	}
 	return
+}
+
+//share info处理
+func (ws *WSConn) shareInfo(arg *pb.CShareInfo) {
+	msg := new(pb.SShareInfo)
+	msg.Type = arg.Type
+	switch arg.Type {
+	case pb.PrizeSelect:
+		msg.List = sharePrizeInfo(ws.user)
+	case pb.PrizeDraw:
+		l, errCode := getSharePrize(arg.GetId(), ws.user)
+		if errCode == pb.OK {
+			//奖励发放
+			ws.sendPrize(l)
+			msg.List = sharePrizeInfo(ws.user)
+		} else {
+			msg.Error = errCode
+		}
+	}
+	msg.Num = ws.user.ShareNum
+	ws.Send(msg)
+}
+
+//getSharePrize 领取分享奖励
+func getSharePrize(id string, user *models.User) (l []models.PrizeProp, err pb.ErrCode) {
+	if val, ok := user.ShareInfo[id]; ok {
+		switch val.Status {
+		case int32(pb.PrizeNone):
+			err = pb.AwardFailed
+			return
+		case int32(pb.PrizeGot):
+			err = pb.AlreadyAward
+			return
+		}
+		val.Status = int32(pb.PrizeGot)
+		user.ShareInfo[id] = val
+	} else {
+		beego.Error("getSharePrize error ", id, user.ShareInfo)
+		err = pb.AwardFailed
+		return
+	}
+	prize := models.GetShare(models.ShareKey(id))
+	if prize == nil {
+		beego.Error("getSharePrize failed ", id)
+		err = pb.AwardFailed
+		return
+	}
+	return prize.Prize, pb.OK
+}
+
+//sharePrizeInfo 获取分享数据信息
+func sharePrizeInfo(user *models.User) (msg []*pb.ShareInfo) {
+	list := models.GetShares()
+	for _, v := range list {
+		msg2 := new(pb.ShareInfo)
+		msg2.Id = v.ID
+		msg2.Number = v.Number
+		msg2.Info = v.Info
+		msg2.Prize = prizePropMsg(v.Prize)
+		if val, ok := user.ShareInfo[v.ID]; ok {
+			msg2.Status = pb.PrizeStatus(val.Status)
+		}
+		msg = append(msg, msg2)
+	}
+	return
+}
+
+//打包奖品信息
+func prizePropMsg(prize []models.PrizeProp) (list []*pb.PrizeProp) {
+	for _, val := range prize {
+		msg := &pb.PrizeProp{
+			Type:   pb.PropType(val.Type),
+			Number: val.Number,
+		}
+		msg.Name = models.GetPropName(val.Type)
+		list = append(list, msg)
+	}
+	return
+}
+
+//invite info处理
+func (ws *WSConn) inviteInfo(arg *pb.CInviteInfo) {
+	msg := new(pb.SInviteInfo)
+	msg.Type = arg.Type
+	switch arg.Type {
+	case pb.PrizeSelect:
+		msg.List = invitePrizeInfo(ws.user)
+	case pb.PrizeDraw:
+		l, errCode := getInvitePrize(arg.GetId(), ws.user)
+		if errCode == pb.OK {
+			//奖励发放
+			ws.sendPrize(l)
+			msg.List = invitePrizeInfo(ws.user)
+		} else {
+			msg.Error = errCode
+		}
+	}
+	msg.Num = ws.user.InviteNum
+	msg.Count = ws.user.InviteCount
+	ws.Send(msg)
+}
+
+//getInvitePrize 领取邀请奖励
+func getInvitePrize(id string, user *models.User) (l []models.PrizeProp, err pb.ErrCode) {
+	if val, ok := user.InviteInfo[id]; ok {
+		switch val.Status {
+		case int32(pb.PrizeNone):
+			err = pb.AwardFailed
+			return
+		case int32(pb.PrizeGot):
+			err = pb.AlreadyAward
+			return
+		}
+		val.Status = int32(pb.PrizeGot)
+		user.InviteInfo[id] = val
+	} else {
+		beego.Error("getInvitePrize error ", id, user.InviteInfo)
+		err = pb.AwardFailed
+		return
+	}
+	prize := models.GetInvite(models.InviteKey(id))
+	if prize == nil {
+		beego.Error("getInvitePrize failed ", id)
+		err = pb.AwardFailed
+		return
+	}
+	return prize.Prize, pb.OK
+}
+
+//invitePrizeInfo 获取邀请数据信息
+func invitePrizeInfo(user *models.User) (msg []*pb.InviteInfo) {
+	list := models.GetInvites()
+	for _, v := range list {
+		msg2 := new(pb.InviteInfo)
+		msg2.Id = v.ID
+		msg2.Number = v.Number
+		msg2.Type = pb.InviteType(v.Type)
+		msg2.Info = v.Info
+		msg2.Prize = prizePropMsg(v.Prize)
+		if val, ok := user.InviteInfo[v.ID]; ok {
+			msg2.Status = pb.PrizeStatus(val.Status)
+		}
+		msg = append(msg, msg2)
+	}
+	return
+}
+
+func todayTime() time.Time {
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+	return today
+}
+
+//TODO 优化验证
+//share 分享信息
+func (ws *WSConn) share(arg *pb.CShare) {
+	ws.user.ShareNum++
+	ws.user.ShareTime = time.Now().Local()
+	list := models.GetShares()
+	for _, v := range list {
+		if ws.user.ShareNum < v.Number {
+			continue
+		}
+		if val, ok := ws.user.ShareInfo[v.ID]; ok {
+			switch val.Status {
+			case int32(pb.PrizeGot):
+				continue
+			}
+		}
+		ws.user.ShareInfo[v.ID] = models.ShareInfo{
+			ID:     v.ID,
+			Status: int32(pb.PrizeDone),
+		}
+	}
+	s2c := new(pb.SShare)
+	ws.Send(s2c)
+}
+
+//invite 邀请信息
+func (ws *WSConn) invite(arg *pb.CInvite) {
+	s2c := new(pb.SShare)
+	if !models.HasID(arg.GetUserid()) {
+		s2c.Error = pb.UserNotExist
+		ws.Send(s2c)
+		return
+	}
+	if ws.user.Invite != "" {
+		s2c.Error = pb.AlreadyInvite
+		ws.Send(s2c)
+		return
+	}
+	ws.user.Invite = arg.GetUserid()
+	ws.Send(s2c)
+	//邀请消息
+	msg := new(pb.Invite)
+	msg.Userid = arg.GetUserid()
+	msg.WSPid = ws.pid
+	MSPid.Request(msg, ws.pid)
+}
+
+//share init
+func (ws *WSConn) shareInit() {
+	if ws.user.ShareInfo == nil {
+		ws.user.ShareInfo = make(map[string]models.ShareInfo)
+		return
+	}
+	today := todayTime()
+	if ws.user.ShareTime.Before(today) {
+		//reset
+		ws.user.ShareNum = 0
+		ws.user.ShareInfo = make(map[string]models.ShareInfo)
+	}
+}
+
+//invite init
+func (ws *WSConn) inviteInit() {
+	if ws.user.InviteInfo == nil {
+		ws.user.InviteInfo = make(map[string]models.InviteInfo)
+		return
+	}
+	today := todayTime()
+	if ws.user.InviteTime.After(today) {
+		return
+	}
+	//reset
+	ws.user.InviteNum = 0
+	for k, v := range ws.user.InviteInfo {
+		prize := models.GetInvite(models.InviteKey(k))
+		if prize == nil {
+			beego.Error("inviteInit failed ", k)
+			delete(ws.user.InviteInfo, k)
+			continue
+		}
+		switch prize.Type {
+		case int32(pb.InviteToday):
+			v.Status = int32(pb.PrizeNone) //reset
+			ws.user.InviteInfo[k] = v
+		}
+	}
 }

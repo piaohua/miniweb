@@ -13,15 +13,15 @@ import (
 
 //LoginPrize 连续登录奖励配置
 type LoginPrize struct {
-	ID    string           `bson:"_id" json:"id"`      //unique ID
-	Day   uint32           `bson:"day" json:"day"`     //unique
-	Prize []LoginPrizeProp `bson:"prize" json:"prize"` //prize
-	Del   int              `bson:"del" json:"del"`     //是否移除
-	Ctime time.Time        `bson:"ctime" json:"ctime"` //创建时间
+	ID    string      `bson:"_id" json:"id"`      //unique ID
+	Day   uint32      `bson:"day" json:"day"`     //unique
+	Prize []PrizeProp `bson:"prize" json:"prize"` //prize
+	Del   int         `bson:"del" json:"del"`     //是否移除
+	Ctime time.Time   `bson:"ctime" json:"ctime"` //创建时间
 }
 
-//LoginPrizeProp 登录奖励
-type LoginPrizeProp struct {
+//PrizeProp 登录奖励
+type PrizeProp struct {
 	Type   int32 `bson:"type" json:"type"`     //物品类型
 	Number int32 `bson:"number" json:"number"` //物品数量
 }
@@ -56,7 +56,7 @@ func SetLoginPrizeList() {
 	prize4 := NewLoginPrizeProp(int32(pb.PROP_TYPE6), 1)
 	var i uint32
 	for i = 0; i < 7; i++ {
-		prize := []LoginPrizeProp{}
+		prize := []PrizeProp{}
 		var num = 10000 + int32(i)*5000
 		prize1 := NewLoginPrizeProp(int32(pb.PROP_TYPE2), num)
 		NewLoginPrize(i, append(prize, prize1, prize2, prize3, prize4))
@@ -75,15 +75,15 @@ func LoadLoginPrizeList() []LoginPrize {
 }
 
 //NewLoginPrizeProp 添加奖励
-func NewLoginPrizeProp(Type, num int32) LoginPrizeProp {
-	return LoginPrizeProp{
+func NewLoginPrizeProp(Type, num int32) PrizeProp {
+	return PrizeProp{
 		Type:   Type,
 		Number: num,
 	}
 }
 
 //NewLoginPrize 添加天数
-func NewLoginPrize(day uint32, prize []LoginPrizeProp) {
+func NewLoginPrize(day uint32, prize []PrizeProp) {
 	t := LoginPrize{
 		ID:    bson.NewObjectId().String(),
 		Day:   day,

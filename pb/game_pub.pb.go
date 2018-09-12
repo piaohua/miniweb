@@ -7,8 +7,6 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
-import strconv "strconv"
-
 import bytes "bytes"
 
 import strings "strings"
@@ -20,29 +18,6 @@ import io "io"
 var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
-
-type LoginPrize_LoginPrizeStatus int32
-
-const (
-	LoginPrizeNone LoginPrize_LoginPrizeStatus = 0
-	LoginPrizeDone LoginPrize_LoginPrizeStatus = 1
-	LoginPrizeGot  LoginPrize_LoginPrizeStatus = 2
-)
-
-var LoginPrize_LoginPrizeStatus_name = map[int32]string{
-	0: "LoginPrizeNone",
-	1: "LoginPrizeDone",
-	2: "LoginPrizeGot",
-}
-var LoginPrize_LoginPrizeStatus_value = map[string]int32{
-	"LoginPrizeNone": 0,
-	"LoginPrizeDone": 1,
-	"LoginPrizeGot":  2,
-}
-
-func (LoginPrize_LoginPrizeStatus) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptorGamePub, []int{5, 0}
-}
 
 // 玩家的基础数据
 type UserData struct {
@@ -310,9 +285,9 @@ func (m *Shop) GetInfo() string {
 
 // 连续登录信息
 type LoginPrize struct {
-	Day    uint32                      `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`
-	Prize  []*LoginPrizeProp           `protobuf:"bytes,2,rep,name=prize" json:"prize,omitempty"`
-	Status LoginPrize_LoginPrizeStatus `protobuf:"varint,3,opt,name=status,proto3,enum=pb.LoginPrize_LoginPrizeStatus" json:"status,omitempty"`
+	Day    uint32       `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`
+	Prize  []*PrizeProp `protobuf:"bytes,2,rep,name=prize" json:"prize,omitempty"`
+	Status PrizeStatus  `protobuf:"varint,3,opt,name=status,proto3,enum=pb.PrizeStatus" json:"status,omitempty"`
 }
 
 func (m *LoginPrize) Reset()                    { *m = LoginPrize{} }
@@ -326,49 +301,153 @@ func (m *LoginPrize) GetDay() uint32 {
 	return 0
 }
 
-func (m *LoginPrize) GetPrize() []*LoginPrizeProp {
+func (m *LoginPrize) GetPrize() []*PrizeProp {
 	if m != nil {
 		return m.Prize
 	}
 	return nil
 }
 
-func (m *LoginPrize) GetStatus() LoginPrize_LoginPrizeStatus {
+func (m *LoginPrize) GetStatus() PrizeStatus {
 	if m != nil {
 		return m.Status
 	}
-	return LoginPrizeNone
+	return PrizeNone
 }
 
-type LoginPrizeProp struct {
+type PrizeProp struct {
 	Type   PropType `protobuf:"varint,1,opt,name=type,proto3,enum=pb.PropType" json:"type,omitempty"`
 	Number int32    `protobuf:"varint,2,opt,name=number,proto3" json:"number,omitempty"`
 	Name   string   `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 }
 
-func (m *LoginPrizeProp) Reset()                    { *m = LoginPrizeProp{} }
-func (*LoginPrizeProp) ProtoMessage()               {}
-func (*LoginPrizeProp) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{6} }
+func (m *PrizeProp) Reset()                    { *m = PrizeProp{} }
+func (*PrizeProp) ProtoMessage()               {}
+func (*PrizeProp) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{6} }
 
-func (m *LoginPrizeProp) GetType() PropType {
+func (m *PrizeProp) GetType() PropType {
 	if m != nil {
 		return m.Type
 	}
 	return PROP_TYPE0
 }
 
-func (m *LoginPrizeProp) GetNumber() int32 {
+func (m *PrizeProp) GetNumber() int32 {
 	if m != nil {
 		return m.Number
 	}
 	return 0
 }
 
-func (m *LoginPrizeProp) GetName() string {
+func (m *PrizeProp) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
+}
+
+// share info
+type ShareInfo struct {
+	Id     string       `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Number int32        `protobuf:"varint,2,opt,name=number,proto3" json:"number,omitempty"`
+	Info   string       `protobuf:"bytes,3,opt,name=info,proto3" json:"info,omitempty"`
+	Prize  []*PrizeProp `protobuf:"bytes,4,rep,name=prize" json:"prize,omitempty"`
+	Status PrizeStatus  `protobuf:"varint,5,opt,name=status,proto3,enum=pb.PrizeStatus" json:"status,omitempty"`
+}
+
+func (m *ShareInfo) Reset()                    { *m = ShareInfo{} }
+func (*ShareInfo) ProtoMessage()               {}
+func (*ShareInfo) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{7} }
+
+func (m *ShareInfo) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *ShareInfo) GetNumber() int32 {
+	if m != nil {
+		return m.Number
+	}
+	return 0
+}
+
+func (m *ShareInfo) GetInfo() string {
+	if m != nil {
+		return m.Info
+	}
+	return ""
+}
+
+func (m *ShareInfo) GetPrize() []*PrizeProp {
+	if m != nil {
+		return m.Prize
+	}
+	return nil
+}
+
+func (m *ShareInfo) GetStatus() PrizeStatus {
+	if m != nil {
+		return m.Status
+	}
+	return PrizeNone
+}
+
+// invite info
+type InviteInfo struct {
+	Id     string       `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Type   InviteType   `protobuf:"varint,2,opt,name=type,proto3,enum=pb.InviteType" json:"type,omitempty"`
+	Number int32        `protobuf:"varint,3,opt,name=number,proto3" json:"number,omitempty"`
+	Info   string       `protobuf:"bytes,4,opt,name=info,proto3" json:"info,omitempty"`
+	Prize  []*PrizeProp `protobuf:"bytes,5,rep,name=prize" json:"prize,omitempty"`
+	Status PrizeStatus  `protobuf:"varint,6,opt,name=status,proto3,enum=pb.PrizeStatus" json:"status,omitempty"`
+}
+
+func (m *InviteInfo) Reset()                    { *m = InviteInfo{} }
+func (*InviteInfo) ProtoMessage()               {}
+func (*InviteInfo) Descriptor() ([]byte, []int) { return fileDescriptorGamePub, []int{8} }
+
+func (m *InviteInfo) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *InviteInfo) GetType() InviteType {
+	if m != nil {
+		return m.Type
+	}
+	return InviteToday
+}
+
+func (m *InviteInfo) GetNumber() int32 {
+	if m != nil {
+		return m.Number
+	}
+	return 0
+}
+
+func (m *InviteInfo) GetInfo() string {
+	if m != nil {
+		return m.Info
+	}
+	return ""
+}
+
+func (m *InviteInfo) GetPrize() []*PrizeProp {
+	if m != nil {
+		return m.Prize
+	}
+	return nil
+}
+
+func (m *InviteInfo) GetStatus() PrizeStatus {
+	if m != nil {
+		return m.Status
+	}
+	return PrizeNone
 }
 
 func init() {
@@ -378,15 +457,9 @@ func init() {
 	proto.RegisterType((*PropData)(nil), "pb.PropData")
 	proto.RegisterType((*Shop)(nil), "pb.Shop")
 	proto.RegisterType((*LoginPrize)(nil), "pb.LoginPrize")
-	proto.RegisterType((*LoginPrizeProp)(nil), "pb.LoginPrizeProp")
-	proto.RegisterEnum("pb.LoginPrize_LoginPrizeStatus", LoginPrize_LoginPrizeStatus_name, LoginPrize_LoginPrizeStatus_value)
-}
-func (x LoginPrize_LoginPrizeStatus) String() string {
-	s, ok := LoginPrize_LoginPrizeStatus_name[int32(x)]
-	if ok {
-		return s
-	}
-	return strconv.Itoa(int(x))
+	proto.RegisterType((*PrizeProp)(nil), "pb.PrizeProp")
+	proto.RegisterType((*ShareInfo)(nil), "pb.ShareInfo")
+	proto.RegisterType((*InviteInfo)(nil), "pb.InviteInfo")
 }
 func (this *UserData) Equal(that interface{}) bool {
 	if that == nil {
@@ -612,14 +685,14 @@ func (this *LoginPrize) Equal(that interface{}) bool {
 	}
 	return true
 }
-func (this *LoginPrizeProp) Equal(that interface{}) bool {
+func (this *PrizeProp) Equal(that interface{}) bool {
 	if that == nil {
 		return this == nil
 	}
 
-	that1, ok := that.(*LoginPrizeProp)
+	that1, ok := that.(*PrizeProp)
 	if !ok {
-		that2, ok := that.(LoginPrizeProp)
+		that2, ok := that.(PrizeProp)
 		if ok {
 			that1 = &that2
 		} else {
@@ -638,6 +711,91 @@ func (this *LoginPrizeProp) Equal(that interface{}) bool {
 		return false
 	}
 	if this.Name != that1.Name {
+		return false
+	}
+	return true
+}
+func (this *ShareInfo) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ShareInfo)
+	if !ok {
+		that2, ok := that.(ShareInfo)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Number != that1.Number {
+		return false
+	}
+	if this.Info != that1.Info {
+		return false
+	}
+	if len(this.Prize) != len(that1.Prize) {
+		return false
+	}
+	for i := range this.Prize {
+		if !this.Prize[i].Equal(that1.Prize[i]) {
+			return false
+		}
+	}
+	if this.Status != that1.Status {
+		return false
+	}
+	return true
+}
+func (this *InviteInfo) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*InviteInfo)
+	if !ok {
+		that2, ok := that.(InviteInfo)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Type != that1.Type {
+		return false
+	}
+	if this.Number != that1.Number {
+		return false
+	}
+	if this.Info != that1.Info {
+		return false
+	}
+	if len(this.Prize) != len(that1.Prize) {
+		return false
+	}
+	for i := range this.Prize {
+		if !this.Prize[i].Equal(that1.Prize[i]) {
+			return false
+		}
+	}
+	if this.Status != that1.Status {
 		return false
 	}
 	return true
@@ -729,15 +887,48 @@ func (this *LoginPrize) GoString() string {
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
-func (this *LoginPrizeProp) GoString() string {
+func (this *PrizeProp) GoString() string {
 	if this == nil {
 		return "nil"
 	}
 	s := make([]string, 0, 7)
-	s = append(s, "&pb.LoginPrizeProp{")
+	s = append(s, "&pb.PrizeProp{")
 	s = append(s, "Type: "+fmt.Sprintf("%#v", this.Type)+",\n")
 	s = append(s, "Number: "+fmt.Sprintf("%#v", this.Number)+",\n")
 	s = append(s, "Name: "+fmt.Sprintf("%#v", this.Name)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *ShareInfo) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 9)
+	s = append(s, "&pb.ShareInfo{")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
+	s = append(s, "Number: "+fmt.Sprintf("%#v", this.Number)+",\n")
+	s = append(s, "Info: "+fmt.Sprintf("%#v", this.Info)+",\n")
+	if this.Prize != nil {
+		s = append(s, "Prize: "+fmt.Sprintf("%#v", this.Prize)+",\n")
+	}
+	s = append(s, "Status: "+fmt.Sprintf("%#v", this.Status)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *InviteInfo) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 10)
+	s = append(s, "&pb.InviteInfo{")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
+	s = append(s, "Type: "+fmt.Sprintf("%#v", this.Type)+",\n")
+	s = append(s, "Number: "+fmt.Sprintf("%#v", this.Number)+",\n")
+	s = append(s, "Info: "+fmt.Sprintf("%#v", this.Info)+",\n")
+	if this.Prize != nil {
+		s = append(s, "Prize: "+fmt.Sprintf("%#v", this.Prize)+",\n")
+	}
+	s = append(s, "Status: "+fmt.Sprintf("%#v", this.Status)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -1027,7 +1218,7 @@ func (m *LoginPrize) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *LoginPrizeProp) Marshal() (dAtA []byte, err error) {
+func (m *PrizeProp) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -1037,7 +1228,7 @@ func (m *LoginPrizeProp) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *LoginPrizeProp) MarshalTo(dAtA []byte) (int, error) {
+func (m *PrizeProp) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -1057,6 +1248,115 @@ func (m *LoginPrizeProp) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintGamePub(dAtA, i, uint64(len(m.Name)))
 		i += copy(dAtA[i:], m.Name)
+	}
+	return i, nil
+}
+
+func (m *ShareInfo) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ShareInfo) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Id) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(len(m.Id)))
+		i += copy(dAtA[i:], m.Id)
+	}
+	if m.Number != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Number))
+	}
+	if len(m.Info) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(len(m.Info)))
+		i += copy(dAtA[i:], m.Info)
+	}
+	if len(m.Prize) > 0 {
+		for _, msg := range m.Prize {
+			dAtA[i] = 0x22
+			i++
+			i = encodeVarintGamePub(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Status != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Status))
+	}
+	return i, nil
+}
+
+func (m *InviteInfo) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *InviteInfo) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Id) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(len(m.Id)))
+		i += copy(dAtA[i:], m.Id)
+	}
+	if m.Type != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Type))
+	}
+	if m.Number != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Number))
+	}
+	if len(m.Info) > 0 {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(len(m.Info)))
+		i += copy(dAtA[i:], m.Info)
+	}
+	if len(m.Prize) > 0 {
+		for _, msg := range m.Prize {
+			dAtA[i] = 0x2a
+			i++
+			i = encodeVarintGamePub(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Status != 0 {
+		dAtA[i] = 0x30
+		i++
+		i = encodeVarintGamePub(dAtA, i, uint64(m.Status))
 	}
 	return i, nil
 }
@@ -1210,7 +1510,7 @@ func (m *LoginPrize) Size() (n int) {
 	return n
 }
 
-func (m *LoginPrizeProp) Size() (n int) {
+func (m *PrizeProp) Size() (n int) {
 	var l int
 	_ = l
 	if m.Type != 0 {
@@ -1222,6 +1522,61 @@ func (m *LoginPrizeProp) Size() (n int) {
 	l = len(m.Name)
 	if l > 0 {
 		n += 1 + l + sovGamePub(uint64(l))
+	}
+	return n
+}
+
+func (m *ShareInfo) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovGamePub(uint64(l))
+	}
+	if m.Number != 0 {
+		n += 1 + sovGamePub(uint64(m.Number))
+	}
+	l = len(m.Info)
+	if l > 0 {
+		n += 1 + l + sovGamePub(uint64(l))
+	}
+	if len(m.Prize) > 0 {
+		for _, e := range m.Prize {
+			l = e.Size()
+			n += 1 + l + sovGamePub(uint64(l))
+		}
+	}
+	if m.Status != 0 {
+		n += 1 + sovGamePub(uint64(m.Status))
+	}
+	return n
+}
+
+func (m *InviteInfo) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovGamePub(uint64(l))
+	}
+	if m.Type != 0 {
+		n += 1 + sovGamePub(uint64(m.Type))
+	}
+	if m.Number != 0 {
+		n += 1 + sovGamePub(uint64(m.Number))
+	}
+	l = len(m.Info)
+	if l > 0 {
+		n += 1 + l + sovGamePub(uint64(l))
+	}
+	if len(m.Prize) > 0 {
+		for _, e := range m.Prize {
+			l = e.Size()
+			n += 1 + l + sovGamePub(uint64(l))
+		}
+	}
+	if m.Status != 0 {
+		n += 1 + sovGamePub(uint64(m.Status))
 	}
 	return n
 }
@@ -1318,20 +1673,49 @@ func (this *LoginPrize) String() string {
 	}
 	s := strings.Join([]string{`&LoginPrize{`,
 		`Day:` + fmt.Sprintf("%v", this.Day) + `,`,
-		`Prize:` + strings.Replace(fmt.Sprintf("%v", this.Prize), "LoginPrizeProp", "LoginPrizeProp", 1) + `,`,
+		`Prize:` + strings.Replace(fmt.Sprintf("%v", this.Prize), "PrizeProp", "PrizeProp", 1) + `,`,
 		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-func (this *LoginPrizeProp) String() string {
+func (this *PrizeProp) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&LoginPrizeProp{`,
+	s := strings.Join([]string{`&PrizeProp{`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
 		`Number:` + fmt.Sprintf("%v", this.Number) + `,`,
 		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ShareInfo) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ShareInfo{`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
+		`Number:` + fmt.Sprintf("%v", this.Number) + `,`,
+		`Info:` + fmt.Sprintf("%v", this.Info) + `,`,
+		`Prize:` + strings.Replace(fmt.Sprintf("%v", this.Prize), "PrizeProp", "PrizeProp", 1) + `,`,
+		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *InviteInfo) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&InviteInfo{`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Number:` + fmt.Sprintf("%v", this.Number) + `,`,
+		`Info:` + fmt.Sprintf("%v", this.Info) + `,`,
+		`Prize:` + strings.Replace(fmt.Sprintf("%v", this.Prize), "PrizeProp", "PrizeProp", 1) + `,`,
+		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -2282,7 +2666,7 @@ func (m *LoginPrize) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Prize = append(m.Prize, &LoginPrizeProp{})
+			m.Prize = append(m.Prize, &PrizeProp{})
 			if err := m.Prize[len(m.Prize)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -2301,7 +2685,7 @@ func (m *LoginPrize) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Status |= (LoginPrize_LoginPrizeStatus(b) & 0x7F) << shift
+				m.Status |= (PrizeStatus(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2327,7 +2711,7 @@ func (m *LoginPrize) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *LoginPrizeProp) Unmarshal(dAtA []byte) error {
+func (m *PrizeProp) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2350,10 +2734,10 @@ func (m *LoginPrizeProp) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: LoginPrizeProp: wiretype end group for non-group")
+			return fmt.Errorf("proto: PrizeProp: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: LoginPrizeProp: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: PrizeProp: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2423,6 +2807,379 @@ func (m *LoginPrizeProp) Unmarshal(dAtA []byte) error {
 			}
 			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGamePub(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ShareInfo) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGamePub
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ShareInfo: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ShareInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Number", wireType)
+			}
+			m.Number = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Number |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Info", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Info = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Prize", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Prize = append(m.Prize, &PrizeProp{})
+			if err := m.Prize[len(m.Prize)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= (PrizeStatus(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGamePub(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *InviteInfo) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGamePub
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: InviteInfo: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: InviteInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			m.Type = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Type |= (InviteType(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Number", wireType)
+			}
+			m.Number = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Number |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Info", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Info = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Prize", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGamePub
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Prize = append(m.Prize, &PrizeProp{})
+			if err := m.Prize[len(m.Prize)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGamePub
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= (PrizeStatus(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGamePub(dAtA[iNdEx:])
@@ -2552,42 +3309,44 @@ var (
 func init() { proto.RegisterFile("game_pub.proto", fileDescriptorGamePub) }
 
 var fileDescriptorGamePub = []byte{
-	// 589 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x94, 0xc1, 0x6e, 0xd3, 0x4e,
-	0x10, 0xc6, 0xb3, 0x71, 0x92, 0xa6, 0xf3, 0x6f, 0xfc, 0x0f, 0x2b, 0x84, 0xac, 0xaa, 0x32, 0x91,
-	0x0f, 0x28, 0x07, 0xd4, 0x43, 0x38, 0x70, 0x44, 0x82, 0x4a, 0xbd, 0x40, 0x55, 0x6d, 0xa9, 0xb8,
-	0x81, 0x36, 0xf1, 0x12, 0x2c, 0x9a, 0x5d, 0x6b, 0xbd, 0x06, 0xb9, 0x07, 0xc4, 0x23, 0x20, 0x9e,
-	0x82, 0x67, 0xe0, 0x09, 0x38, 0xf6, 0xc0, 0x81, 0x23, 0x35, 0x17, 0x8e, 0x7d, 0x04, 0x34, 0x63,
-	0xd7, 0x6e, 0x10, 0x95, 0x7a, 0x9b, 0xef, 0x9b, 0xcd, 0xee, 0xef, 0x9b, 0xdd, 0x18, 0xfc, 0xa5,
-	0x5c, 0xa9, 0x57, 0x69, 0x3e, 0xdf, 0x4d, 0xad, 0x71, 0x86, 0x77, 0xd3, 0xf9, 0xf6, 0xff, 0xe4,
-	0xb9, 0x22, 0x55, 0x95, 0x19, 0x7d, 0x65, 0x30, 0x3c, 0xce, 0x94, 0xdd, 0x93, 0x4e, 0xf2, 0x3b,
-	0x30, 0xc8, 0x33, 0x65, 0x93, 0x38, 0x60, 0x13, 0x36, 0xdd, 0x14, 0xb5, 0xe2, 0xdb, 0x30, 0xd4,
-	0xc9, 0xe2, 0xed, 0x81, 0x5c, 0xa9, 0xa0, 0x4b, 0x9d, 0x46, 0xf3, 0x1d, 0xd8, 0x94, 0xef, 0xa4,
-	0x93, 0xf6, 0xd8, 0x9e, 0x04, 0x1e, 0x35, 0x5b, 0x03, 0x77, 0x5c, 0x2a, 0x1d, 0x2b, 0x1b, 0xf4,
-	0x26, 0x6c, 0xda, 0x17, 0xb5, 0xe2, 0x01, 0x6c, 0xc4, 0x89, 0x5c, 0x19, 0x1d, 0x07, 0xfd, 0x09,
-	0x9b, 0x7a, 0xe2, 0x52, 0x72, 0x0e, 0xbd, 0x85, 0x49, 0x74, 0x30, 0x20, 0x9b, 0x6a, 0xdc, 0x45,
-	0x69, 0x65, 0x97, 0x45, 0xb0, 0x41, 0x6e, 0xad, 0xa2, 0x0f, 0x30, 0xdc, 0x97, 0x4e, 0x11, 0xfb,
-	0x04, 0x7a, 0x18, 0x8b, 0xc8, 0xfd, 0xd9, 0xd6, 0x6e, 0x3a, 0xdf, 0xc5, 0xde, 0xf3, 0x22, 0x55,
-	0x82, 0x3a, 0xc4, 0x22, 0x9d, 0x4a, 0x62, 0xca, 0x80, 0x2c, 0xa4, 0xf8, 0x18, 0x3c, 0x9d, 0xaf,
-	0x88, 0xbd, 0x2f, 0xb0, 0x44, 0x86, 0x58, 0x3a, 0x49, 0xcc, 0x5b, 0x82, 0x6a, 0xf4, 0x32, 0x27,
-	0x2d, 0xe1, 0xf6, 0x05, 0xd5, 0xd1, 0x23, 0xd8, 0xc4, 0x33, 0x9e, 0x98, 0x5c, 0xbb, 0x1b, 0x00,
-	0xd4, 0x07, 0x75, 0x9b, 0x83, 0xa2, 0xcf, 0x0c, 0x86, 0x87, 0xd6, 0xa4, 0xd7, 0x25, 0xc0, 0xde,
-	0xbf, 0x37, 0xf0, 0x1a, 0x52, 0xe9, 0x9c, 0xad, 0xe1, 0xa9, 0x46, 0x4f, 0xe3, 0x4d, 0xf5, 0xe8,
-	0x32, 0xa8, 0xe6, 0xb7, 0xa1, 0x9f, 0x2d, 0x94, 0x56, 0x35, 0x7e, 0x25, 0xd0, 0x5d, 0x98, 0x13,
-	0x63, 0x69, 0xd8, 0x7d, 0x51, 0x89, 0xe8, 0x3b, 0x83, 0xde, 0xd1, 0x1b, 0x93, 0x72, 0x1f, 0xba,
-	0xcd, 0x53, 0xe8, 0x26, 0x31, 0xbf, 0x07, 0x83, 0xcc, 0x49, 0x97, 0x67, 0x44, 0xe0, 0xcf, 0x7c,
-	0x44, 0xc4, 0x95, 0x47, 0xe4, 0x8a, 0xba, 0xdb, 0x04, 0xf1, 0xae, 0x0d, 0xb2, 0x03, 0xde, 0x7b,
-	0x59, 0x10, 0xa1, 0x3f, 0x03, 0x5a, 0x20, 0x8b, 0x17, 0xb2, 0x10, 0x68, 0xe3, 0x45, 0xe9, 0x7c,
-	0x35, 0x57, 0xd5, 0xb0, 0x47, 0xa2, 0x56, 0x88, 0x9b, 0xda, 0x64, 0xa1, 0x08, 0x77, 0x24, 0x2a,
-	0xd1, 0xc4, 0xdd, 0xb8, 0x12, 0x97, 0x43, 0x2f, 0xd1, 0xaf, 0x4d, 0x30, 0xac, 0x3c, 0xac, 0xa3,
-	0x33, 0x06, 0xf0, 0xd4, 0x2c, 0x13, 0x7d, 0x68, 0x93, 0x53, 0x9a, 0x65, 0x2c, 0x0b, 0x4a, 0x37,
-	0x12, 0x58, 0xf2, 0x29, 0x6d, 0x7f, 0x8a, 0x4f, 0xdc, 0x9b, 0xfe, 0x37, 0xe3, 0x88, 0xd5, 0xfe,
-	0x00, 0x13, 0x88, 0x6a, 0x01, 0x7f, 0xd8, 0x0c, 0xa2, 0x8a, 0x78, 0x77, 0x7d, 0xe9, 0x95, 0x72,
-	0x7d, 0x32, 0xd1, 0x33, 0x18, 0xff, 0xdd, 0xe3, 0x1c, 0xfc, 0xd6, 0x3b, 0x30, 0x5a, 0x8d, 0x3b,
-	0xeb, 0xde, 0x1e, 0x7a, 0x8c, 0xdf, 0x82, 0x51, 0xeb, 0xed, 0x1b, 0x37, 0xee, 0x46, 0x2f, 0xaf,
-	0x2e, 0x43, 0xc0, 0x1b, 0xbc, 0xa1, 0x76, 0xb8, 0xf5, 0xbf, 0xa0, 0x1e, 0xee, 0xe5, 0x18, 0xbd,
-	0x76, 0x8c, 0x8f, 0xef, 0x9f, 0x9d, 0x87, 0x9d, 0x1f, 0xe7, 0x61, 0xe7, 0xe2, 0x3c, 0x64, 0x1f,
-	0xcb, 0x90, 0x7d, 0x29, 0x43, 0xf6, 0xad, 0x0c, 0xd9, 0x59, 0x19, 0xb2, 0x9f, 0x65, 0xc8, 0x7e,
-	0x97, 0x61, 0xe7, 0xa2, 0x0c, 0xd9, 0xa7, 0x5f, 0x61, 0x67, 0x3e, 0xa0, 0x2f, 0xca, 0x83, 0x3f,
-	0x01, 0x00, 0x00, 0xff, 0xff, 0x79, 0xa0, 0x95, 0x97, 0x78, 0x04, 0x00, 0x00,
+	// 619 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x94, 0xd1, 0x6a, 0x13, 0x4f,
+	0x14, 0xc6, 0x33, 0xd9, 0xdd, 0x34, 0x39, 0xff, 0x26, 0xfd, 0x33, 0x88, 0x2c, 0xa5, 0x2c, 0x61,
+	0x05, 0xcd, 0x85, 0xf4, 0x22, 0x3e, 0x80, 0xa0, 0x82, 0x14, 0x44, 0xca, 0xd4, 0x22, 0x5e, 0xc9,
+	0x24, 0x3b, 0x4d, 0x07, 0x9b, 0x99, 0x65, 0x76, 0xb6, 0xb2, 0xbd, 0x10, 0x1f, 0x41, 0x04, 0xdf,
+	0xc1, 0x67, 0xe8, 0x13, 0x78, 0xd9, 0x0b, 0x2f, 0xbc, 0xb4, 0xeb, 0x8d, 0x97, 0x7d, 0x04, 0x99,
+	0xb3, 0xdb, 0x4d, 0xc5, 0x34, 0xe4, 0xee, 0x7c, 0xdf, 0x99, 0xcc, 0xfe, 0xbe, 0x73, 0x86, 0xc0,
+	0x60, 0xc6, 0xe7, 0xe2, 0x6d, 0x9a, 0x4f, 0x76, 0x53, 0xa3, 0xad, 0xa6, 0xed, 0x74, 0xb2, 0xbd,
+	0x85, 0x9e, 0x2d, 0x52, 0x51, 0x99, 0xf1, 0x39, 0x81, 0xee, 0x61, 0x26, 0xcc, 0x33, 0x6e, 0x39,
+	0xbd, 0x0b, 0x9d, 0x3c, 0x13, 0x46, 0x26, 0x21, 0x19, 0x92, 0x51, 0x8f, 0xd5, 0x8a, 0x6e, 0x43,
+	0x57, 0xc9, 0xe9, 0xbb, 0x97, 0x7c, 0x2e, 0xc2, 0x36, 0x76, 0x1a, 0x4d, 0x77, 0xa0, 0xc7, 0x4f,
+	0xb9, 0xe5, 0xe6, 0xd0, 0x9c, 0x84, 0x1e, 0x36, 0x17, 0x86, 0xbb, 0x71, 0x26, 0x54, 0x22, 0x4c,
+	0xe8, 0x0f, 0xc9, 0x28, 0x60, 0xb5, 0xa2, 0x21, 0x6c, 0x24, 0x92, 0xcf, 0xb5, 0x4a, 0xc2, 0x60,
+	0x48, 0x46, 0x1e, 0xbb, 0x96, 0x94, 0x82, 0x3f, 0xd5, 0x52, 0x85, 0x1d, 0xb4, 0xb1, 0x76, 0xb7,
+	0x08, 0x25, 0xcc, 0xac, 0x08, 0x37, 0xd0, 0xad, 0x55, 0xfc, 0x01, 0xba, 0xcf, 0xb9, 0x15, 0xc8,
+	0x3e, 0x04, 0xdf, 0xc5, 0x42, 0xf2, 0xc1, 0x78, 0x73, 0x37, 0x9d, 0xec, 0xba, 0xde, 0xab, 0x22,
+	0x15, 0x0c, 0x3b, 0xc8, 0xc2, 0xad, 0x90, 0x09, 0x66, 0x70, 0x2c, 0xa8, 0xe8, 0xff, 0xe0, 0xa9,
+	0x7c, 0x8e, 0xec, 0x01, 0x73, 0xa5, 0x63, 0x48, 0xb8, 0xe5, 0xc8, 0xbc, 0xc9, 0xb0, 0x76, 0x5e,
+	0x66, 0xb9, 0x41, 0xdc, 0x80, 0x61, 0x1d, 0x3f, 0x86, 0x9e, 0xfb, 0xc6, 0x53, 0x9d, 0x2b, 0xbb,
+	0x06, 0x40, 0xfd, 0xa1, 0x76, 0xf3, 0xa1, 0xf8, 0x33, 0x81, 0xee, 0xbe, 0xd1, 0xe9, 0x6d, 0x09,
+	0x5c, 0x6f, 0xf9, 0x05, 0x5e, 0x43, 0xca, 0xad, 0x35, 0x35, 0x3c, 0xd6, 0xce, 0x53, 0x6e, 0x53,
+	0x3e, 0x2e, 0x03, 0x6b, 0x7a, 0x07, 0x82, 0x6c, 0x2a, 0x94, 0xa8, 0xf1, 0x2b, 0xe1, 0xdc, 0xa9,
+	0x3e, 0xd1, 0x06, 0x87, 0x1d, 0xb0, 0x4a, 0xc4, 0xdf, 0x09, 0xf8, 0x07, 0xc7, 0x3a, 0xa5, 0x03,
+	0x68, 0x37, 0x4f, 0xa1, 0x2d, 0x13, 0x7a, 0x1f, 0x3a, 0x99, 0xe5, 0x36, 0xcf, 0x90, 0x60, 0x30,
+	0x1e, 0x38, 0x44, 0x77, 0xf2, 0x00, 0x5d, 0x56, 0x77, 0x9b, 0x20, 0xde, 0xad, 0x41, 0x76, 0xc0,
+	0x7b, 0xcf, 0x0b, 0x24, 0x1c, 0x8c, 0x01, 0x0f, 0xf0, 0xe2, 0x35, 0x2f, 0x98, 0xb3, 0xdd, 0xa2,
+	0x54, 0x3e, 0x9f, 0x88, 0x6a, 0xd8, 0x7d, 0x56, 0x2b, 0x87, 0x9b, 0x1a, 0x39, 0x15, 0x88, 0xdb,
+	0x67, 0x95, 0x68, 0xe2, 0x6e, 0xdc, 0x88, 0x4b, 0xc1, 0x97, 0xea, 0x48, 0x87, 0xdd, 0xca, 0x73,
+	0x75, 0x7c, 0x02, 0xf0, 0x42, 0xcf, 0xa4, 0xda, 0x37, 0xf2, 0x0c, 0x47, 0x99, 0xf0, 0x02, 0xc3,
+	0xf5, 0x99, 0x2b, 0xe9, 0x3d, 0xbc, 0xfd, 0xcc, 0xbd, 0x70, 0x6f, 0xf4, 0xdf, 0xb8, 0x5f, 0x61,
+	0xcb, 0x33, 0xe1, 0xd8, 0x59, 0xd5, 0xa3, 0x0f, 0x9a, 0x11, 0x54, 0xe1, 0xb6, 0x9a, 0x53, 0x7f,
+	0xcf, 0x20, 0x7e, 0x03, 0xbd, 0xe6, 0xc7, 0x6b, 0x6c, 0x76, 0x11, 0xb9, 0x7e, 0x9b, 0x75, 0xe4,
+	0xeb, 0x70, 0xde, 0x22, 0x5c, 0xfc, 0x85, 0x40, 0xef, 0xe0, 0x98, 0x1b, 0xb1, 0xa7, 0x8e, 0xf4,
+	0x3f, 0x4b, 0x5a, 0x71, 0x13, 0x8e, 0xc4, 0x5b, 0x8c, 0x64, 0x11, 0xd9, 0x5f, 0x2b, 0x72, 0xb0,
+	0x3a, 0xf2, 0x39, 0x01, 0xd8, 0x53, 0xa7, 0xd2, 0x2e, 0x07, 0x8b, 0xeb, 0x21, 0xdc, 0x78, 0x3b,
+	0xd5, 0xe9, 0xa5, 0x63, 0xf0, 0x96, 0xc2, 0xfb, 0xcb, 0xe0, 0x83, 0xb5, 0xe0, 0x3b, 0x2b, 0xe1,
+	0x9f, 0x3c, 0xbc, 0xb8, 0x8c, 0x5a, 0x3f, 0x2e, 0xa3, 0xd6, 0xd5, 0x65, 0x44, 0x3e, 0x96, 0x11,
+	0xf9, 0x5a, 0x46, 0xe4, 0x5b, 0x19, 0x91, 0x8b, 0x32, 0x22, 0x3f, 0xcb, 0x88, 0xfc, 0x2e, 0xa3,
+	0xd6, 0x55, 0x19, 0x91, 0x4f, 0xbf, 0xa2, 0xd6, 0xa4, 0x83, 0x7f, 0x9e, 0x8f, 0xfe, 0x04, 0x00,
+	0x00, 0xff, 0xff, 0x5e, 0x3d, 0xf8, 0x02, 0x63, 0x05, 0x00, 0x00,
 }

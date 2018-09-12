@@ -60,8 +60,21 @@ enum ShopStatus {
     SHOP_STATUS4  =  4;//临时
 }
 
-//登录奖励类型
-enum LoginPrizeType {
-    LoginPrizeSelect = 0;//查询(默认)
-    LoginPrizeDraw   = 1;//领取
+//奖励类型
+enum PrizeType {
+    PrizeSelect = 0;//查询(默认)
+    PrizeDraw   = 1;//领取
+}
+
+//邀请好友设定
+enum InviteType {
+    InviteToday = 0;//每日(默认)
+    InviteCount = 1;//累计
+}
+
+//奖励状态
+enum PrizeStatus {
+    PrizeNone = 0;//未完成
+    PrizeDone = 1;//可以领取
+    PrizeGot = 2;//已经领取
 }

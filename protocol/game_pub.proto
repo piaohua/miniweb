@@ -58,19 +58,35 @@ message Shop
 // 连续登录信息
 message LoginPrize
 {
-    enum LoginPrizeStatus {
-        LoginPrizeNone = 0;//未完成
-        LoginPrizeDone = 1;//可以领取
-        LoginPrizeGot = 2;//已经领取
-    }
     uint32 day     = 1;//
-    repeated LoginPrizeProp prize = 2;//
-    LoginPrizeStatus status = 3;//状态
+    repeated PrizeProp prize = 2;//
+    PrizeStatus status = 3;//状态
 }
 
-message LoginPrizeProp
+message PrizeProp
 {
     PropType type = 1; //物品
     int32 number = 2; //数量
     string name = 3;//名字
+}
+
+// share info
+message ShareInfo
+{
+    string id     = 1;//
+    int32 number  = 2;//
+    string info   = 3;//
+    repeated PrizeProp prize = 4;//
+    PrizeStatus status = 5;//状态
+}
+
+// invite info
+message InviteInfo
+{
+    string id     = 1;//
+    InviteType type    = 2;//
+    int32 number  = 3;//
+    string info   = 4;//
+    repeated PrizeProp prize = 5;//
+    PrizeStatus status = 6;//状态
 }

@@ -55,6 +55,18 @@ func Rpacket(msg interface{}) (uint32, []byte, error) {
 	case *CStart:
 		b, err := msg.(*CStart).Marshal()
 		return 1018, b, err
+	case *CShareInfo:
+		b, err := msg.(*CShareInfo).Marshal()
+		return 1019, b, err
+	case *CInviteInfo:
+		b, err := msg.(*CInviteInfo).Marshal()
+		return 1020, b, err
+	case *CShare:
+		b, err := msg.(*CShare).Marshal()
+		return 1021, b, err
+	case *CInvite:
+		b, err := msg.(*CInvite).Marshal()
+		return 1022, b, err
 	default:
 		return 0, []byte{}, errors.New("unknown message")
 	}

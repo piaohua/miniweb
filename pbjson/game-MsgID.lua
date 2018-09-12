@@ -14,6 +14,10 @@ msgID = {
 	CLoginPrize = 1016,
 	CUseProp = 1017,
 	CStart = 1018,
+	CShareInfo = 1019,
+	CInviteInfo = 1020,
+	CShare = 1021,
+	CInvite = 1022,
 
 	SWxLogin = 1001,
 	SLogin = 1002,
@@ -32,4 +36,8 @@ msgID = {
 	SLoginPrize = 1016,
 	SUseProp = 1017,
 	SStart = 1018,
+	SShareInfo = 1019,
+	SInviteInfo = 1020,
+	SShare = 1021,
+	SInvite = 1022,
 }

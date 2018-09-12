@@ -73,10 +73,20 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 		ws.useProp(arg)
 	case *pb.CStart:
 		ws.gameStart(arg)
+	case *pb.CShareInfo:
+		ws.shareInfo(arg)
+	case *pb.CInviteInfo:
+		ws.inviteInfo(arg)
+	case *pb.CShare:
+		ws.share(arg)
+	case *pb.CInvite:
+		ws.invite(arg)
 	case *pb.ChangeCurrency:
 		ws.change(arg)
 	case *pb.LoginElse:
 		ws.loginElse(arg, ctx)
+	case *pb.Invite:
+		models.SetInvite(arg.GetUserid(), ws.user)
 	case proto.Message:
 		//响应
 		ws.Send(arg)
@@ -197,6 +207,9 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 		WSPid:   ws.pid,
 	}
 	MSPid.Request(msg2, ctx.Self())
+	//初始化
+	ws.shareInit()
+	ws.inviteInit()
 }
 
 //普通登录验证

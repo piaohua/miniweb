@@ -45,8 +45,8 @@ func TestBeego(t *testing.T) {
 
 // TestWS is a sample to run an endpoint test
 func TestWS(t *testing.T) {
-	//ws := "ws://localhost:8080/ws/login?3rd_session=813c37947b55ca2fe2648cf6e91912df"
-	ws := "ws://localhost/ws/login?3rd_session=e5e1d338add7094dab230d2fb8a42c82"
+	ws := "ws://localhost:8080/ws/login?3rd_session=813c37947b55ca2fe2648cf6e91912df"
+	//ws := "wss://www.xxx.com/ws/login?3rd_session=e5e1d338add7094dab230d2fb8a42c82"
 	beego.Trace("ws %s\n", ws)
 	c, _, err := websocket.DefaultDialer.Dial(ws, nil)
 	beego.Trace("err -> %+v\n", err)

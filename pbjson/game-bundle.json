@@ -90,7 +90,9 @@
             "SetPropFailed": 15,
             "SetPrizeFailed": 16,
             "SetGateFailed": 17,
-            "EnergyEnough": 18
+            "EnergyEnough": 18,
+            "UserNotExist": 19,
+            "AlreadyInvite": 20
           }
         },
         "LogType": {
@@ -152,10 +154,23 @@
             "SHOP_STATUS4": 4
           }
         },
-        "LoginPrizeType": {
+        "PrizeType": {
           "values": {
-            "LoginPrizeSelect": 0,
-            "LoginPrizeDraw": 1
+            "PrizeSelect": 0,
+            "PrizeDraw": 1
+          }
+        },
+        "InviteType": {
+          "values": {
+            "InviteToday": 0,
+            "InviteCount": 1
+          }
+        },
+        "PrizeStatus": {
+          "values": {
+            "PrizeNone": 0,
+            "PrizeDone": 1,
+            "PrizeGot": 2
           }
         },
         "CPing": {
@@ -410,25 +425,16 @@
             },
             "prize": {
               "rule": "repeated",
-              "type": "LoginPrizeProp",
+              "type": "PrizeProp",
               "id": 2
             },
             "status": {
-              "type": "LoginPrizeStatus",
+              "type": "PrizeStatus",
               "id": 3
-            }
-          },
-          "nested": {
-            "LoginPrizeStatus": {
-              "values": {
-                "LoginPrizeNone": 0,
-                "LoginPrizeDone": 1,
-                "LoginPrizeGot": 2
-              }
             }
           }
         },
-        "LoginPrizeProp": {
+        "PrizeProp": {
           "fields": {
             "type": {
               "type": "PropType",
@@ -441,6 +447,60 @@
             "name": {
               "type": "string",
               "id": 3
+            }
+          }
+        },
+        "ShareInfo": {
+          "fields": {
+            "id": {
+              "type": "string",
+              "id": 1
+            },
+            "number": {
+              "type": "int32",
+              "id": 2
+            },
+            "info": {
+              "type": "string",
+              "id": 3
+            },
+            "prize": {
+              "rule": "repeated",
+              "type": "PrizeProp",
+              "id": 4
+            },
+            "status": {
+              "type": "PrizeStatus",
+              "id": 5
+            }
+          }
+        },
+        "InviteInfo": {
+          "fields": {
+            "id": {
+              "type": "string",
+              "id": 1
+            },
+            "type": {
+              "type": "InviteType",
+              "id": 2
+            },
+            "number": {
+              "type": "int32",
+              "id": 3
+            },
+            "info": {
+              "type": "string",
+              "id": 4
+            },
+            "prize": {
+              "rule": "repeated",
+              "type": "PrizeProp",
+              "id": 5
+            },
+            "status": {
+              "type": "PrizeStatus",
+              "id": 6
             }
           }
         },
@@ -533,7 +593,7 @@
         "CLoginPrize": {
           "fields": {
             "type": {
-              "type": "LoginPrizeType",
+              "type": "PrizeType",
               "id": 1
             },
             "day": {
@@ -545,7 +605,7 @@
         "SLoginPrize": {
           "fields": {
             "type": {
-              "type": "LoginPrizeType",
+              "type": "PrizeType",
               "id": 1
             },
             "list": {
@@ -576,6 +636,103 @@
             "error": {
               "type": "ErrCode",
               "id": 2
+            }
+          }
+        },
+        "CShareInfo": {
+          "fields": {
+            "type": {
+              "type": "PrizeType",
+              "id": 1
+            },
+            "id": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "SShareInfo": {
+          "fields": {
+            "type": {
+              "type": "PrizeType",
+              "id": 1
+            },
+            "num": {
+              "type": "int32",
+              "id": 2
+            },
+            "list": {
+              "rule": "repeated",
+              "type": "ShareInfo",
+              "id": 3
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 4
+            }
+          }
+        },
+        "CInviteInfo": {
+          "fields": {
+            "type": {
+              "type": "PrizeType",
+              "id": 1
+            },
+            "id": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "SInviteInfo": {
+          "fields": {
+            "type": {
+              "type": "PrizeType",
+              "id": 1
+            },
+            "num": {
+              "type": "int32",
+              "id": 2
+            },
+            "count": {
+              "type": "int32",
+              "id": 3
+            },
+            "list": {
+              "rule": "repeated",
+              "type": "InviteInfo",
+              "id": 4
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 5
+            }
+          }
+        },
+        "CShare": {
+          "fields": {}
+        },
+        "SShare": {
+          "fields": {
+            "error": {
+              "type": "ErrCode",
+              "id": 1
+            }
+          }
+        },
+        "CInvite": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "SInvite": {
+          "fields": {
+            "error": {
+              "type": "ErrCode",
+              "id": 1
             }
           }
         },

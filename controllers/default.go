@@ -48,11 +48,11 @@ func (this *MainController) Code() {
 		return
 	}
 
-	if !this.isPost() {
-		jsonData.WxErr.ErrCode = int(pb.Failed)
-		jsonData.WxErr.ErrMsg = "method error"
-		return
-	}
+	//if !this.isPost() {
+	//	jsonData.WxErr.ErrCode = int(pb.Failed)
+	//	jsonData.WxErr.ErrMsg = "method error"
+	//	return
+	//}
 
 	if !this.token {
 		jsonData.WxErr.ErrCode = int(pb.Failed)

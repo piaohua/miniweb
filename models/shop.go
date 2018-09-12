@@ -12,24 +12,18 @@ import (
 
 //Shop 商城
 type Shop struct {
-	ID     string          `bson:"_id" json:"id"`        //购买ID
-	Status int32           `bson:"status" json:"status"` //物品状态
-	Ptype  int32           `bson:"ptype" json:"ptype"`   //兑换的物品
-	Payway int32           `bson:"payway" json:"payway"` //支付方式
-	Number uint32          `bson:"number" json:"number"` //兑换的数量
-	Price  uint32          `bson:"price" json:"price"`   //支付价格(单位元)
-	Name   string          `bson:"name" json:"name"`     //物品名字
-	Info   string          `bson:"info" json:"info"`     //物品信息
-	Prize  []ShopPrizeProp `bson:"prize" json:"prize"`   //prize
-	Del    int             `bson:"del" json:"del"`       //是否移除
-	Etime  time.Time       `bson:"etime" json:"etime"`   //过期时间
-	Ctime  time.Time       `bson:"ctime" json:"ctime"`   //创建时间
-}
-
-//ShopPrizeProp 奖励
-type ShopPrizeProp struct {
-	Type   int32 `bson:"type" json:"type"`     //物品类型
-	Number int32 `bson:"number" json:"number"` //物品数量
+	ID     string      `bson:"_id" json:"id"`        //购买ID
+	Status int32       `bson:"status" json:"status"` //物品状态
+	Ptype  int32       `bson:"ptype" json:"ptype"`   //兑换的物品
+	Payway int32       `bson:"payway" json:"payway"` //支付方式
+	Number uint32      `bson:"number" json:"number"` //兑换的数量
+	Price  uint32      `bson:"price" json:"price"`   //支付价格(单位元)
+	Name   string      `bson:"name" json:"name"`     //物品名字
+	Info   string      `bson:"info" json:"info"`     //物品信息
+	Prize  []PrizeProp `bson:"prize" json:"prize"`   //prize
+	Del    int         `bson:"del" json:"del"`       //是否移除
+	Etime  time.Time   `bson:"etime" json:"etime"`   //过期时间
+	Ctime  time.Time   `bson:"ctime" json:"ctime"`   //创建时间
 }
 
 //GetShopList 商城列表

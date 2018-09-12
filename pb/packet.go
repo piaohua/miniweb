@@ -61,6 +61,18 @@ func Packet(msg interface{}) (uint32, uint32, []byte, error) {
 	case *SStart:
 		b, err := msg.(*SStart).Marshal()
 		return 1018, 0, b, err
+	case *SShareInfo:
+		b, err := msg.(*SShareInfo).Marshal()
+		return 1019, 0, b, err
+	case *SInviteInfo:
+		b, err := msg.(*SInviteInfo).Marshal()
+		return 1020, 0, b, err
+	case *SShare:
+		b, err := msg.(*SShare).Marshal()
+		return 1021, 0, b, err
+	case *SInvite:
+		b, err := msg.(*SInvite).Marshal()
+		return 1022, 0, b, err
 	default:
 		return 0, 0, []byte{}, errors.New("unknown message")
 	}

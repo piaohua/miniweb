@@ -92,3 +92,13 @@ message LoginedElse {
     string Session = 1;
     LoginType Type = 2;
 }
+
+//邀请信息
+message Invite {
+    string Userid = 1;
+    actor.PID WSPid = 2; //登录进程
+}
+
+message Invited {
+    string Userid = 1;
+}

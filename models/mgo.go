@@ -15,12 +15,15 @@ var mgoCloseCh chan bool
 
 // 各个表的Collection对象
 var Users *mgo.Collection
+
 //var IDGens *mgo.Collection
 //var UserInfos *mgo.Collection
 var LoginPrizes *mgo.Collection
 var Gates *mgo.Collection
 var Props *mgo.Collection
 var Shops *mgo.Collection
+var Shares *mgo.Collection
+var Invites *mgo.Collection
 
 // 初始化时连接数据库
 func InitMgo(dbHost, dbPort, dbUser, dbPassword, dbName string) {
@@ -55,6 +58,8 @@ func InitMgo(dbHost, dbPort, dbUser, dbPassword, dbName string) {
 	Gates = Session.DB(dbName).C("col_gate")
 	Props = Session.DB(dbName).C("col_prop")
 	Shops = Session.DB(dbName).C("col_shop")
+	Shares = Session.DB(dbName).C("col_share")
+	Invites = Session.DB(dbName).C("col_invite")
 }
 
 func Close() {

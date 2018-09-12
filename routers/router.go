@@ -30,6 +30,8 @@ func init() {
 	beego.Router("/show/prize", &controllers.ShowController{}, "get:Prize")
 	beego.Router("/show/prop", &controllers.ShowController{}, "get:Prop")
 	beego.Router("/show/gate", &controllers.ShowController{}, "get:Gate")
+	beego.Router("/show/share", &controllers.ShowController{}, "get:Share")
+	beego.Router("/show/invite", &controllers.ShowController{}, "get:Invite")
 
 	// Set
 	beego.Router("/set/shop", &controllers.SetController{}, "post:Shop")
@@ -39,4 +41,6 @@ func init() {
 	beego.Router("/set/diamond", &controllers.SetController{}, "post:Diamond")
 	beego.Router("/set/close", &controllers.SetController{}, "post:Close")
 	beego.Router("/set/gate", &controllers.SetController{}, "post:Gate")
+	beego.Router("/set/share", &controllers.SetController{}, "post:Share")
+	beego.Router("/set/invite", &controllers.SetController{}, "post:Invite")
 }

@@ -84,6 +84,12 @@ func (ms *MSActor) Handler(msg interface{}, ctx actor.Context) {
 		} else {
 			models.UpdateCurrency(arg)
 		}
+	case *pb.Invite:
+		if v, ok := ms.online[arg.GetUserid()]; ok {
+			v.Tell(arg)
+		} else {
+			models.SetInviteByID(arg.GetUserid())
+		}
 	case proto.Message:
 		//TODO 响应消息
 	default:

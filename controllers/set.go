@@ -51,7 +51,7 @@ func (s *SetController) Shop() {
 	beego.Info("set shop success: ", shop)
 }
 
-// Prize show prize list
+// Prize set prize list
 func (s *SetController) Prize() {
 	jsonData := &models.WxErr{}
 	defer s.jsonResult(jsonData)
@@ -158,6 +158,78 @@ func (s *SetController) Gate() {
 		return
 	}
 	beego.Info("set gate success: ", gate)
+}
+
+// Share set share list
+func (s *SetController) Share() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
+
+	if !s.isPost() {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
+		return
+	}
+
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
+		return
+	}
+
+	var share models.Share
+	var err error
+	err = json.Unmarshal(s.Ctx.Input.RequestBody, &share)
+	if err != nil {
+		beego.Error("set share err: ", err)
+		jsonData.ErrCode = int(pb.SetShareFailed)
+		jsonData.ErrMsg = err.Error()
+		return
+	}
+
+	if !models.UpsertShare(share) {
+		beego.Error("set share err: ", err)
+		jsonData.ErrCode = int(pb.SetPropFailed)
+		jsonData.ErrMsg = "set share failed"
+		return
+	}
+	beego.Info("set share success: ", share)
+}
+
+// Invite set invite list
+func (s *SetController) Invite() {
+	jsonData := &models.WxErr{}
+	defer s.jsonResult(jsonData)
+
+	if !s.isPost() {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "method error"
+		return
+	}
+
+	if !s.token {
+		jsonData.ErrCode = int(pb.Failed)
+		jsonData.ErrMsg = "token error"
+		return
+	}
+
+	var invite models.Invite
+	var err error
+	err = json.Unmarshal(s.Ctx.Input.RequestBody, &invite)
+	if err != nil {
+		beego.Error("set invite err: ", err)
+		jsonData.ErrCode = int(pb.SetInviteFailed)
+		jsonData.ErrMsg = err.Error()
+		return
+	}
+
+	if !models.UpsertInvite(invite) {
+		beego.Error("set invite err: ", err)
+		jsonData.ErrCode = int(pb.SetPropFailed)
+		jsonData.ErrMsg = "set invite failed"
+		return
+	}
+	beego.Info("set invite success: ", invite)
 }
 
 // Coin set coin

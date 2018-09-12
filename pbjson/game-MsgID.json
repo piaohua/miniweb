@@ -14,6 +14,10 @@
 	1016:{type:"room",		sendType:"pb.CLoginPrize",		revType:"pb.SLoginPrize",		},
 	1017:{type:"room",		sendType:"pb.CUseProp",		revType:"pb.SUseProp",		},
 	1018:{type:"room",		sendType:"pb.CStart",		revType:"pb.SStart",		},
+	1019:{type:"room",		sendType:"pb.CShareInfo",		revType:"pb.SShareInfo",		},
+	1020:{type:"room",		sendType:"pb.CInviteInfo",		revType:"pb.SInviteInfo",		},
+	1021:{type:"room",		sendType:"pb.CShare",		revType:"pb.SShare",		},
+	1022:{type:"room",		sendType:"pb.CInvite",		revType:"pb.SInvite",		},
 	1003:{type:"room",		sendType:"",		revType:"pb.SLoginOut",		},
 	1010:{type:"room",		sendType:"",		revType:"pb.SPushProp",		},
 }
