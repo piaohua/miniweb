@@ -583,7 +583,7 @@ func getSharePrize(id string, user *models.User) (l []models.PrizeProp, err pb.E
 		err = pb.AwardFailed
 		return
 	}
-	prize := models.GetShare(models.ShareKey(id))
+	prize := models.GetShare(id)
 	if prize == nil {
 		beego.Error("getSharePrize failed ", id)
 		err = pb.AwardFailed
@@ -662,7 +662,7 @@ func getInvitePrize(id string, user *models.User) (l []models.PrizeProp, err pb.
 		err = pb.AwardFailed
 		return
 	}
-	prize := models.GetInvite(models.InviteKey(id))
+	prize := models.GetInvite(id)
 	if prize == nil {
 		beego.Error("getInvitePrize failed ", id)
 		err = pb.AwardFailed
@@ -779,7 +779,7 @@ func (ws *WSConn) inviteInit() {
 	//reset
 	ws.user.InviteNum = 0
 	for k, v := range ws.user.InviteInfo {
-		prize := models.GetInvite(models.InviteKey(k))
+		prize := models.GetInvite(k)
 		if prize == nil {
 			beego.Error("inviteInit failed ", k)
 			delete(ws.user.InviteInfo, k)

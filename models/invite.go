@@ -144,6 +144,7 @@ func SetInviteByID(id string) {
 	user := new(User)
 	user.ID = id
 	user.Get()
+	beego.Info("user ", user)
 	SetInvite(id, user)
 }
 
@@ -165,5 +166,6 @@ func SetInvite(id string, user *User) {
 			Status: int32(pb.PrizeDone),
 		}
 	}
+	beego.Info("user ", user)
 	user.Save()
 }
