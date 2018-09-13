@@ -38,6 +38,7 @@ type User struct {
 	//
 	LoginTimes uint32 `bson:"login_times" json:"login_times"` //连续登录次数
 	LoginPrize uint32 `bson:"login_prize" json:"login_prize"` //连续登录奖励
+	LoginCount uint32 `bson:"login_count" json:"login_count"` //累计登录次数
 	//
 	Diamond    int64 `bson:"diamond" json:"diamond"`                             // 钻石
 	Coin       int64 `bson:"coin" json:"coin"`                                   // 金币

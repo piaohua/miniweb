@@ -210,6 +210,7 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 	//初始化
 	ws.shareInit()
 	ws.inviteInit()
+	ws.user.LoginCount++
 }
 
 //普通登录验证

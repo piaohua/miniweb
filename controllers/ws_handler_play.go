@@ -722,14 +722,24 @@ func (ws *WSConn) share(arg *pb.CShare) {
 
 //invite 邀请信息
 func (ws *WSConn) invite(arg *pb.CInvite) {
-	s2c := new(pb.SShare)
-	if !models.HasID(arg.GetUserid()) {
-		s2c.Error = pb.UserNotExist
+	s2c := new(pb.SInvite)
+	if ws.user.LoginCount > 1 {
+		s2c.Error = pb.AlreadyInvite
 		ws.Send(s2c)
 		return
 	}
 	if ws.user.Invite != "" {
 		s2c.Error = pb.AlreadyInvite
+		ws.Send(s2c)
+		return
+	}
+	if arg.GetUserid() == "" {
+		s2c.Error = pb.UserNotExist
+		ws.Send(s2c)
+		return
+	}
+	if !models.HasID(arg.GetUserid()) {
+		s2c.Error = pb.UserNotExist
 		ws.Send(s2c)
 		return
 	}
