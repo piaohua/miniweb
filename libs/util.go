@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os/exec"
+	"time"
 )
 
 // ExecCmd 执行shell命令
@@ -20,4 +21,11 @@ func Load(filePath string, v interface{}) error {
 		return err
 	}
 	return json.Unmarshal(data, v)
+}
+
+//TodayTime today time
+func TodayTime() time.Time {
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+	return today
 }

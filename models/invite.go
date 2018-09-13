@@ -145,6 +145,7 @@ func SetInviteByID(id string) {
 	user.ID = id
 	user.Get()
 	beego.Info("user ", user)
+	InviteInit(user)
 	SetInvite(id, user)
 }
 
@@ -153,6 +154,11 @@ func SetInvite(id string, user *User) {
 	user.InviteNum++
 	user.InviteCount++
 	user.InviteTime = time.Now().Local()
+	if user.InviteInfo == nil {
+		beego.Error("SetInvite failed ", id)
+		user.Save()
+		return
+	}
 	list := GetInvites()
 	for _, v := range list {
 		if val, ok := user.InviteInfo[v.ID]; ok {
@@ -168,4 +174,31 @@ func SetInvite(id string, user *User) {
 	}
 	beego.Info("user ", user)
 	user.Save()
+}
+
+//InviteInit invite init
+func InviteInit(user *User) {
+	if user.InviteInfo == nil {
+		user.InviteInfo = make(map[string]InviteInfo)
+		return
+	}
+	today := libs.TodayTime()
+	if user.InviteTime.After(today) {
+		return
+	}
+	//reset
+	user.InviteNum = 0
+	for k, v := range user.InviteInfo {
+		prize := GetInvite(k)
+		if prize == nil {
+			beego.Error("inviteInit failed ", k)
+			delete(user.InviteInfo, k)
+			continue
+		}
+		switch prize.Type {
+		case int32(pb.InviteToday):
+			v.Status = int32(pb.PrizeNone) //reset
+			user.InviteInfo[k] = v
+		}
+	}
 }

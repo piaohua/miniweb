@@ -209,7 +209,7 @@ func (ws *WSConn) logined(userid string, ctx actor.Context) {
 	MSPid.Request(msg2, ctx.Self())
 	//初始化
 	ws.shareInit()
-	ws.inviteInit()
+	models.InviteInit(ws.user)
 	ws.user.LoginCount++
 }
 

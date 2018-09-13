@@ -11,6 +11,7 @@ package controllers
 import (
 	"time"
 
+	"miniweb/libs"
 	"miniweb/models"
 	"miniweb/pb"
 
@@ -478,7 +479,7 @@ func (ws *WSConn) sendPrize(list []models.PrizeProp) {
 
 //setLoginPrize 连续登录处理
 func setLoginPrize(user *models.User) {
-	today := todayTime()
+	today := libs.TodayTime()
 	yesterDay := today.AddDate(0, 0, -1)
 	if user.LoginTime.Before(yesterDay) {
 		//隔天登录重置
@@ -689,12 +690,6 @@ func invitePrizeInfo(user *models.User) (msg []*pb.InviteInfo) {
 	return
 }
 
-func todayTime() time.Time {
-	now := time.Now()
-	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
-	return today
-}
-
 //TODO 优化验证
 //share 分享信息
 func (ws *WSConn) share(arg *pb.CShare) {
@@ -758,37 +753,10 @@ func (ws *WSConn) shareInit() {
 		ws.user.ShareInfo = make(map[string]models.ShareInfo)
 		return
 	}
-	today := todayTime()
+	today := libs.TodayTime()
 	if ws.user.ShareTime.Before(today) {
 		//reset
 		ws.user.ShareNum = 0
 		ws.user.ShareInfo = make(map[string]models.ShareInfo)
-	}
-}
-
-//invite init
-func (ws *WSConn) inviteInit() {
-	if ws.user.InviteInfo == nil {
-		ws.user.InviteInfo = make(map[string]models.InviteInfo)
-		return
-	}
-	today := todayTime()
-	if ws.user.InviteTime.After(today) {
-		return
-	}
-	//reset
-	ws.user.InviteNum = 0
-	for k, v := range ws.user.InviteInfo {
-		prize := models.GetInvite(k)
-		if prize == nil {
-			beego.Error("inviteInit failed ", k)
-			delete(ws.user.InviteInfo, k)
-			continue
-		}
-		switch prize.Type {
-		case int32(pb.InviteToday):
-			v.Status = int32(pb.PrizeNone) //reset
-			ws.user.InviteInfo[k] = v
-		}
 	}
 }
