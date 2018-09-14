@@ -84,3 +84,20 @@ func (s *ShowController) Invite() {
 
 	s.jsonResult(list)
 }
+
+// Rank show rank list
+func (s *ShowController) Rank() {
+
+	if s.isPost() {
+		s.Redirect("/", 302)
+		return
+	}
+
+	Type, _ := s.GetInt32("type")
+	Gateid, _ := s.GetInt32("gateid")
+
+	key := models.RankKey(Type, Gateid)
+	list := models.GetRankInfo(key)
+
+	s.jsonResult(list)
+}

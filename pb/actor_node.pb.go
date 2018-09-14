@@ -63,6 +63,7 @@
 		PrizeProp
 		ShareInfo
 		InviteInfo
+		GateRank
 		CShop
 		SShop
 		CBuy

@@ -24,6 +24,7 @@ message COverData
     GateType type = 1;//类型
     int32 gateid  = 2;//关卡id
     int32 star    = 3;//星数
+    int32 score   = 4;//分数
 }
 
 message SOverData
@@ -31,7 +32,8 @@ message SOverData
     int32 cardInfo = 1; //卡片奖励次数信息
     GateData gateInfo = 2; //关卡信息
     repeated PropData propInfo = 3; //道具奖励信息
-    ErrCode error = 4;//错误码
+    repeated GateRank rankInfo = 4; //排行信息
+    ErrCode error = 5;//错误码
 }
 
 // 卡牌

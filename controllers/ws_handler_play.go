@@ -51,6 +51,7 @@ func (ws *WSConn) getGateData() {
 			Gateid: v.Gateid,
 			Num:    v.Num,
 			Star:   v.Star,
+			Score:  v.Score,
 		}
 		s2c.GateInfo = append(s2c.GateInfo, gate)
 	}
@@ -300,14 +301,17 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 		if coin > 0 {
 			msg1 := models.AddCoinMsg(ws.user, coin)
 			ws.Send(msg1)
+			s2c.PropInfo = append(s2c.PropInfo, msg1.PropInfo)
 		}
 		if energy > 0 {
 			msg2 := models.AddEnergyMsg(ws.user, energy)
 			ws.Send(msg2)
+			s2c.PropInfo = append(s2c.PropInfo, msg2.PropInfo)
 		}
 		//response
 		//update gateid
-		models.AddGate(ws.user, Type, gateID, arg.GetStar())
+		models.AddGate(ws.user, Type, gateID,
+			arg.GetStar(), arg.GetScore())
 		//add new gateid
 		nextid := gateID + 1
 		models.AddNewGate(ws.user, Type, nextid)
@@ -317,6 +321,21 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 			Gateid: gateID,
 			Num:    ws.user.Gate[key].Num,
 			Star:   ws.user.Gate[key].Star,
+			Score:  ws.user.Gate[key].Score,
+		}
+		//rank info
+		rankInfo := models.NewRankInfo(Type, gateID,
+			arg.GetScore(), ws.user)
+		rankList := models.SetRankInfo(rankInfo)
+		for k, v := range rankList {
+			info := &pb.GateRank{
+				Index:     int32(k + 1),
+				Userid:    v.Userid,
+				NickName:  v.NickName,
+				AvatarUrl: v.AvatarUrl,
+				Score:     v.Score,
+			}
+			s2c.RankInfo = append(s2c.RankInfo, info)
 		}
 		ws.Send(s2c)
 		ws.tempClean()
@@ -426,6 +445,7 @@ func (ws *WSConn) gameStart(arg *pb.CStart) {
 			Gateid: gateID,
 			Num:    val.Num,
 			Star:   val.Star,
+			Score:  val.Score,
 		}
 		//data 配置数据
 		gate := models.GetGate(Type, gateID)

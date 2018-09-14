@@ -22,6 +22,7 @@ message GateData
     int32 num     = 3;//完成次数
     bytes data    = 4;//数据
     int32 star    = 5;//星数
+    int32 score   = 6;//分数
 }
 
 // 关卡数
@@ -89,4 +90,14 @@ message InviteInfo
     string info   = 4;//
     repeated PrizeProp prize = 5;//
     PrizeStatus status = 6;//状态
+}
+
+// gate rank
+message GateRank
+{
+    int32  index     = 1;//
+    string userid    = 2;//用户id
+    string nickName  = 3;//昵称
+    string avatarUrl = 4;//头像
+    int32  score     = 5;//
 }

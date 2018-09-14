@@ -92,7 +92,9 @@
             "SetGateFailed": 17,
             "EnergyEnough": 18,
             "UserNotExist": 19,
-            "AlreadyInvite": 20
+            "AlreadyInvite": 20,
+            "SetShareFailed": 21,
+            "SetInviteFailed": 22
           }
         },
         "LogType": {
@@ -338,6 +340,10 @@
             "star": {
               "type": "int32",
               "id": 5
+            },
+            "score": {
+              "type": "int32",
+              "id": 6
             }
           }
         },
@@ -504,6 +510,30 @@
             }
           }
         },
+        "GateRank": {
+          "fields": {
+            "index": {
+              "type": "int32",
+              "id": 1
+            },
+            "userid": {
+              "type": "string",
+              "id": 2
+            },
+            "nickName": {
+              "type": "string",
+              "id": 3
+            },
+            "avatarUrl": {
+              "type": "string",
+              "id": 4
+            },
+            "score": {
+              "type": "int32",
+              "id": 5
+            }
+          }
+        },
         "CStart": {
           "fields": {
             "type": {
@@ -546,6 +576,10 @@
             "star": {
               "type": "int32",
               "id": 3
+            },
+            "score": {
+              "type": "int32",
+              "id": 4
             }
           }
         },
@@ -564,9 +598,14 @@
               "type": "PropData",
               "id": 3
             },
+            "rankInfo": {
+              "rule": "repeated",
+              "type": "GateRank",
+              "id": 4
+            },
             "error": {
               "type": "ErrCode",
-              "id": 4
+              "id": 5
             }
           }
         },

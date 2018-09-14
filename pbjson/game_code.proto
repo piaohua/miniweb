@@ -27,4 +27,6 @@ enum ErrCode {
     EnergyEnough           = 18; //精力足够
     UserNotExist           = 19; //玩家不存在
     AlreadyInvite          = 20; //已经邀请
+    SetShareFailed         = 21; //设置share错误
+    SetInviteFailed        = 22; //设置invite错误
 }

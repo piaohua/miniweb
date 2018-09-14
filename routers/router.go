@@ -32,6 +32,7 @@ func init() {
 	beego.Router("/show/gate", &controllers.ShowController{}, "get:Gate")
 	beego.Router("/show/share", &controllers.ShowController{}, "get:Share")
 	beego.Router("/show/invite", &controllers.ShowController{}, "get:Invite")
+	beego.Router("/show/rank", &controllers.ShowController{}, "get:Rank")
 
 	// Set
 	beego.Router("/set/shop", &controllers.SetController{}, "post:Shop")

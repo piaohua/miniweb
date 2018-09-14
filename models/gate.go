@@ -33,10 +33,11 @@ type GateCount struct {
 
 //GateInfo gate info
 type GateInfo struct {
-	Gateid int32 `bson:"gateid" json:"gateid"`                 //unique
-	Type   int32 `bson:"type" json:"type"`                     //type
-	Star   int32 `bson:"star,omitempty" json:"star,omitempty"` //星数
-	Num    int32 `bson:"num,omitempty" json:"num,omitempty"`   //完成次数
+	Gateid int32 `bson:"gateid" json:"gateid"`                   //unique
+	Type   int32 `bson:"type" json:"type"`                       //type
+	Star   int32 `bson:"star,omitempty" json:"star,omitempty"`   //星数
+	Num    int32 `bson:"num,omitempty" json:"num,omitempty"`     //完成次数
+	Score  int32 `bson:"score,omitempty" json:"score,omitempty"` //分数
 }
 
 //GetGateList get prop list
@@ -80,22 +81,25 @@ func GateInit(user *User) {
 	//单人
 	key := GateKey(int32(pb.GATE_TYPE1), 1)
 	if _, ok := user.Gate[key]; !ok {
-		AddGate(user, int32(pb.GATE_TYPE1), 1, 0)
+		AddGate(user, int32(pb.GATE_TYPE1), 1, 0, 0)
 	}
 	//副本
 	key = GateKey(int32(pb.GATE_TYPE2), 1)
 	if _, ok := user.Gate[key]; !ok {
-		AddGate(user, int32(pb.GATE_TYPE2), 1, 0)
+		AddGate(user, int32(pb.GATE_TYPE2), 1, 0, 0)
 	}
 }
 
 //AddGate add new gate
-func AddGate(user *User, Type, id, star int32) {
+func AddGate(user *User, Type, id, star, score int32) {
 	key := GateKey(Type, id)
 	if val, ok := user.Gate[key]; ok {
 		val.Num++
 		if val.Star < star {
 			val.Star = star
+		}
+		if val.Score < score {
+			val.Score = score
 		}
 		user.Gate[key] = val
 		return
@@ -104,6 +108,7 @@ func AddGate(user *User, Type, id, star int32) {
 		Gateid: id,
 		Type:   Type,
 		Star:   star,
+		Score:  score,
 	}
 }
 

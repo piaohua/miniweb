@@ -24,6 +24,7 @@ var Props *mgo.Collection
 var Shops *mgo.Collection
 var Shares *mgo.Collection
 var Invites *mgo.Collection
+var Ranks *mgo.Collection
 
 // 初始化时连接数据库
 func InitMgo(dbHost, dbPort, dbUser, dbPassword, dbName string) {
@@ -60,6 +61,7 @@ func InitMgo(dbHost, dbPort, dbUser, dbPassword, dbName string) {
 	Shops = Session.DB(dbName).C("col_shop")
 	Shares = Session.DB(dbName).C("col_share")
 	Invites = Session.DB(dbName).C("col_invite")
+	Ranks = Session.DB(dbName).C("col_rank")
 }
 
 func Close() {
