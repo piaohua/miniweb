@@ -73,6 +73,9 @@ func Packet(msg interface{}) (uint32, uint32, []byte, error) {
 	case *SInvite:
 		b, err := msg.(*SInvite).Marshal()
 		return 1022, 0, b, err
+	case *SGetRank:
+		b, err := msg.(*SGetRank).Marshal()
+		return 1023, 0, b, err
 	default:
 		return 0, 0, []byte{}, errors.New("unknown message")
 	}

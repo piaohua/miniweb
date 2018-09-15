@@ -18,6 +18,7 @@ msgID = {
 	CInviteInfo : 1020,
 	CShare : 1021,
 	CInvite : 1022,
+	CGetRank : 1023,
 
 	SWxLogin : 1001,
 	SLogin : 1002,
@@ -39,5 +40,6 @@ msgID = {
 	SShareInfo : 1019,
 	SInviteInfo : 1020,
 	SShare : 1021,
-	SInvite : 1022
+	SInvite : 1022,
+	SGetRank : 1023
 }

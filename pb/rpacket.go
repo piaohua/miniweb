@@ -67,6 +67,9 @@ func Rpacket(msg interface{}) (uint32, []byte, error) {
 	case *CInvite:
 		b, err := msg.(*CInvite).Marshal()
 		return 1022, b, err
+	case *CGetRank:
+		b, err := msg.(*CGetRank).Marshal()
+		return 1023, b, err
 	default:
 		return 0, []byte{}, errors.New("unknown message")
 	}

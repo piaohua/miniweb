@@ -775,6 +775,39 @@
             }
           }
         },
+        "CGetRank": {
+          "fields": {
+            "type": {
+              "type": "GateType",
+              "id": 1
+            },
+            "gateid": {
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "SGetRank": {
+          "fields": {
+            "type": {
+              "type": "GateType",
+              "id": 1
+            },
+            "gateid": {
+              "type": "int32",
+              "id": 2
+            },
+            "rankInfo": {
+              "rule": "repeated",
+              "type": "GateRank",
+              "id": 3
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 4
+            }
+          }
+        },
         "CShop": {
           "fields": {}
         },

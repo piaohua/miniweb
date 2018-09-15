@@ -83,6 +83,8 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 		ws.invite(arg)
 	case *pb.ChangeCurrency:
 		ws.change(arg)
+	case *pb.CGetRank:
+		ws.getRank(arg)
 	case *pb.LoginElse:
 		ws.loginElse(arg, ctx)
 	case *pb.Invite:

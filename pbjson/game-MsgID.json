@@ -18,6 +18,7 @@
 	1020:{type:"room",		sendType:"pb.CInviteInfo",		revType:"pb.SInviteInfo",		},
 	1021:{type:"room",		sendType:"pb.CShare",		revType:"pb.SShare",		},
 	1022:{type:"room",		sendType:"pb.CInvite",		revType:"pb.SInvite",		},
+	1023:{type:"room",		sendType:"pb.CGetRank",		revType:"pb.SGetRank",		},
 	1003:{type:"room",		sendType:"",		revType:"pb.SLoginOut",		},
 	1010:{type:"room",		sendType:"",		revType:"pb.SPushProp",		},
 }

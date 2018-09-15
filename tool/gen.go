@@ -73,6 +73,7 @@ var protosUnpack = map[string][]proto{
 		{code: 1020, name: "CInviteInfo"},
 		{code: 1021, name: "CShare"},
 		{code: 1022, name: "CInvite"},
+		{code: 1023, name: "CGetRank"},
 	},
 }
 
@@ -105,6 +106,7 @@ var protosPacket = map[string][]proto{
 		{code: 1020, name: "SInviteInfo"},
 		{code: 1021, name: "SShare"},
 		{code: 1022, name: "SInvite"},
+		{code: 1023, name: "SGetRank"},
 	},
 }
 

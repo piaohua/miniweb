@@ -54,6 +54,8 @@
 		SShare
 		CInvite
 		SInvite
+		CGetRank
+		SGetRank
 		UserData
 		GateData
 		GateCount

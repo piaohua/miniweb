@@ -327,16 +327,7 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 		rankInfo := models.NewRankInfo(Type, gateID,
 			arg.GetScore(), ws.user)
 		rankList := models.SetRankInfo(rankInfo)
-		for k, v := range rankList {
-			info := &pb.GateRank{
-				Index:     int32(k + 1),
-				Userid:    v.Userid,
-				NickName:  v.NickName,
-				AvatarUrl: v.AvatarUrl,
-				Score:     v.Score,
-			}
-			s2c.RankInfo = append(s2c.RankInfo, info)
-		}
+		s2c.RankInfo = gateRanks(rankList)
 		ws.Send(s2c)
 		ws.tempClean()
 		return
@@ -344,6 +335,34 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 	s2c.Error = pb.GateUnreachable
 	ws.Send(s2c)
 	beego.Error("overData error ", arg)
+}
+
+//get rank
+func (ws *WSConn) getRank(arg *pb.CGetRank) {
+	s2c := new(pb.SGetRank)
+	Type := int32(arg.GetType())
+	gateID := arg.GetGateid()
+	s2c.Type = arg.GetType()
+	s2c.Gateid = arg.GetGateid()
+	key := models.RankKey(Type, gateID)
+	rankList := models.GetRankInfo(key)
+	s2c.RankInfo = gateRanks(rankList)
+	ws.Send(s2c)
+}
+
+//get rank info list
+func gateRanks(rankList []models.RankInfo) (list []*pb.GateRank) {
+	for k, v := range rankList {
+		info := &pb.GateRank{
+			Index:     int32(k + 1),
+			Userid:    v.Userid,
+			NickName:  v.NickName,
+			AvatarUrl: v.AvatarUrl,
+			Score:     v.Score,
+		}
+		list = append(list, info)
+	}
+	return
 }
 
 //temp prop clean

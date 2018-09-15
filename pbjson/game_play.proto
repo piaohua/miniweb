@@ -125,3 +125,18 @@ message SInvite
 {
     ErrCode error = 1;//错误码
 }
+
+// get rank
+message CGetRank
+{
+    GateType type = 1;//类型
+    int32 gateid  = 2;//关卡id
+}
+
+message SGetRank
+{
+    GateType type = 1;//类型
+    int32 gateid  = 2;//关卡id
+    repeated GateRank rankInfo = 3; //排行信息
+    ErrCode error = 4;//错误码
+}

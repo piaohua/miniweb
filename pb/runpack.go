@@ -94,6 +94,10 @@ func Runpack(id uint32, b []byte) (interface{}, error) {
 		msg := new(SInvite)
 		err := msg.Unmarshal(b)
 		return msg, err
+	case 1023:
+		msg := new(SGetRank)
+		err := msg.Unmarshal(b)
+		return msg, err
 	default:
 		return nil, errors.New("unknown message")
 	}
