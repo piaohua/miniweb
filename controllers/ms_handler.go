@@ -104,6 +104,13 @@ func (ms *MSActor) start(ctx actor.Context) {
 }
 
 func (ms *MSActor) stop(ctx actor.Context) {
+	select {
+	case <-ms.stopCh:
+		return
+	default:
+		//停止发送消息
+		close(ms.stopCh)
+	}
 	beego.Info("ms stop: ", ctx.Self().String())
 	beego.Info("ms userids: ", ms.userids)
 	msg := new(pb.ServeStop)

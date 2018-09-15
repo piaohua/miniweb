@@ -60,3 +60,15 @@ func TestGet(t *testing.T) {
 	t.Logf("%s\n", openid)
 	Close()
 }
+
+func TestRank(t *testing.T) {
+	InitMgo("127.0.0.1", "27017", "", "", "test")
+	info := NewRankInfo(1, 1, 210, new(User))
+	key := RankKey(info.Type, info.Gateid)
+	var list []RankInfo
+	list = append(list, info)
+	t.Logf("%#v\n", list)
+	ok := RankUpsert(key, list)
+	t.Logf("%v\n", ok)
+	Close()
+}

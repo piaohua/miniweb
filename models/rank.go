@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"sort"
 	"sync"
 	"time"
@@ -43,12 +44,19 @@ func (t *Rank) Upsert() bool {
 	return Upsert(Ranks, bson.M{"_id": t.ID}, t)
 }
 
+//HasRank key是否存在
+func HasRank(key string) bool {
+	return Has(Ranks, bson.M{"_id": key})
+}
+
 //RankUpsert 更新数据库
 func RankUpsert(key string, info []RankInfo) bool {
-	if Update(Ranks, bson.M{"_id": key},
-		bson.M{"$set": bson.M{"info": info, "utime": bson.Now()}}) {
-		return true
+	if HasRank(key) {
+		fmt.Println("key 1 - ", key)
+		return Update(Ranks, bson.M{"_id": key},
+			bson.M{"$set": bson.M{"info": info, "utime": bson.Now()}})
 	}
+	fmt.Println("key 2 - ", key)
 	t := &Rank{ID: key, Info: info}
 	return t.Save()
 }
