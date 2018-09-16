@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"sort"
 	"sync"
 	"time"
@@ -52,11 +51,9 @@ func HasRank(key string) bool {
 //RankUpsert 更新数据库
 func RankUpsert(key string, info []RankInfo) bool {
 	if HasRank(key) {
-		fmt.Println("key 1 - ", key)
 		return Update(Ranks, bson.M{"_id": key},
 			bson.M{"$set": bson.M{"info": info, "utime": bson.Now()}})
 	}
-	fmt.Println("key 2 - ", key)
 	t := &Rank{ID: key, Info: info}
 	return t.Save()
 }
@@ -67,17 +64,19 @@ func RankKey(Type, Gateid int32) string {
 }
 
 //GetRankInfo get rank from cache by id
-func GetRankInfo(key string) (rank []RankInfo) {
+func GetRankInfo(key string) (list []RankInfo) {
 	//key := RankKey(Type, Gateid)
 	if !Cache.IsExist(key) {
 		rank := new(Rank)
 		rank.ID = key
 		rank.Get()
-		Cache.Put(key, rank.Info, 300)
+		Cache.Put(key, rank.Info, (300 * time.Second))
+		list = rank.Info
+		return
 	}
 	if v := Cache.Get(key); v != nil {
 		if val, ok := v.([]RankInfo); ok {
-			rank = val
+			list = val
 		}
 	}
 	return
@@ -112,14 +111,14 @@ func SetRankInfo(info RankInfo) (list []RankInfo) {
 		if v.Userid == info.Userid && v.Score < info.Score {
 			list[k] = info
 			SortRank(list)
-			Cache.Put(key, list, 300)
+			Cache.Put(key, list, (300 * time.Second))
 			RankUpsert(key, list)
 			return
 		}
 	}
 	if len(list) == 0 {
 		list = append(list, info)
-		Cache.Put(key, list, 300)
+		Cache.Put(key, list, (300 * time.Second))
 		RankUpsert(key, list)
 		return
 	}
@@ -129,14 +128,14 @@ func SetRankInfo(info RankInfo) (list []RankInfo) {
 	if len(list) < 10 {
 		list = append(list, info)
 		SortRank(list)
-		Cache.Put(key, list, 300)
+		Cache.Put(key, list, (300 * time.Second))
 		RankUpsert(key, list)
 		return
 	}
 	list = append(list, info)
 	SortRank(list)
 	list = list[:10]
-	Cache.Put(key, list, 300)
+	Cache.Put(key, list, (300 * time.Second))
 	RankUpsert(key, list)
 	return
 }

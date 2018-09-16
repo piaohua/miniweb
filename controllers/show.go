@@ -1,6 +1,8 @@
 package controllers
 
-import "miniweb/models"
+import (
+	"miniweb/models"
+)
 
 // ShowController show
 type ShowController struct {
