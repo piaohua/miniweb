@@ -122,14 +122,14 @@ func SetRankInfo(info RankInfo) (list []RankInfo) {
 		RankUpsert(key, list)
 		return
 	}
-	if list[len(list)-1].Score >= info.Score {
-		return
-	}
 	if len(list) < 10 {
 		list = append(list, info)
 		SortRank(list)
 		Cache.Put(key, list, (300 * time.Second))
 		RankUpsert(key, list)
+		return
+	}
+	if list[len(list)-1].Score >= info.Score {
 		return
 	}
 	list = append(list, info)
