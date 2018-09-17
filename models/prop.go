@@ -253,11 +253,16 @@ func UpsertProp(prop Prop) bool {
 		return false
 	}
 	Cache.Put(key, &prop, 0)
+	var has bool
 	for k, v := range list {
 		if v.Type == prop.Type {
 			list[k] = prop
+			has = true
 			break
 		}
+	}
+	if !has {
+		list = append(list, prop)
 	}
 	Cache.Put("prop", list, 0)
 	return true

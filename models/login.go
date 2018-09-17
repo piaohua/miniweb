@@ -100,7 +100,7 @@ func VerifyUserInfo(arg *pb.CWxLogin, session string) (*WxUserInfo, error) {
 	if wxUserInfo.Watermark.Appid != WX.Appid {
 		return nil, errors.New("appid error")
 	}
-	if wxUserInfo.Watermark.Timestamp < time.Now().Unix() {
+	if (time.Now().Unix() - wxUserInfo.Watermark.Timestamp) > 5 {
 		return nil, errors.New("session expire")
 	}
 	return wxUserInfo, nil

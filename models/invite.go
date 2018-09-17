@@ -104,11 +104,16 @@ func UpsertInvite(invite Invite) bool {
 		return false
 	}
 	Cache.Put(key, &invite, 0)
+	var has bool
 	for k, v := range list {
 		if v.ID == invite.ID {
 			list[k] = invite
+			has = true
 			break
 		}
+	}
+	if !has {
+		list = append(list, invite)
 	}
 	Cache.Put("invite", list, 0)
 	return true

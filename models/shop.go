@@ -118,11 +118,16 @@ func UpsertShop(shop Shop) bool {
 		return false
 	}
 	Cache.Put(key, &shop, 0)
+	var has bool
 	for k, v := range list {
 		if v.ID == shop.ID {
 			list[k] = shop
+			has = true
 			break
 		}
+	}
+	if !has {
+		list = append(list, shop)
 	}
 	Cache.Put("shop", list, 0)
 	return true

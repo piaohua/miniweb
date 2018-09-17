@@ -102,11 +102,16 @@ func UpsertShare(share Share) bool {
 		return false
 	}
 	Cache.Put(key, &share, 0)
+	var has bool
 	for k, v := range list {
 		if v.ID == share.ID {
 			list[k] = share
+			has = true
 			break
 		}
+	}
+	if !has {
+		list = append(list, share)
 	}
 	Cache.Put("share", list, 0)
 	return true

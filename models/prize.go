@@ -136,11 +136,16 @@ func UpsertPrize(prize LoginPrize) bool {
 		return false
 	}
 	Cache.Put(key, &prize, 0)
+	var has bool
 	for k, v := range list {
 		if v.Day == prize.Day {
 			list[k] = prize
+			has = true
 			break
 		}
+	}
+	if !has {
+		list = append(list, prize)
 	}
 	Cache.Put("prize", list, 0)
 	return true

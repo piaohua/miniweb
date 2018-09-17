@@ -207,11 +207,16 @@ func UpsertGate(gate Gate) bool {
 		return false
 	}
 	Cache.Put(key, &gate, 0)
+	var has bool
 	for k, v := range list {
 		if v.Type == gate.Type && v.Gateid == gate.Gateid {
 			list[k] = gate
+			has = true
 			break
 		}
+	}
+	if !has {
+		list = append(list, gate)
 	}
 	Cache.Put("gate", list, 0)
 	//count init
