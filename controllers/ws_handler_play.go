@@ -326,8 +326,9 @@ func (ws *WSConn) overData(arg *pb.COverData) {
 		//rank info
 		rankInfo := models.NewRankInfo(Type, gateID,
 			arg.GetScore(), ws.user)
-		rankList := models.SetRankInfo(rankInfo)
-		s2c.RankInfo = gateRanks(rankList)
+		models.SetRankInfo(rankInfo)
+		//rankList := models.SetRankInfo(rankInfo)
+		//s2c.RankInfo = gateRanks(rankList)
 		ws.Send(s2c)
 		ws.tempClean()
 		return
