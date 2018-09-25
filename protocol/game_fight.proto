@@ -1,0 +1,39 @@
+syntax = "proto3";
+package pb;
+import "game_code.proto";
+import "game_type.proto";
+
+// 对战类型
+message CFight
+{
+}
+
+message SFight
+{
+    repeated FightType type = 1; //入口
+    ErrCode error = 2;//错误码
+}
+
+// 对战匹配
+message CFightMatch
+{
+    FightType type = 1; //入口
+}
+
+message SFightMatch
+{
+    FightType type = 1; //入口
+    ErrCode error = 2;//错误码
+}
+
+// 对战创建
+message CFightCreate
+{
+    FightType type = 1; //入口
+}
+
+message SFightCreate
+{
+    FightType type = 1; //入口
+    ErrCode error = 2;//错误码
+}

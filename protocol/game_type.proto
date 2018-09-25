@@ -78,3 +78,11 @@ enum PrizeStatus {
     PrizeDone = 1;//可以领取
     PrizeGot = 2;//已经领取
 }
+
+//对战类型
+enum FightType {
+    FIGHT_TYPE0  =  0;//对战模式,1vs1
+    FIGHT_TYPE1  =  1;//竞技模式,1vs1
+    FIGHT_TYPE2  =  2;//协同模式,2vs2
+    FIGHT_TYPE3  =  3;//死亡模式,1vs1vs1vs1
+}
