@@ -1,6 +1,7 @@
 syntax = "proto3";
 package pb;
 import "game_code.proto";
+import "game_pub.proto";
 import "game_type.proto";
 
 // 对战类型
@@ -10,30 +11,51 @@ message CFight
 
 message SFight
 {
-    repeated FightType type = 1; //入口
+    repeated FightType type = 1; //对战类型
     ErrCode error = 2;//错误码
 }
 
 // 对战匹配
 message CFightMatch
 {
-    FightType type = 1; //入口
+    FightType type = 1; //对战类型
 }
 
 message SFightMatch
 {
-    FightType type = 1; //入口
-    ErrCode error = 2;//错误码
+    RoomData roomInfo = 1; //玩家信息
+    repeated UserData userInfo = 2; //玩家信息
+    ErrCode error = 3;//错误码
 }
 
 // 对战创建
 message CFightCreate
 {
-    FightType type = 1; //入口
+    FightType type = 1; //对战类型
 }
 
 message SFightCreate
 {
-    FightType type = 1; //入口
-    ErrCode error = 2;//错误码
+    RoomData roomInfo = 1; //玩家信息
+    repeated UserData userInfo = 2; //玩家信息
+    ErrCode error = 3;//错误码
+}
+
+// 进入对战房间
+message CFightEnter
+{
+    string code = 1; //code
+}
+
+message SFightEnter
+{
+    RoomData roomInfo = 1; //玩家信息
+    repeated UserData userInfo = 2; //玩家信息
+    ErrCode error = 3;//错误码
+}
+
+// 房间玩家数据更新
+message SFightUser
+{
+    repeated UserData userInfo = 1; //玩家信息
 }

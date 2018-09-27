@@ -101,3 +101,12 @@ message GateRank
     string avatarUrl = 4;//头像
     int32  score     = 5;//
 }
+
+// 房间的基础数据
+message RoomData
+{
+    FightType type = 1;//对战类型
+    string userid  = 2;//房主id
+    string roomid  = 3;//roomid
+    string code    = 4;//code
+}
