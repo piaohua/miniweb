@@ -86,3 +86,9 @@ enum FightType {
     FIGHT_TYPE2  =  2;//协同模式,2vs2
     FIGHT_TYPE3  =  3;//死亡模式,1vs1vs1vs1
 }
+
+//允许自动匹配
+enum AllowType {
+    ALLOW_TYPE0  =  0;//不允许
+    ALLOW_TYPE1  =  1;//允许
+}

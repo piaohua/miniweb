@@ -109,4 +109,16 @@ message RoomData
     string userid  = 2;//房主id
     string roomid  = 3;//roomid
     string code    = 4;//code
+    AllowType match = 5; //允许自动匹配
+    AllowType userProp = 6; //允使用道具
+}
+
+// 房间的用户数据
+message RoomUserData
+{
+    string userid    = 1;//用户id
+    string nickName  = 2;//昵称
+    string avatarUrl = 3;//头像
+    int32  gender    = 4;//性别
+    int32  score     = 5;//当前的积分
 }
