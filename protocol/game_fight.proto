@@ -104,7 +104,7 @@ message CFightingCancelGird
     //和上一个图标产生消除效果
 }
 
-message CFightingCancelGirdNotify
+message SFightingCancelGird
 {
     string userid = 1;//消除者id
     int32 startPosition = 2;//起点格子
