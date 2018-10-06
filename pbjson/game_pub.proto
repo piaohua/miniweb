@@ -101,3 +101,24 @@ message GateRank
     string avatarUrl = 4;//头像
     int32  score     = 5;//
 }
+
+// 房间的基础数据
+message RoomData
+{
+    FightType type = 1;//对战类型
+    AllowType match = 2; //允许自动匹配
+    AllowType userProp = 3; //允使用道具
+    string userid  = 4;//房主id
+    string roomid  = 5;//roomid
+    repeated RoomUser userInfo = 6; //玩家信息
+}
+
+// 房间的用户数据
+message RoomUser
+{
+    string userid    = 1;//用户id
+    string nickName  = 2;//昵称
+    string avatarUrl = 3;//头像
+    int32  gender    = 4;//性别
+    int32  score     = 5;//当前的积分
+}

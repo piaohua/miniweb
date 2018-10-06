@@ -52,6 +52,7 @@ func main() {
 	//models.HealthCheck()
 	//models.RunStatics()
 	//models.RunTask()
+	models.GenCodeChInit()
 
 	//init cache
 	models.InitPropList()
@@ -61,8 +62,10 @@ func main() {
 	models.InitShareList()
 	models.InitInviteList()
 
-	//init ms pid
+	//init pid
+	controllers.NewRemote()
 	controllers.NewMS()
+	controllers.NewLogger()
 
 	beego.Run()
 }

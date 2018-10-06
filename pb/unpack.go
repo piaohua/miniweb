@@ -90,6 +90,46 @@ func Unpack(id uint32, b []byte) (interface{}, error) {
 		msg := new(CGetRank)
 		err := msg.Unmarshal(b)
 		return msg, err
+	case 1024:
+		msg := new(CFight)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1025:
+		msg := new(CFightMatch)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1026:
+		msg := new(CFightCreate)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1027:
+		msg := new(CFightEnter)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1028:
+		msg := new(CFightMatchExit)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1029:
+		msg := new(CFightChangeSet)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1030:
+		msg := new(CFightStart)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1031:
+		msg := new(CFightingCancelGird)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1032:
+		msg := new(CFightingScore)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1033:
+		msg := new(CFightingEnd)
+		err := msg.Unmarshal(b)
+		return msg, err
 	default:
 		return nil, errors.New("unknown message")
 	}

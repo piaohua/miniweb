@@ -25,6 +25,9 @@ var Shops *mgo.Collection
 var Shares *mgo.Collection
 var Invites *mgo.Collection
 var Ranks *mgo.Collection
+var Rooms *mgo.Collection
+var LogRooms *mgo.Collection
+var LogRoomUsers *mgo.Collection
 
 // 初始化时连接数据库
 func InitMgo(dbHost, dbPort, dbUser, dbPassword, dbName string) {
@@ -62,6 +65,9 @@ func InitMgo(dbHost, dbPort, dbUser, dbPassword, dbName string) {
 	Shares = Session.DB(dbName).C("col_share")
 	Invites = Session.DB(dbName).C("col_invite")
 	Ranks = Session.DB(dbName).C("col_rank")
+	Rooms = Session.DB(dbName).C("col_room")
+	LogRooms = Session.DB(dbName).C("col_log_room")
+	LogRoomUsers = Session.DB(dbName).C("col_log_room_user")
 }
 
 func Close() {

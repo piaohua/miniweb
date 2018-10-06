@@ -1,4 +1,4 @@
-package main
+package controllers
 
 import (
 	"miniweb/pb"
@@ -17,7 +17,7 @@ func (a *LoggerActor) Handler(msg interface{}, ctx actor.Context) {
 		rsp := new(pb.ServeStoped)
 		ctx.Respond(rsp)
 	case *pb.ServeClose:
-		beego.Debug("ms ServeClose ", arg)
+		beego.Info("ms ServeClose ", msg)
 		//响应
 		rsp := new(pb.ServeClosed)
 		ctx.Respond(rsp)

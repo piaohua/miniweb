@@ -89,6 +89,26 @@ func (ws *WSConn) handlerLogined(msg interface{}, ctx actor.Context) {
 		ws.loginElse(arg, ctx)
 	case *pb.Invite:
 		models.SetInvite(arg.GetUserid(), ws.user)
+	case *pb.CFight:
+		ws.fight()
+	case *pb.CFightMatch:
+		ws.fightMatch(arg)
+	case *pb.CFightCreate:
+		ws.fightCreate(arg)
+	case *pb.CFightEnter:
+		ws.fightEnter(arg)
+	case *pb.CFightMatchExit:
+		ws.fightExit(arg)
+	case *pb.CFightChangeSet:
+		ws.fightChange(arg)
+	case *pb.CFightStart:
+		ws.fightStart(arg)
+	case *pb.CFightingCancelGird:
+		ws.fightGird(arg)
+	case *pb.CFightingScore:
+		ws.fightScore(arg)
+	case *pb.CFightingEnd:
+		ws.fightEnd(arg)
 	case proto.Message:
 		//响应
 		ws.Send(arg)

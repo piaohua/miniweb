@@ -102,3 +102,15 @@ message Invite {
 message Invited {
     string Userid = 1;
 }
+
+//启动服务
+message NodeConn {
+    //actor.PID NodePid = 1;
+    string Bind = 1;
+    string Kind = 2;
+}
+
+message NodeConned {
+    string Bind = 1;
+    string Kind = 2;
+}

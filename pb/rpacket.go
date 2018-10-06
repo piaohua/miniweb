@@ -70,6 +70,36 @@ func Rpacket(msg interface{}) (uint32, []byte, error) {
 	case *CGetRank:
 		b, err := msg.(*CGetRank).Marshal()
 		return 1023, b, err
+	case *CFight:
+		b, err := msg.(*CFight).Marshal()
+		return 1024, b, err
+	case *CFightMatch:
+		b, err := msg.(*CFightMatch).Marshal()
+		return 1025, b, err
+	case *CFightCreate:
+		b, err := msg.(*CFightCreate).Marshal()
+		return 1026, b, err
+	case *CFightEnter:
+		b, err := msg.(*CFightEnter).Marshal()
+		return 1027, b, err
+	case *CFightMatchExit:
+		b, err := msg.(*CFightMatchExit).Marshal()
+		return 1028, b, err
+	case *CFightChangeSet:
+		b, err := msg.(*CFightChangeSet).Marshal()
+		return 1029, b, err
+	case *CFightStart:
+		b, err := msg.(*CFightStart).Marshal()
+		return 1030, b, err
+	case *CFightingCancelGird:
+		b, err := msg.(*CFightingCancelGird).Marshal()
+		return 1031, b, err
+	case *CFightingScore:
+		b, err := msg.(*CFightingScore).Marshal()
+		return 1032, b, err
+	case *CFightingEnd:
+		b, err := msg.(*CFightingEnd).Marshal()
+		return 1033, b, err
 	default:
 		return 0, []byte{}, errors.New("unknown message")
 	}

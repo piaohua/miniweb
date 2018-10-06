@@ -76,6 +76,36 @@ func Packet(msg interface{}) (uint32, uint32, []byte, error) {
 	case *SGetRank:
 		b, err := msg.(*SGetRank).Marshal()
 		return 1023, 0, b, err
+	case *SFight:
+		b, err := msg.(*SFight).Marshal()
+		return 1024, 0, b, err
+	case *SFightMatch:
+		b, err := msg.(*SFightMatch).Marshal()
+		return 1025, 0, b, err
+	case *SFightCreate:
+		b, err := msg.(*SFightCreate).Marshal()
+		return 1026, 0, b, err
+	case *SFightEnter:
+		b, err := msg.(*SFightEnter).Marshal()
+		return 1027, 0, b, err
+	case *SFightMatchExit:
+		b, err := msg.(*SFightMatchExit).Marshal()
+		return 1028, 0, b, err
+	case *SFightUser:
+		b, err := msg.(*SFightUser).Marshal()
+		return 1029, 0, b, err
+	case *SFightStart:
+		b, err := msg.(*SFightStart).Marshal()
+		return 1030, 0, b, err
+	case *SFightingCancelGird:
+		b, err := msg.(*SFightingCancelGird).Marshal()
+		return 1031, 0, b, err
+	case *SFightingScore:
+		b, err := msg.(*SFightingScore).Marshal()
+		return 1032, 0, b, err
+	case *SFightingEnd:
+		b, err := msg.(*SFightingEnd).Marshal()
+		return 1033, 0, b, err
 	default:
 		return 0, 0, []byte{}, errors.New("unknown message")
 	}

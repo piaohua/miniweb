@@ -1,4 +1,4 @@
-package main
+package controllers
 
 import (
 	"time"
@@ -21,7 +21,6 @@ const maxConcurrency = 5
 
 //LoggerActor 日志记录服务
 type LoggerActor struct {
-	Name string
 }
 
 // Receive is sent messages to be processed from the mailbox associated with the instance of the actor
@@ -36,11 +35,11 @@ func (a *LoggerActor) Receive(ctx actor.Context) {
 	case *actor.Restarting:
 		beego.Notice("Restarting, actor is about to restart")
 	case *actor.ReceiveTimeout:
-		beego.Infof("ReceiveTimeout: %v", ctx.Self().String())
+		beego.Info("ReceiveTimeout pid: ", ctx.Self().String())
 	case proto.Message:
 		a.Handler(msg, ctx)
 	default:
-		beego.Errorf("unknown message %v", msg)
+		beego.Error("unknown message ", msg)
 	}
 }
 
@@ -56,10 +55,16 @@ func newLoggerProps() *actor.Props {
 		WithMailbox(mailbox.Unbounded())
 }
 
-//NewLogger 启动服务
-func NewLogger() *actor.PID {
+// init ...
+func initLogger() *actor.PID {
 	props := newLoggerProps()
 	return actor.Spawn(props) //启动一个进程
+}
+
+//NewLogger 启动服务
+func NewLogger() {
+	LoggerPid = initLogger()
+	beego.Info("LoggerPid: ", LoggerPid.String())
 }
 
 //StopLogger 停止服务

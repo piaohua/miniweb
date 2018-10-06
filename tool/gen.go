@@ -74,6 +74,17 @@ var protosUnpack = map[string][]proto{
 		{code: 1021, name: "CShare"},
 		{code: 1022, name: "CInvite"},
 		{code: 1023, name: "CGetRank"},
+		//
+		{code: 1024, name: "CFight"},
+		{code: 1025, name: "CFightMatch"},
+		{code: 1026, name: "CFightCreate"},
+		{code: 1027, name: "CFightEnter"},
+		{code: 1028, name: "CFightMatchExit"},
+		{code: 1029, name: "CFightChangeSet"},
+		{code: 1030, name: "CFightStart"},
+		{code: 1031, name: "CFightingCancelGird"},
+		{code: 1032, name: "CFightingScore"},
+		{code: 1033, name: "CFightingEnd"},
 	},
 }
 
@@ -107,6 +118,17 @@ var protosPacket = map[string][]proto{
 		{code: 1021, name: "SShare"},
 		{code: 1022, name: "SInvite"},
 		{code: 1023, name: "SGetRank"},
+		//
+		{code: 1024, name: "SFight"},
+		{code: 1025, name: "SFightMatch"},
+		{code: 1026, name: "SFightCreate"},
+		{code: 1027, name: "SFightEnter"},
+		{code: 1028, name: "SFightMatchExit"},
+		{code: 1029, name: "SFightUser"},
+		{code: 1030, name: "SFightStart"},
+		{code: 1031, name: "SFightingCancelGird"},
+		{code: 1032, name: "SFightingScore"},
+		{code: 1033, name: "SFightingEnd"},
 	},
 }
 

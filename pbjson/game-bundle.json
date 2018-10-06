@@ -94,7 +94,16 @@
             "UserNotExist": 19,
             "AlreadyInvite": 20,
             "SetShareFailed": 21,
-            "SetInviteFailed": 22
+            "SetInviteFailed": 22,
+            "FightCreateFailed": 23,
+            "FightChangeFailed": 24,
+            "FightRoomFull": 25,
+            "FightRoomNotExist": 26,
+            "FightStartFailed": 27,
+            "FightExitFailed": 28,
+            "FightNotInRoom": 29,
+            "FightNotStart": 30,
+            "FightMatchFailed": 31
           }
         },
         "LogType": {
@@ -173,6 +182,20 @@
             "PrizeNone": 0,
             "PrizeDone": 1,
             "PrizeGot": 2
+          }
+        },
+        "FightType": {
+          "values": {
+            "FIGHT_TYPE0": 0,
+            "FIGHT_TYPE1": 1,
+            "FIGHT_TYPE2": 2,
+            "FIGHT_TYPE3": 3
+          }
+        },
+        "AllowType": {
+          "values": {
+            "ALLOW_TYPE0": 0,
+            "ALLOW_TYPE1": 1
           }
         },
         "CPing": {
@@ -526,6 +549,59 @@
             },
             "avatarUrl": {
               "type": "string",
+              "id": 4
+            },
+            "score": {
+              "type": "int32",
+              "id": 5
+            }
+          }
+        },
+        "RoomData": {
+          "fields": {
+            "type": {
+              "type": "FightType",
+              "id": 1
+            },
+            "match": {
+              "type": "AllowType",
+              "id": 2
+            },
+            "userProp": {
+              "type": "AllowType",
+              "id": 3
+            },
+            "userid": {
+              "type": "string",
+              "id": 4
+            },
+            "roomid": {
+              "type": "string",
+              "id": 5
+            },
+            "userInfo": {
+              "rule": "repeated",
+              "type": "RoomUser",
+              "id": 6
+            }
+          }
+        },
+        "RoomUser": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            },
+            "nickName": {
+              "type": "string",
+              "id": 2
+            },
+            "avatarUrl": {
+              "type": "string",
+              "id": 3
+            },
+            "gender": {
+              "type": "int32",
               "id": 4
             },
             "score": {

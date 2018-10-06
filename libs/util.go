@@ -3,7 +3,9 @@ package libs
 import (
 	"encoding/json"
 	"io/ioutil"
+	"math/rand"
 	"os/exec"
+	"strconv"
 	"time"
 )
 
@@ -28,4 +30,14 @@ func TodayTime() time.Time {
 	now := time.Now()
 	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
 	return today
+}
+
+//RandStr ...
+func RandStr(i int) (s string) {
+	for i > 0 {
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		s += strconv.FormatInt(r.Int63n(10), 10)
+		i--
+	}
+	return
 }

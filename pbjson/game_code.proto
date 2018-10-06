@@ -29,4 +29,13 @@ enum ErrCode {
     AlreadyInvite          = 20; //已经邀请
     SetShareFailed         = 21; //设置share错误
     SetInviteFailed        = 22; //设置invite错误
+    FightCreateFailed      = 23; //创建失败
+    FightChangeFailed      = 24; //更新失败
+    FightRoomFull          = 25; //房间满员
+    FightRoomNotExist      = 26; //房间不存在
+    FightStartFailed       = 27; //不能开始
+    FightExitFailed        = 28; //退出失败
+    FightNotInRoom         = 29; //不在房间
+    FightNotStart          = 30; //没有开始
+    FightMatchFailed       = 31; //匹配失败
 }

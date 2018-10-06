@@ -98,6 +98,46 @@ func Runpack(id uint32, b []byte) (interface{}, error) {
 		msg := new(SGetRank)
 		err := msg.Unmarshal(b)
 		return msg, err
+	case 1024:
+		msg := new(SFight)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1025:
+		msg := new(SFightMatch)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1026:
+		msg := new(SFightCreate)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1027:
+		msg := new(SFightEnter)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1028:
+		msg := new(SFightMatchExit)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1029:
+		msg := new(SFightUser)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1030:
+		msg := new(SFightStart)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1031:
+		msg := new(SFightingCancelGird)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1032:
+		msg := new(SFightingScore)
+		err := msg.Unmarshal(b)
+		return msg, err
+	case 1033:
+		msg := new(SFightingEnd)
+		err := msg.Unmarshal(b)
+		return msg, err
 	default:
 		return nil, errors.New("unknown message")
 	}

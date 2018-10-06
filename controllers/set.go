@@ -318,9 +318,11 @@ func (s *SetController) Close() {
 	}
 
 	//close
+	CloseNode()
 	CloseMS()
 	Handler.Close()
 	StopMS()
+	StopNode()
 }
 
 // Prepare implemented Prepare() method for baseController.

@@ -70,6 +70,7 @@ func (ws *WSConn) stop(ctx actor.Context) {
 			Session: ws.session,
 		}
 		MSPid.Request(msg2, ctx.Self())
+		NodePid.Request(msg2, ctx.Self())
 		//TODO 优化缓存
 		ws.user.Save()
 	}
