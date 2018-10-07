@@ -1,0 +1,144 @@
+syntax = "proto3";
+package pb;
+import "game_code.proto";
+import "game_pub.proto";
+import "game_type.proto";
+
+// 对战类型
+message CFight
+{
+}
+
+message SFight
+{
+    repeated FightType type = 1; //对战类型
+    ErrCode error = 2;//错误码
+}
+
+// 对战匹配
+message CFightMatch
+{
+    FightType type = 1; //对战类型
+    string userid = 2; //userid (server)
+}
+
+message SFightMatch
+{
+    RoomData roomInfo = 1; //房间数据
+    ErrCode error = 2;//错误码
+}
+
+// 对战创建
+message CFightCreate
+{
+    FightType type = 1; //对战类型
+    AllowType match = 2; //允许自动匹配
+    AllowType userProp = 3; //允使用道具
+    string userid = 4; //userid (server)
+}
+
+message SFightCreate
+{
+    RoomData roomInfo = 1; //房间数据
+    ErrCode error = 2;//错误码
+}
+
+// 进入对战房间
+message CFightEnter
+{
+    string roomid = 1; //roomid
+    string userid = 2; //userid (server)
+}
+
+message SFightEnter
+{
+    RoomData roomInfo = 1; //玩家信息
+    ErrCode error = 2;//错误码
+}
+
+// 房间玩家数据更新
+message SFightUser
+{
+    RoomData roomInfo = 1; //房间数据
+}
+
+//进入匹配房间之后, 也可以修改设置, 修改成功,可以通过SFightUser更新信息
+message CFightChangeSet
+{
+    AllowType match = 1; //允许自动匹配
+    AllowType userProp = 2; //允使用道具
+    string roomid    = 3;//roomid
+    string userid = 4; //userid (server)
+}
+
+//退出匹配
+message CFightMatchExit
+{
+    string userid = 1; //userid (server)
+}
+
+message SFightMatchExit
+{
+    RoomUser userInfo = 1; //退出玩家信息
+    ErrCode error = 2;//错误码
+    //ps:如果退出的人是房主, 需要更新一下房间数据的房主id，可以按顺序把第二个进房间的设置为房主
+}
+
+//房主开始游戏
+message CFightStart
+{
+    string userid = 1; //userid (server)
+}
+
+message SFightStart
+{
+    ErrCode error = 1;//错误码, ps：前端在人满的时候会自动倒计时321， 发送开始游戏的消息， 但是在发送的过程中
+    //因为网络延时，可能会出现忽然有人退出匹配的情况， 这个时候就不能开始游戏， 所以后台需要
+    //在前端发送开始游戏的时候， 检测人数是否满足玩法的要求， 少于或者多余设定人数， 都需要有错误码
+}
+
+//消除水果
+message CFightingCancelGird
+{
+    int32 startPosition = 1;//起点格子
+    int32 endPosition = 2;//终点格子
+    string userid = 3; //userid (server)
+    //前端可能回默认填-1， 多人2v2有一种设定， 我点一个图标， 队友点一个图标会形成一个超级甜蜜效果，这就
+    //要求，同步消除是点一个就广播一次， 前端根据广播收到的userid是否是自己以及是否是队友按来检测是否
+    //和上一个图标产生消除效果
+}
+
+message SFightingCancelGird
+{
+    string userid = 1;//消除者id
+    int32 startPosition = 2;//起点格子
+    int32 endPosition = 3;//终点格子
+    ErrCode error = 4;//错误码
+}
+
+//广播自己的积分
+message CFightingScore
+{
+    int32 score = 1;//当前自己的积分
+    string userid = 2; //userid (server)
+}
+
+message SFightingScore
+{
+    string userid = 1;//积分变化者id
+    int32 score = 2;  //当前积分
+    ErrCode error = 3;//错误码
+}
+
+//战斗结束
+message CFightingEnd
+{
+    string userid = 1; //userid (server)
+    //前端自己根据玩法，检测是否完成， 完成则发送这个消息
+}
+
+message SFightingEnd
+{
+    string userid = 1;//结束游戏者id, 前端根据玩法类型，房间每个玩家的积分， 自己去计算输赢显示结果
+    ErrCode error = 2;//错误码
+}
