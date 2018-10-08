@@ -165,7 +165,7 @@ func roomUserInfo(v bson.M) *pb.RoomUser {
 		info.AvatarUrl = val.(string)
 	}
 	if val, ok := v["gender"]; ok {
-		info.Gender = val.(int32)
+		info.Gender = int32(val.(int))
 	}
 	if info.Userid == "" {
 		return nil

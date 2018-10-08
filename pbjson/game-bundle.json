@@ -952,6 +952,250 @@
               "id": 2
             }
           }
+        },
+        "CFight": {
+          "fields": {}
+        },
+        "SFight": {
+          "fields": {
+            "type": {
+              "rule": "repeated",
+              "type": "FightType",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CFightMatch": {
+          "fields": {
+            "type": {
+              "type": "FightType",
+              "id": 1
+            },
+            "userid": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "SFightMatch": {
+          "fields": {
+            "roomInfo": {
+              "type": "RoomData",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CFightCreate": {
+          "fields": {
+            "type": {
+              "type": "FightType",
+              "id": 1
+            },
+            "match": {
+              "type": "AllowType",
+              "id": 2
+            },
+            "userProp": {
+              "type": "AllowType",
+              "id": 3
+            },
+            "userid": {
+              "type": "string",
+              "id": 4
+            }
+          }
+        },
+        "SFightCreate": {
+          "fields": {
+            "roomInfo": {
+              "type": "RoomData",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CFightEnter": {
+          "fields": {
+            "roomid": {
+              "type": "string",
+              "id": 1
+            },
+            "userid": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "SFightEnter": {
+          "fields": {
+            "roomInfo": {
+              "type": "RoomData",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "SFightUser": {
+          "fields": {
+            "roomInfo": {
+              "type": "RoomData",
+              "id": 1
+            }
+          }
+        },
+        "CFightChangeSet": {
+          "fields": {
+            "match": {
+              "type": "AllowType",
+              "id": 1
+            },
+            "userProp": {
+              "type": "AllowType",
+              "id": 2
+            },
+            "roomid": {
+              "type": "string",
+              "id": 3
+            },
+            "userid": {
+              "type": "string",
+              "id": 4
+            }
+          }
+        },
+        "CFightMatchExit": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "SFightMatchExit": {
+          "fields": {
+            "userInfo": {
+              "type": "RoomUser",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
+        },
+        "CFightStart": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "SFightStart": {
+          "fields": {
+            "error": {
+              "type": "ErrCode",
+              "id": 1
+            }
+          }
+        },
+        "CFightingCancelGird": {
+          "fields": {
+            "startPosition": {
+              "type": "int32",
+              "id": 1
+            },
+            "endPosition": {
+              "type": "int32",
+              "id": 2
+            },
+            "userid": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        },
+        "SFightingCancelGird": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            },
+            "startPosition": {
+              "type": "int32",
+              "id": 2
+            },
+            "endPosition": {
+              "type": "int32",
+              "id": 3
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 4
+            }
+          }
+        },
+        "CFightingScore": {
+          "fields": {
+            "score": {
+              "type": "int32",
+              "id": 1
+            },
+            "userid": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "SFightingScore": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            },
+            "score": {
+              "type": "int32",
+              "id": 2
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 3
+            }
+          }
+        },
+        "CFightingEnd": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "SFightingEnd": {
+          "fields": {
+            "userid": {
+              "type": "string",
+              "id": 1
+            },
+            "error": {
+              "type": "ErrCode",
+              "id": 2
+            }
+          }
         }
       }
     }

@@ -121,6 +121,7 @@ protojson() {
         game_type.proto \
         game_play.proto \
         game_shop.proto \
+        game_fight.proto \
         > ../pbjson/game-bundle.json
     #
     cp game_*.proto ../pbjson/
