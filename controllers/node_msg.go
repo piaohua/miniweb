@@ -30,7 +30,7 @@ func (a *NodeActor) Handler(msg interface{}, ctx actor.Context) {
 		//rsp := new(pb.ServeStarted)
 		//ctx.Respond(rsp)
 	case *pb.Logout:
-		delete(a.roles, arg.GetUserid())
+		a.userExit(arg.GetUserid())
 	case *pb.CFightCreate:
 		beego.Info("CFightCreate ", arg)
 		a.fightCreate(arg, ctx)
@@ -106,7 +106,7 @@ func (a *NodeActor) start(ctx actor.Context) {
 // create ...
 func (a *NodeActor) fightCreate(arg *pb.CFightCreate, ctx actor.Context) {
 	rsp := new(pb.SFightCreate)
-	room, err := models.CreateRoom(arg, a.Name)
+	room, err := a.createRoom(arg, ctx)
 	if err != nil {
 		beego.Error("fight create error ", err)
 		rsp.Error = pb.FightCreateFailed
@@ -115,12 +115,20 @@ func (a *NodeActor) fightCreate(arg *pb.CFightCreate, ctx actor.Context) {
 	}
 	rsp.RoomInfo = models.RoomData(room)
 	ctx.Respond(rsp)
-	//
+}
+
+func (a *NodeActor) createRoom(arg *pb.CFightCreate,
+	ctx actor.Context) (room *models.Room, err error) {
+	room, err = models.CreateRoom(arg, a.Name)
+	if err != nil {
+		return
+	}
 	a.rooms[room.ID] = room
 	a.roles[arg.Userid] = &models.RoomRole{
 		Roomid: room.ID,
 		Pid:    ctx.Sender(),
 	}
+	return
 }
 
 // change ...
@@ -129,6 +137,12 @@ func (a *NodeActor) fightChange(arg *pb.CFightChangeSet, ctx actor.Context) {
 	room := a.rooms[arg.GetRoomid()]
 	if room == nil {
 		//TODO broadcast to nodes
+		beego.Error("fight change error ", arg)
+		//rsp.Error = pb.FightRoomNotExist
+		//ctx.Respond(rsp)
+		return
+	}
+	if room.Userid != arg.GetUserid() {
 		beego.Error("fight change error ", arg)
 		//rsp.Error = pb.FightRoomNotExist
 		//ctx.Respond(rsp)
@@ -165,31 +179,51 @@ func (a *NodeActor) send2userid(userid string, msg interface{}) {
 
 // exit ...
 func (a *NodeActor) fightExit(arg *pb.CFightMatchExit, ctx actor.Context) {
-	rsp := new(pb.SFightMatchExit)
-	roomid := a.userid2roomid(arg.GetUserid())
-	room := a.rooms[roomid]
-	if room == nil {
-		//TODO broadcast to nodes
+	rsp := a.userExit(arg.GetUserid())
+	if rsp == nil {
+		rsp = new(pb.SFightMatchExit)
 		beego.Error("fight exit error ", arg)
 		rsp.Error = pb.FightNotInRoom
 		ctx.Respond(rsp)
 		return
 	}
-	for k, v := range room.User {
-		if v.Userid == arg.GetUserid() {
-			room.User = append(room.User[:k], room.User[k+1:]...)
-			break
-		}
+	ctx.Respond(rsp)
+}
+
+func (a *NodeActor) userExit(userid string) *pb.SFightMatchExit {
+	roomid := a.userid2roomid(userid)
+	room := a.rooms[roomid]
+	if room == nil {
+		//TODO broadcast to nodes
+		beego.Error("fight exit error ", userid)
+		return nil
 	}
-	userInfo, err := models.GetRoomUser(arg.GetUserid())
+	rsp := new(pb.SFightMatchExit)
+	userInfo, err := models.GetRoomUser(userid)
 	if err != nil {
 		beego.Error("fight exit error ", err)
 	}
 	rsp.UserInfo = userInfo
-	room.Status = 0
-	room.Upsert()
-	a.rooms[roomid] = room
+	var has bool
+	for k, v := range room.User {
+		if v.Userid == userid {
+			has = true
+			room.User = append(room.User[:k], room.User[k+1:]...)
+			break
+		}
+	}
+	if has {
+		if userid == room.Userid && len(room.User) != 0 {
+			room.Userid = room.User[0].Userid
+		}
+		room.Status = 0
+		room.Number--
+		room.Upsert()
+		a.rooms[roomid] = room
+		delete(a.roles, userid)
+	}
 	a.broadcast(roomid, rsp)
+	return rsp
 }
 
 // enter ...
@@ -314,12 +348,15 @@ func (a *NodeActor) fightMatch(arg *pb.CFightMatch, ctx actor.Context) {
 	if _, ok := a.rooms[roomid]; ok {
 		//TODO broadcast to nodes
 		beego.Error("fight match error ", arg)
-		rsp.Error = pb.FightMatchFailed
+		rsp.Error = pb.FightInRoom
 		ctx.Respond(rsp)
 		return
 	}
 	var room *models.Room
 	for k, v := range a.rooms {
+		if v.Match == 0 { //不许匹配
+			continue
+		}
 		if v.Status == 1 {
 			continue
 		}
@@ -331,6 +368,24 @@ func (a *NodeActor) fightMatch(arg *pb.CFightMatch, ctx actor.Context) {
 		}
 		room = v
 	}
+	var newRoom bool
+	if room == nil {
+		arg2 := &pb.CFightCreate{
+			Type:     arg.GetType(),
+			Userid:   arg.GetUserid(),
+			Match:    pb.ALLOW_TYPE1,
+			UserProp: pb.ALLOW_TYPE1,
+		}
+		var err error
+		room, err = a.createRoom(arg2, ctx)
+		if err != nil {
+			beego.Error("fight match failed ", arg)
+			rsp.Error = pb.FightMatchFailed
+			ctx.Respond(rsp)
+			return
+		}
+		newRoom = true
+	}
 	if room == nil {
 		beego.Error("fight match failed ", arg)
 		rsp.Error = pb.FightMatchFailed
@@ -338,15 +393,21 @@ func (a *NodeActor) fightMatch(arg *pb.CFightMatch, ctx actor.Context) {
 		return
 	}
 	//
-	a.roles[arg.Userid] = &models.RoomRole{
-		Roomid: room.ID,
-		Pid:    ctx.Sender(),
+	if !newRoom {
+		a.roles[arg.Userid] = &models.RoomRole{
+			Roomid: room.ID,
+			Pid:    ctx.Sender(),
+		}
 	}
 	userInfo := models.RoomUser{
 		Userid: arg.GetUserid(),
 	}
 	room.User = append(room.User, userInfo)
 	room.Number++
+	if len(room.User) == 1 && room.Userid != arg.GetUserid() {
+		room.Userid = arg.GetUserid()
+		room.Upsert()
+	}
 	a.rooms[room.ID] = room
 	rsp.RoomInfo = models.RoomData(room)
 	ctx.Respond(rsp)
