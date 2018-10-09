@@ -38,4 +38,5 @@ enum ErrCode {
     FightNotInRoom         = 29; //不在房间
     FightNotStart          = 30; //没有开始
     FightMatchFailed       = 31; //匹配失败
+    FightInRoom            = 32; //在房间
 }

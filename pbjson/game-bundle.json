@@ -103,7 +103,8 @@
             "FightExitFailed": 28,
             "FightNotInRoom": 29,
             "FightNotStart": 30,
-            "FightMatchFailed": 31
+            "FightMatchFailed": 31,
+            "FightInRoom": 32
           }
         },
         "LogType": {
